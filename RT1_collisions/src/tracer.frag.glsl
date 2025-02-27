@@ -171,25 +171,47 @@ bool ray_sphere_intersection(
 bool ray_plane_intersection(
 		vec3 ray_origin, vec3 ray_direction, 
 		vec3 plane_normal, float plane_offset, 
-		out float t, out vec3 normal) {
-	vec2 sols;
-	int sol_count = solve_quadratic(
+		out float t, out vec3 normal) 
+{
+	/** #TODO RT1.1:
+	The plane is described by its normal vec3(nx, ny, nz) and an offset b.
+	Point x belongs to the plane iff `dot(normal, x) = b`.
+
+	- Compute the intersection between the ray and the plane
+		- If the ray and the plane are parallel there is no intersection
+		- Otherwise, compute intersection data and store it in `normal`, and `t` (distance along ray until intersection).
+	- Return whether there is an intersection in front of the viewer (t > 0)
+	*/
+
+	// can use the plane center if you need it
+	vec3 plane_center = plane_normal * plane_offset;
+	
+	vec2 solutions;
+
+	int num_solutions = solve_quadratic(
 		0.,
 		dot(ray_direction, plane_normal),
 		dot(ray_origin, plane_normal) - plane_offset,
-		sols
+		solutions
 	);
-	t = MAX_RANGE + 10.;
-	if (sol_count >= 1 && sols[0] > 0.){
-		t = sols[0];
+
+	t = MAX_RANGE + 10.;  // corresponds to no intersection, to be updated if one is found
+	bool collision_happened = false;
+
+	if (num_solutions == 1 && solutions[0] > 0.) {
+		t = solutions[0];
 	}
-	if (dot(plane_normal, ray_direction) != 0. && t < MAX_RANGE){
-		vec3 intersection = (ray_origin + t * ray_direction);
-		normal = dot(ray_origin - intersection, plane_normal) > 0. ? plane_normal : -plane_normal;
+
+	if (t < MAX_RANGE && dot(plane_normal, ray_direction) != 0.) {
+		vec3 intersection_point = ray_origin + ray_direction * t;
+		if (dot(ray_origin - intersection_point, plane_normal) > 0.) {
+			normal = plane_normal;
+		} else {
+			normal = -plane_normal;
+		}
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 /*
@@ -209,10 +231,56 @@ bool ray_cylinder_intersection(
 	- Return whether there is an intersection with t > 0
 	*/
 
+	vec3 oc = ray_origin - cyl.center;
+	vec3 m = cross(cyl.axis, oc);
+	vec3 n = cross(cyl.axis, ray_direction);
+
+	vec2 solutions;
+
+	int num_solutions = solve_quadratic(
+		dot(n, n),
+		2. * dot(m, n),
+		dot(m, m) - cyl.radius * cyl.radius,
+		solutions
+	);
+
 	vec3 intersection_point;
 	t = MAX_RANGE + 10.;
 
-	return false;
+	if (num_solutions >= 1 && solutions[0] > 0.) {
+		float t1 = solutions[0];
+		vec3 intersection_point1 = ray_origin + ray_direction * t1;
+		vec3 w1 = intersection_point1 - cyl.center;
+		vec3 pw1 = (dot(w1, cyl.axis) / dot(cyl.axis, cyl.axis)) * cyl.axis;
+		if (length(pw1) <= cyl.height / 2.) {
+			t = t1;
+		}
+	}
+	
+	if (num_solutions >= 2 && solutions[1] > 0. && solutions[1] < t) {
+		float t2 = solutions[1];
+		vec3 intersection_point2 = ray_origin + ray_direction * t2;
+		vec3 w2 = intersection_point2 - cyl.center;
+		vec3 pw2 = (dot(w2, cyl.axis) / dot(cyl.axis, cyl.axis)) * cyl.axis;
+		if (length(pw2) <= cyl.height / 2.) {
+			t = t2;
+		}
+	}
+
+	if (t < MAX_RANGE) {
+		vec3 intersection_point = ray_origin + ray_direction * t;
+		vec3 w = intersection_point - cyl.center;
+		vec3 pw = (dot(w, cyl.axis) / dot(cyl.axis, cyl.axis)) * cyl.axis;
+		vec3 cyl_normal = normalize(w - pw);
+		if (dot(ray_origin - intersection_point, cyl_normal) > 0.) {
+			normal = cyl_normal;
+		} else {
+			normal = -cyl_normal;
+		}
+		return true;
+	} else {
+		return false;
+	}
 }
 
 
