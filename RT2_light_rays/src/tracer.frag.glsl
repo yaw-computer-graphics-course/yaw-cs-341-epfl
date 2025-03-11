@@ -175,11 +175,11 @@ bool ray_plane_intersection(
 {
 	/** #TODO RT1.1:
 	The plane is described by its normal vec3(nx, ny, nz) and an offset b.
-	Point x belongs to the plane iff `dot(normal, x) = b`.
+	Point x belongs to the plane iff dot(normal, x) = b.
 
 	- Compute the intersection between the ray and the plane
 		- If the ray and the plane are parallel there is no intersection
-		- Otherwise, compute intersection data and store it in `normal`, and `t` (distance along ray until intersection).
+		- Otherwise, compute intersection data and store it in normal, and t (distance along ray until intersection).
 	- Return whether there is an intersection in front of the viewer (t > 0)
 	*/
 
@@ -225,9 +225,9 @@ bool ray_cylinder_intersection(
 	/** #TODO RT1.2.2: 
 	- Compute the first valid intersection between the ray and the cylinder
 		(valid means in front of the viewer: t > 0)
-	- Store the intersection point in `intersection_point`
-	- Store the ray parameter in `t`
-	- Store the normal at intersection_point in `normal`
+	- Store the intersection point in intersection_point
+	- Store the ray parameter in t
+	- Store the normal at intersection_point in normal
 	- Return whether there is an intersection with t > 0
 	*/
 
@@ -376,7 +376,7 @@ vec3 lighting(
 	- make sure that the reflected light shines towards the camera
 	- return the ouput color
 
-	You can use existing methods for `vec3` objects such as `reflect`, `dot`, `normalize` and `length`.
+	You can use existing methods for vec3 objects such as reflect, dot, normalize and length.
 	*/
 	
 	vec3 n = normalize(object_normal);
@@ -443,25 +443,40 @@ vec3 render_light(vec3 ray_origin, vec3 ray_direction) {
 	*/
 
 	vec3 pix_color = vec3(0.);
+	float product_reflect_weights = 1.;
 
 	float col_distance;
 	vec3 col_normal = vec3(0.);
 	int mat_id = 0;
-	if (ray_intersection(ray_origin, ray_direction, col_distance, col_normal, mat_id)) {
-		Material m = get_material(mat_id);
-		//pix_color = m.color;
-		vec3 ambient_coeff = m.color * m.ambient;
-		vec3 object_point = ray_origin + col_distance * ray_direction;
+	for(int i_reflection = 0; i_reflection < NUM_REFLECTIONS+1; i_reflection++) {
+		float col_distance;
+		vec3 col_normal = vec3(0.);
+		int mat_id      = 0;
+		if (ray_intersection(ray_origin, ray_direction, col_distance, col_normal, mat_id)) {
+			Material m = get_material(mat_id);
+			vec3 ambient_coeff = m.color * m.ambient;
+			vec3 n = normalize(col_normal);
+			vec3 object_point = ray_origin + col_distance * ray_direction + 0.001 * n;
 
-		pix_color += light_color_ambient * ambient_coeff;
-		#if NUM_LIGHTS != 0
-		for(int i_light = 0; i_light < NUM_LIGHTS; i_light++) {
-		// // do something for each light lights[i_light]
-			pix_color += lighting(object_point, normalize(col_normal), -normalize(ray_direction), lights[i_light], m);
-		}
-		#endif
+			vec3 color = light_color_ambient * ambient_coeff;
+			#if NUM_LIGHTS != 0
+			for(int i_light = 0; i_light < NUM_LIGHTS; i_light++) {
+			// // do something for each light lights[i_light]
+				color += lighting(object_point, normalize(col_normal), -ray_direction, lights[i_light], m);
+			}
+			#endif
+			
+			float reflection_weight = m.mirror;
+
+			pix_color = pix_color + ((1. - reflection_weight) * product_reflect_weights) * color;
+			product_reflect_weights = product_reflect_weights * reflection_weight;
+
+			if (reflection_weight < 1e-3) break;
+
+			ray_origin        = ray_origin + col_distance * ray_direction + 0.001 * n;
+			ray_direction     = reflect(ray_direction, n);
+		} else break;
 	}
-
 	/** #TODO RT2.3.2: 
 	- create an outer loop on the number of reflections (see below for a suggested structure)
 	- compute lighting with the current ray (might be reflected)
@@ -503,15 +518,14 @@ vec3 render_light(vec3 ray_origin, vec3 ray_direction) {
 			Material m = get_material(mat_id); // get material of the intersected object
 			reflection_weight = m.mirror;
 
-			reflect_color = reflect_color + ((1. - reflection_weight) * product_reflect_weights) * reflect_color;
+			reflect_color = reflect_color + ((1. - reflection_weight) * product_reflect_weights) * m.color;
 			product_reflect_weights = product_reflect_weights * reflection_weight;
 
 			ray_origin        = ray_origin + col_distance * ray_direction;
-			ray_direction     = col_normal;
+			ray_direction     = normalize(reflect(ray_direction, col_normal));
 		}
-	}
+	}*/
 
-	pix_color = pix_color + reflect_color;*/
 
 	return pix_color;
 }
