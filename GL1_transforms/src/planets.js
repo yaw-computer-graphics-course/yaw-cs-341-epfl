@@ -103,15 +103,17 @@ export class SysOrbitalMovement {
 			* Angle of orbit:
 				angle = sim_time * actor.orbit_speed + actor.orbit_phase
 
-		Spin around the planet's Z axis
-			angle = sim_time * actor.rotation_speed (radians)
-		
-		Scale the unit sphere to match the desired size
-			scale = actor.size
-			mat4.fromScaling takes a 3D vector!
 		*/
 
-		//const M_orbit = mat4.create();
+		//Spin around the planet's Z axis
+		const angle = sim_time * actor.rotation_speed;
+		const rotation_from_spin_matrix = mat4.fromZRotation(mat4.create(), angle)
+		
+		//Scale the unit sphere to match the desired size
+		const scale = actor.size
+		const scaling_matrix = mat4.fromScaling(mat4.create(), [scale, scale, scale]);
+
+		const M_orbit = mat4.create();
 
 		if(actor.orbit !== null) {
 			// Parent's translation
@@ -119,10 +121,18 @@ export class SysOrbitalMovement {
 			const parent_translation_v = mat4.getTranslation([0, 0, 0], parent.mat_model_to_world)
 
 			// Orbit around the parent
+			const translation_to_parent_matrix = mat4.fromTranslation(mat4.create(), parent_translation_v);
+			
+			const orbit_angle = sim_time * actor.orbit_speed + actor.orbit_phase;
+			const rotation_from_orbit_matrix = mat4.fromZRotation(mat4.create(), orbit_angle);
+
+			const translation_to_orbit_matrix = mat4.fromTranslation(mat4.create(), [actor.orbit_radius, 0, 0]);
+			
+			mat4_matmul_many(M_orbit, translation_to_parent_matrix, rotation_from_orbit_matrix, translation_to_orbit_matrix);
 		} 
 		
 		// Store the combined transform in actor.mat_model_to_world
-		//mat4_matmul_many(actor.mat_model_to_world, ...);
+		mat4_matmul_many(actor.mat_model_to_world, M_orbit, rotation_from_spin_matrix, scaling_matrix);
 	}
 
 	simulate(scene_info) {
@@ -191,7 +201,7 @@ export class SysRenderPlanetsUnshaded {
 
 				// #TODO GL1.2.1.2
 				// Calculate mat_mvp: model-view-projection matrix	
-				//mat4_matmul_many(mat_mvp, ...)
+				mat4_matmul_many(mat_mvp, mat_projection, mat_view, actor.mat_model_to_world);
 
 				entries_to_draw.push({
 					mat_mvp: mat_mvp,
