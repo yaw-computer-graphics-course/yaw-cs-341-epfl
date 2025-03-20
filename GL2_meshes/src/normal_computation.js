@@ -35,9 +35,9 @@ function compute_triangle_normals_and_angle_weights(mesh) {
 		const triangle_normal = vec3.normalize([0., 0., 0.], vec3.cross([0., 0., 0.], e1, e2))
 
 		// weights
-		const w1 = Math.acos(Math.abs(vec3.dot(e1, e2)))
-		const w2 = Math.acos(Math.abs(vec3.dot(e1, e2)))
-		const w3 = Math.acos(Math.abs(vec3.dot(e1, e2)))
+		const w1 = Math.abs(vec3.angle(e1, e2))
+		const w2 = Math.abs(vec3.angle(e1, e3))
+		const w3 = Math.abs(vec3.angle(e2, e3))
 
 		tri_normals.push(triangle_normal)
 		angle_weights.push([w1, w2, w3])
@@ -65,14 +65,14 @@ function compute_vertex_normals(mesh, tri_normals, angle_weights) {
 		const normal = tri_normals[i_face]
 
 		// Add your code for adding the contribution of the current triangle to its vertices' normals
-		vertex_normals[iv1] += angle_weights[iv1] * tri_normals[i_face]
-		vertex_normals[iv2] += angle_weights[iv2] * tri_normals[i_face]
-		vertex_normals[iv3] += angle_weights[iv3] * tri_normals[i_face]
+		vec3.add(vertex_normals[iv1], vertex_normals[iv1], vec3.scale([0., 0., 0.], normal, angle_weights[i_face][0]));
+		vec3.add(vertex_normals[iv2], vertex_normals[iv2], vec3.scale([0., 0., 0.], normal, angle_weights[i_face][1]));
+		vec3.add(vertex_normals[iv3], vertex_normals[iv3], vec3.scale([0., 0., 0.], normal, angle_weights[i_face][2]));
 	}
 
 	for(let i_vertex = 0; i_vertex < num_vertices; i_vertex++) {
 		// Normalize the vertices
-		vertex_normals[i_vertex] = vec3.normalize([0., 0., 0.], vertex_normals[i_vertex]) 
+		vertex_normals[i_vertex] = vec3.normalize([0., 0., 0.], vertex_normals[i_vertex])
 	}
 
 	return vertex_normals
