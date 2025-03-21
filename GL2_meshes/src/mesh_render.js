@@ -1,5 +1,6 @@
 import {vec2, vec3, vec4, mat3, mat4} from "../lib/gl-matrix_3.3.0/esm/index.js"
 import { transpose } from "../lib/gl-matrix_3.3.0/esm/mat2.js"
+import { fromMat3 } from "../lib/gl-matrix_3.3.0/esm/quat.js"
 import {mat4_matmul_many} from "./icg_math.js"
 
 /*
@@ -218,7 +219,7 @@ class SysRenderMeshes {
 					inverse(transpose( mat view * mat model ))
 			*/
 			// calculate mat_normals_to_view
-			mat3.invert(mat_normals_to_view, mat3.transpose(mat_normals_to_view, mat_model_view))
+			mat3.invert(mat_normals_to_view, mat3.transpose(mat_normals_to_view, mat3.fromMat4(mat3.create(), mat_model_view)))
 
 
 			entries_to_draw.push({
