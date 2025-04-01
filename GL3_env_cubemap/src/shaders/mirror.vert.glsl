@@ -5,12 +5,12 @@ attribute vec3 vertex_normal;
 // Per-vertex outputs passed on to the fragment shader
 
 /* #TODO GL3.2.3
-	Setup the varying values needed to compue the Phong shader:
+	Setup the varying values needed to compute the Phong shader:
 	* surface normal
 	* view vector: direction to camera
 */
-//varying ...
-//varying ...
+varying vec3 v2f_normal;
+varying vec3 v2f_dir_to_camera;
 
 // Global variables specified in "uniforms" entry of the pipeline
 uniform mat4 mat_mvp;
@@ -28,9 +28,9 @@ void main() {
     Hint: Write the final vertex position to gl_Position
     */
 	// viewing vector (from camera to vertex in view coordinates), camera is at vec3(0, 0, 0) in cam coords
-	//v2f_dir_to_camera = vec3(1, 0, 0); // TODO calculate
+	v2f_dir_to_camera = -normalize((mat_model_view * vec4(vertex_position, 1.)).xyz);
 	// transform normal to camera coordinates
-	//v2f_normal = normal; // TODO apply normal transformation
+	v2f_normal = normalize(mat_normals_to_view * vertex_normal);
 	
 	gl_Position = mat_mvp * vec4(vertex_position, 1);
 }

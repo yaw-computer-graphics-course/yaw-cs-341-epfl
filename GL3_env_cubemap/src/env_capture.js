@@ -80,10 +80,15 @@ export class EnvironmentCapture {
 		#TODO GL3.2.1 cube_camera_projection:
 			Construct the camera projection matrix which has a correct light camera's view frustum.
 			please use the function perspective, see https://stackoverflow.com/questions/28286057/trying-to-understand-the-math-behind-the-perspective-matrix-in-webgl
-			Note: this is the same for all point lights/cube faces!
+			Note: this is the same for all (point lights)/(cube faces)!
 		*/
-		// please use mat4.perspective(mat4.create(), fovy, aspect, near, far);
-		this.cube_camera_projection = mat4.create()
+		
+		const near = 0.1;
+		const far = 200;
+		const fovy = Math.PI / 2;
+		const aspect = 1.
+		
+		this.cube_camera_projection = mat4.perspective(mat4.create(), fovy, aspect, near, far);
 
 		this.run_with_output_framebuffer = regl({
 			framebuffer: regl.prop('out_buffer'),
@@ -108,12 +113,12 @@ export class EnvironmentCapture {
 	*/
 
 	static CUBE_FACE_UP = [
+		[0, -1, 0],
+		[0, -1, 0],
 		[0, 0, 1],
-		[0, 0, 1],
-		[0, 0, 1],
-		[0, 0, 1],
-		[0, 0, 1],
-		[0, 0, 1],
+		[0, 0, -1],
+		[0, -1, 0],
+		[0, -1, 0],
 	]
 
 	cube_camera_view(side_idx, center, mat_view_camera) {
