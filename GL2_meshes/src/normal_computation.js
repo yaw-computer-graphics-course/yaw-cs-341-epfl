@@ -36,7 +36,7 @@ function compute_triangle_normals_and_angle_weights(mesh) {
 
 		// weights
 		const w1 = Math.abs(vec3.angle(e1, e2))
-		const w2 = Math.abs(vec3.angle(e1, e3))
+		const w2 = Math.abs(vec3.angle(vec3.negate([0., 0., 0.], e1), e3))
 		const w3 = Math.abs(vec3.angle(e2, e3))
 
 		tri_normals.push(triangle_normal)
