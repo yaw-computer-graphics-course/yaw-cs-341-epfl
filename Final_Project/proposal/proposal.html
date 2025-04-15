@@ -38,75 +38,148 @@
             <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
           </ul>-->
           <ul>
-          <li><a href="#project-title" id="toc-project-title">Project
-          Title</a>
+          <li><a href="#project-title-campfire-at-midnight"
+          id="toc-project-title-campfire-at-midnight">Project Title :
+          Campfire at Midnight</a>
           <ul>
-          <li><a href="#abstract" id="toc-abstract">Abstract</a></li>
+          <li><a href="#abstract" id="toc-abstract">Abstract</a>
+          <ul>
+          <li><a href="#objective" id="toc-objective">Objective</a></li>
+          <li><a href="#technical-focus"
+          id="toc-technical-focus">Technical Focus</a></li>
+          </ul></li>
           <li><a href="#featuress" id="toc-featuress">Featuress</a></li>
           <li><a href="#schedule" id="toc-schedule">Schedule</a></li>
-          <li><a href="#resources" id="toc-resources">Resources</a></li>
+          <li><a href="#resources" id="toc-resources">Resources</a>
+          <ul>
+          <li><a href="#books" id="toc-books">📚
+          <strong>Books</strong></a></li>
+          <li><a href="#blogs" id="toc-blogs">🌐
+          <strong>Blogs</strong></a></li>
+          <li><a href="#online-tutorials" id="toc-online-tutorials">🎓
+          <strong>Online Tutorials</strong></a></li>
+          </ul></li>
+          <li><a href="#the-group-members"
+          id="toc-the-group-members">The group members</a></li>
           </ul></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         
-<h1 id="project-title">Project Title</h1>
-<figure>
-<img src="images/demo.jpg" width="300" alt="A representative image" />
-<figcaption aria-hidden="true">A representative image</figcaption>
-</figure>
+<h1 id="project-title-campfire-at-midnight">Project Title : Campfire at
+Midnight</h1>
+<table>
+<tr>
+<td>
+<img src="images/rody-muijrers-insta-fire03-3.gif" alt="Campfire illustration" width="300" style="display: block; margin: auto;">
+<p style="text-align: center;">
+<em>Figure 1: A campfire illustration utilizing noise functions for fire
+and smoke. Credit: Rody Muijrers</em>
+</p>
+</td>
+<td>
+<img src="images\L-systems-spruce-trees.jpg" alt="L-Systems generated trees" width="300" height="300" style="display: block; margin: auto;">
+<p style="text-align: center;">
+<em>Figure 2: Spruce trees generated using L-systems. Credit: Tomáš
+Stolárik </em>
+</p>
+</td>
+</tr>
+</table>
 <h2 id="abstract">Abstract</h2>
-<p>TODO</p>
+<h3 id="objective">Objective</h3>
+<p>This project aims to create a real-time, interactive campfire
+simulation that emphasizes physically-based lighting and procedurally
+generated content. The central visual element is a fire source, which
+dynamically illuminates a structured environment featuring vegetation
+and procedurally generated trees modeled using L-Systems.</p>
+<h3 id="technical-focus">Technical Focus</h3>
+<p>The implementation will leverage a range of computer graphics
+techniques, including:</p>
+<ul>
+<li><p><strong>Soft Shadows</strong> Simulate realistic light diffusion
+from the fire source, producing natural and physically accurate shadow
+gradients.</p></li>
+<li><p><strong>Screen-Space Ambient Occlusion (SSAO)</strong> Improve
+local shading and depth perception by approximating occlusion effects
+using depth buffer data.</p></li>
+<li><p><strong>Procedural Texture Generation (PTG)</strong> Generate
+dynamic fire and smoke textures in real time, allowing for continuous
+variation in particle appearance.</p></li>
+<li><p><strong>L-System-Based Procedural Tree Generation</strong> Use
+algorithmic rules to model tree geometry, providing scalable and varied
+vegetation for the environment.</p></li>
+<li><p><strong>Scene and Mesh Design</strong> Construct the campfire
+environment by modeling key static elements such as the ground surface,
+fire pit, wooden benches, stacked firewood, and surrounding
+objects.</p></li>
+<li><p><strong>Bloom Effect</strong> Enhance the perception of
+brightness and glow in nighttime scenes, particularly around
+high-intensity light sources like fire.</p></li>
+</ul>
 <h2 id="featuress">Featuress</h2>
 <table>
 <thead>
-<tr class="header">
+<tr>
+<th>Index</th>
 <th>Feature</th>
 <th>Points</th>
 <th>Adapted Points</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Feature 1</td>
-<td>5</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td>Feature 2</td>
-<td>10</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td>Feature 3</td>
-<td>10</td>
-<td>10</td>
-</tr>
-<tr class="even">
-<td>Feature 4</td>
+<tr>
+<td>1</td>
+<td>Soft Shadows</td>
 <td>20</td>
 <td>10</td>
 </tr>
-<tr class="odd">
-<td>Feature 5</td>
+<tr>
+<td>2</td>
+<td>SSAO</td>
 <td>20</td>
-<td>20</td>
+<td>10</td>
+</tr>
+<tr>
+<td>3</td>
+<td>PTG<sup>*</sup></td>
+<td>10</td>
+<td>10</td>
+</tr>
+<tr>
+<td>4</td>
+<td>L-Systems</td>
+<td>10</td>
+<td>10</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Mesh/Scene Design</td>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Bloom</td>
+<td>5</td>
+<td>5</td>
 </tr>
 </tbody>
 </table>
+<p><sup>*PTG : Procedural Texture Generation</sup></p>
 <h2 id="schedule">Schedule</h2>
 <table>
 <tr>
 <th style="width: 20%">
 </th>
 <th>
-Name 1
+Adam Bekkar
 </th>
 <th>
-Name 2
+Walid Ait Said
 </th>
 <th>
-Name 3
+Youssef Benhayoun Sadafi
 </th>
 </tr>
 <tr>
@@ -114,10 +187,13 @@ Name 3
 Week 1
 </td>
 <td>
+Write detailed proposal
 </td>
 <td>
+Adapt points and find relevant resources
 </td>
 <td>
+Find ideas and corresponding features
 </td>
 </tr>
 <tr style="background-color: #f9f9f9;">
@@ -141,10 +217,13 @@ Week 2 (Easter)
 Week 3
 </td>
 <td>
+Look into lighting effects
 </td>
 <td>
+Start looking for or construct meshes for scene modeling
 </td>
 <td>
+Look into L-systems and procedural generation
 </td>
 </tr>
 <tr>
@@ -152,10 +231,13 @@ Week 3
 Week 4
 </td>
 <td>
+Start implementing shaders for ambient occlusion
 </td>
 <td>
+Use blender and add meshes to the scene
 </td>
 <td>
+Start tree generation code
 </td>
 </tr>
 <tr style="background-color: #f9f9f9;">
@@ -168,10 +250,13 @@ Milestone
 Week 5
 </td>
 <td>
+Finalize ambiant occlusion shaders and look into boom effect
 </td>
 <td>
+Finalize base scene and start looking into soft shadows
 </td>
 <td>
+Implement tree generation shaders and look into texture generation
 </td>
 </tr>
 <tr>
@@ -179,10 +264,13 @@ Week 5
 Week 6
 </td>
 <td>
+Fully implement Bloom effect
 </td>
 <td>
+Complete shadows implementation
 </td>
 <td>
+Finalize campfire textures
 </td>
 </tr>
 <tr>
@@ -190,10 +278,13 @@ Week 6
 Week 7
 </td>
 <td>
+Edit the video to be showcased
 </td>
 <td>
+Record a comprehensive demo
 </td>
 <td>
+Write detailed report
 </td>
 </tr>
 <tr style="background-color: #f9f9f9;">
@@ -203,7 +294,39 @@ Video and Report
 </tr>
 </table>
 <h2 id="resources">Resources</h2>
-<p>TODO</p>
+<h3 id="books">📚 <strong>Books</strong></h3>
+<ul>
+<li><strong>Marschner &amp; Shirley: <em>Fundamentals of Computer
+Graphics</em>, 5th Edition, AK Peters, 2021</strong></li>
+<li><strong>Glassner: <em>Graphics Gems</em>, Academic Press,
+1989</strong></li>
+<li><strong>Ebert, Musgrave, Peachey, Perlin, Worley: <em>Texturing
+&amp; Modeling: A Procedural Approach</em>, 3rd Edition</strong></li>
+</ul>
+<h3 id="blogs">🌐 <strong>Blogs</strong></h3>
+<ul>
+<li><a
+href="https://github.com/lettier/3d-game-shaders-for-beginners">3D Game
+Shaders for Beginners</a></li>
+</ul>
+<h3 id="online-tutorials">🎓 <strong>Online Tutorials</strong></h3>
+<ul>
+<li><a
+href="https://github.com/lettier/awesome-computer-graphics">Awesome
+Computer Graphics Resources by lettier</a></li>
+<li><a
+href="https://www.youtube.com/watch?v=vLSphLtKQ0o&amp;list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh">Introduction
+to Computer Graphics by Cem Yuksel</a></li>
+<li><a
+href="https://youtube.com/playlist?list=PLjEaoINr3zgEPv5y--4MKpciLaoQYZB1Z&amp;si=tnK_WiwRdk_pP7cw">Blender
+4.0 Beginner Donut Tutorial (Newest) by Blender Guru</a></li>
+</ul>
+<p>We may also need to use AI tools as ChatGPT, Copilot or Midjourney
+depending on the need for coding help and image generation.</p>
+<h2 id="the-group-members">The group members</h2>
+<p>Adam Bekkar (379476)</p>
+<p>Youssef Benhayoun Sadafi (358748)</p>
+<p>Walid Ait Said (356082)</p>
         </div>
       </div>
     </div>

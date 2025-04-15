@@ -141,3 +141,12 @@ The implementation will leverage a range of computer graphics techniques, includ
 - [Blender 4.0 Beginner Donut Tutorial (Newest) by Blender Guru](https://youtube.com/playlist?list=PLjEaoINr3zgEPv5y--4MKpciLaoQYZB1Z&si=tnK_WiwRdk_pP7cw)
 
 We may also need to use AI tools as ChatGPT, Copilot or Midjourney depending on the need for coding help and image generation.
+
+
+## The group members
+
+Adam Bekkar (379476)
+
+Youssef Benhayoun Sadafi (358748)
+
+Walid Ait Said (356082)
