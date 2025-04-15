@@ -4,7 +4,18 @@ title: Project Proposal CS-341 2025
 
 # Project Title : Campfire at Midnight
 
-![Campfire illustration taken from the game Minecraft](images/campfire.gif){width="300px"}
+<table>
+  <tr>
+	<td>
+	  <img src="images/rody-muijrers-insta-fire03-3.gif" alt="Campfire illustration" width="300" style="display: block; margin: auto;">
+	  <p style="text-align: center;"><em>Figure 1: A campfire illustration utilizing noise functions for fire and smoke. Credit: Rody Muijrers</em></p>
+	</td>
+	<td>
+	  <img src="images\L-systems-spruce-trees.jpg" alt="L-Systems generated trees" width="300" height="300" style="display: block; margin: auto;">
+	  <p style="text-align: center;"><em>Figure 2: Spruce trees generated using L-systems. Credit: Tomáš Stolárik </em></p>
+	</td>
+  </tr>
+</table>
 
 ## Abstract
 
@@ -53,15 +64,15 @@ The implementation will leverage a range of computer graphics techniques, includ
 <table>
 	<tr>
 		<th style="width: 20%"></th>
-		<th>Name 1</th>
-		<th>Name 2</th>
-		<th>Name 3</th>
+		<th>Adam Bekkar</th>
+		<th>Walid Ait Said</th>
+		<th>Youssef Benhayoun Sadafi</th>
 	</tr>
 	<tr>
 		<td>Week 1</td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>Write detailed proposal</td>
+		<td>Adapt points and find relevant resources</td>
+		<td>Find ideas and corresponding features</td>
 	</tr>
 	<tr style="background-color: #f9f9f9;">
 		<td colspan="4" align="center">Proposal</td>
@@ -74,36 +85,36 @@ The implementation will leverage a range of computer graphics techniques, includ
 	</tr>
 	<tr>
 		<td>Week 3</td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>Look into lighting effects</td>
+		<td>Start looking for or construct meshes for scene modeling</td>
+		<td>Look into L-systems and procedural generation</td>
 	</tr>
 	<tr>
 		<td>Week 4</td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>Start implementing shaders for ambient occlusion</td>
+		<td>Use blender and add meshes to the scene</td>
+		<td>Start tree generation code</td>
 	</tr>
 	<tr style="background-color: #f9f9f9;">
 		<td colspan="4" align="center">Milestone</td>
 	</tr>
 	<tr>
 		<td>Week 5</td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>Finalize ambiant occlusion shaders and look into boom effect</td>
+		<td>Finalize base scene and start looking into soft shadows</td>
+		<td>Implement tree generation shaders and look into texture generation</td>
 	</tr>
 	<tr>
 		<td>Week 6</td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>Fully implement Bloom effect</td>
+		<td>Complete shadows implementation</td>
+		<td>Finalize campfire textures</td>
 	</tr>
 	<tr>
 		<td>Week 7</td>
-		<td></td>
-		<td></td>
-		<td></td>
+		<td>Edit the video to be showcased</td>
+		<td>Record a comprehensive demo</td>
+		<td>Write detailed report</td>
 	</tr>
 	<tr style="background-color: #f9f9f9;">
 		<td colspan="4" align="center">Video and Report</td>
