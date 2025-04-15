@@ -28,24 +28,24 @@ This project aims to create a real-time, interactive campfire simulation that em
 The implementation will leverage a range of computer graphics techniques, including:
 
 - **Soft Shadows**
-  Simulate realistic light diffusion from the fire source, producing natural and physically accurate shadow gradients.
+  To simulate realistic light diffusion from the fire source, producing natural and physically accurate shadow gradients.
 
 - **Screen-Space Ambient Occlusion (SSAO)**
-  Improve local shading and depth perception by approximating occlusion effects using depth buffer data.
+  To improve local shading and depth perception by approximating occlusion effects.
 
 - **Procedural Texture Generation (PTG)**
-  Generate dynamic fire and smoke textures in real time, allowing for continuous variation in particle appearance.
+  To generate dynamic fire and smoke textures in real time, allowing for continuous variation in particle appearance.
 
 - **L-System-Based Procedural Tree Generation**
-  Use algorithmic rules to model tree geometry, providing scalable and varied vegetation for the environment.
+  To use algorithmic rules to model tree geometry, providing scalable and varied vegetation for the environment.
 
 - **Scene and Mesh Design**
-  Construct the campfire environment by modeling key static elements such as the ground surface, fire pit, wooden benches, stacked firewood, and surrounding objects.
+  To construct the campfire environment by modeling key static elements such as the ground surface, fire pit, wooden benches, stacked firewood, and surrounding objects.
 
 - **Bloom Effect**
-  Enhance the perception of brightness and glow in nighttime scenes, particularly around high-intensity light sources like fire.
+  To enhance the perception of brightness and glow in nighttime scenes, particularly around high-intensity light sources like fire.
 
-## Featuress
+## Features
 
 | Index  | Feature          	| Points | Adapted Points |
 |--------|----------------------|--------|----------------|
