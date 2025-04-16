@@ -21,47 +21,35 @@ title: Project Proposal CS-341 2025
 
 ### What do you want to achieve?
 
-We aim to create a visually compelling and interactive real-time campfire simulation that showcases advanced computer graphics techniques. The centerpiece is a dynamically illuminated environment with realistic fire and smoke effects, accompanied by procedurally generated vegetation using L-Systems. The experience should evoke a naturalistic nighttime scene with rich lighting, ambiance, and depth.
+We aim to create a visually compelling and interactive real-time campfire simulation that showcases some computer graphics techniques. The centerpiece is a dynamically illuminated environment with fire and smoke effects, accompanied by procedurally generated trees using L-Systems. The experience should evoke a nighttime scene with rich lighting, ambiance, and depth.
 
 ---
 
-### How do you plan to do it?
+### How do you plan to do it and which new techniques or algorithms do you plan to add to the regl framework?
 
 We plan to implement the simulation using the **regl** framework for WebGL-based rendering. The project will combine several techniques:
 
-- **Soft Shadows** to realistically diffuse firelight across the scene.
+- **Soft Shadows** to properly show light effect on surrounding objects.
 - **Screen-Space Ambient Occlusion (SSAO)** to add depth and shading detail.
 - **Procedural Texture Generation** for fire and smoke animations.
-- **L-System algorithms** for generating tree structures and organic forms.
-- **Scene modeling** in Blender for static elements like the fire pit and benches.
+- **L-System algorithms** for generating tree structures.
+- **Scene modeling** with Blender for static elements like the fire pit and benches.
 - **Bloom effect** to emphasize the glow and warmth of the campfire.
 
 ---
 
 ### Why do you think it is interesting?
 
-This project is interesting because it blends technical complexity with artistic expression. Fire and natural lighting are notoriously difficult to simulate convincingly, especially in real-time and with procedural variation. By combining physically based lighting, procedural modeling, and real-time shading, we explore how to balance realism and performance. The final product has potential uses in games, simulations, or even meditative or storytelling environments.
-
----
-
-### Which new techniques or algorithms do you plan to add to the regl framework?
-
-We are considering contributing or adapting several advanced techniques to the **regl** ecosystem, depending on their feasibility and compatibility with real-time performance, like:
-
-- **Soft shadow rendering** using variance or PCF (Percentage-Closer Filtering) approaches.
-- **Real-time procedural texture shaders** for animated fire and smoke using noise functions (e.g., Perlin or Worley noise).
-- **L-System interpreters** embedded in GLSL or as a preprocessing step, enabling dynamic generation of tree meshes.
-- **Custom SSAO shader** implementation tailored for real-time rendering in WebGL.
+This project is interesting because it blends technical complexity with artistic expression. Fire and smoke seem difficult to simulate convincingly, especially in real-time and with procedural variation. The L-Systems used in tree generation can use rather simple rules to build a complex system. The shadows and lighting effect can significantly enhance the scene and bring a warm atmosphere.
 
 ---
 
 ### Which are the technical challenges you expect to face?
 
-- **Performance Constraints**: Maintaining real-time frame rates while handling complex lighting and procedural effects.
+- **Performance Constraints**: Maintaining decent frame rates while handling complex lighting and procedural effects.
 - **Fire Simulation**: Creating believable fire and smoke without relying on pre-baked textures.
-- **Shadow Accuracy**: Soft shadows can be expensive and difficult to implement correctly in a physically plausible way.
-- **Procedural Tree Generation**: Balancing visual richness with the limitations of browser-based rendering.
-- **Shader Complexity**: Combining multiple effects (SSAO, bloom, noise-based animation) in a coherent shader pipeline.</br>
+- **Procedural Tree Generation**: Balancing visual richness with the technical limitations.
+- **Shader Complexity**: Combining multiple effects (SSAO, bloom, noise-based animation, etc...) in a coherent shader pipeline.</br>
 
 ## Features
 
