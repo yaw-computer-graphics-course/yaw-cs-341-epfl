@@ -44,9 +44,24 @@
           <ul>
           <li><a href="#abstract" id="toc-abstract">Abstract</a>
           <ul>
-          <li><a href="#objective" id="toc-objective">Objective</a></li>
-          <li><a href="#technical-focus"
-          id="toc-technical-focus">Technical Focus</a></li>
+          <li><a href="#what-do-you-want-to-achieve"
+          id="toc-what-do-you-want-to-achieve">What do you want to
+          achieve?</a></li>
+          <li><a href="#how-do-you-plan-to-do-it"
+          id="toc-how-do-you-plan-to-do-it">How do you plan to do
+          it?</a></li>
+          <li><a href="#why-do-you-think-it-is-interesting"
+          id="toc-why-do-you-think-it-is-interesting">Why do you think
+          it is interesting?</a></li>
+          <li><a
+          href="#which-new-techniques-or-algorithms-do-you-plan-to-add-to-the-regl-framework"
+          id="toc-which-new-techniques-or-algorithms-do-you-plan-to-add-to-the-regl-framework">Which
+          new techniques or algorithms do you plan to add to the regl
+          framework?</a></li>
+          <li><a
+          href="#which-are-the-technical-challenges-you-expect-to-face"
+          id="toc-which-are-the-technical-challenges-you-expect-to-face">Which
+          are the technical challenges you expect to face?</a></li>
           </ul></li>
           <li><a href="#features" id="toc-features">Features</a></li>
           <li><a href="#schedule" id="toc-schedule">Schedule</a></li>
@@ -87,35 +102,77 @@ Stolárik </em>
 </tr>
 </table>
 <h2 id="abstract">Abstract</h2>
-<h3 id="objective">Objective</h3>
-<p>This project aims to create a real-time, interactive campfire
-simulation that emphasizes physically-based lighting and procedurally
-generated content. The central visual element is a fire source, which
-dynamically illuminates a structured environment featuring vegetation
-and procedurally generated trees modeled using L-Systems.</p>
-<h3 id="technical-focus">Technical Focus</h3>
-<p>The implementation will leverage a range of computer graphics
-techniques, including:</p>
+<h3 id="what-do-you-want-to-achieve">What do you want to achieve?</h3>
+<p>We aim to create a visually compelling and interactive real-time
+campfire simulation that showcases advanced computer graphics
+techniques. The centerpiece is a dynamically illuminated environment
+with realistic fire and smoke effects, accompanied by procedurally
+generated vegetation using L-Systems. The experience should evoke a
+naturalistic nighttime scene with rich lighting, ambiance, and
+depth.</p>
+<hr />
+<h3 id="how-do-you-plan-to-do-it">How do you plan to do it?</h3>
+<p>We plan to implement the simulation using the <strong>regl</strong>
+framework for WebGL-based rendering. The project will combine several
+techniques:</p>
 <ul>
-<li><p><strong>Soft Shadows</strong> To simulate realistic light
-diffusion from the fire source, producing natural and physically
-accurate shadow gradients.</p></li>
-<li><p><strong>Screen-Space Ambient Occlusion (SSAO)</strong> To improve
-local shading and depth perception by approximating occlusion
-effects.</p></li>
-<li><p><strong>Procedural Texture Generation (PTG)</strong> To generate
-dynamic fire and smoke textures in real time, allowing for continuous
-variation in particle appearance.</p></li>
-<li><p><strong>L-System-Based Procedural Tree Generation</strong> To use
-algorithmic rules to model tree geometry, providing scalable and varied
-vegetation for the environment.</p></li>
-<li><p><strong>Scene and Mesh Design</strong> To construct the campfire
-environment by modeling key static elements such as the ground surface,
-fire pit, wooden benches, stacked firewood, and surrounding
-objects.</p></li>
-<li><p><strong>Bloom Effect</strong> To enhance the perception of
-brightness and glow in nighttime scenes, particularly around
-high-intensity light sources like fire.</p></li>
+<li><strong>Soft Shadows</strong> to realistically diffuse firelight
+across the scene.</li>
+<li><strong>Screen-Space Ambient Occlusion (SSAO)</strong> to add depth
+and shading detail.</li>
+<li><strong>Procedural Texture Generation</strong> for fire and smoke
+animations.</li>
+<li><strong>L-System algorithms</strong> for generating tree structures
+and organic forms.</li>
+<li><strong>Scene modeling</strong> in Blender for static elements like
+the fire pit and benches.</li>
+<li><strong>Bloom effect</strong> to emphasize the glow and warmth of
+the campfire.</li>
+</ul>
+<hr />
+<h3 id="why-do-you-think-it-is-interesting">Why do you think it is
+interesting?</h3>
+<p>This project is interesting because it blends technical complexity
+with artistic expression. Fire and natural lighting are notoriously
+difficult to simulate convincingly, especially in real-time and with
+procedural variation. By combining physically based lighting, procedural
+modeling, and real-time shading, we explore how to balance realism and
+performance. The final product has potential uses in games, simulations,
+or even meditative or storytelling environments.</p>
+<hr />
+<h3
+id="which-new-techniques-or-algorithms-do-you-plan-to-add-to-the-regl-framework">Which
+new techniques or algorithms do you plan to add to the regl
+framework?</h3>
+<p>We are considering contributing or adapting several advanced
+techniques to the <strong>regl</strong> ecosystem, depending on their
+feasibility and compatibility with real-time performance, like:</p>
+<ul>
+<li><strong>Soft shadow rendering</strong> using variance or PCF
+(Percentage-Closer Filtering) approaches.</li>
+<li><strong>Real-time procedural texture shaders</strong> for animated
+fire and smoke using noise functions (e.g., Perlin or Worley
+noise).</li>
+<li><strong>L-System interpreters</strong> embedded in GLSL or as a
+preprocessing step, enabling dynamic generation of tree meshes.</li>
+<li><strong>Custom SSAO shader</strong> implementation tailored for
+real-time rendering in WebGL.</li>
+</ul>
+<hr />
+<h3 id="which-are-the-technical-challenges-you-expect-to-face">Which are
+the technical challenges you expect to face?</h3>
+<ul>
+<li><strong>Performance Constraints</strong>: Maintaining real-time
+frame rates while handling complex lighting and procedural effects.</li>
+<li><strong>Fire Simulation</strong>: Creating believable fire and smoke
+without relying on pre-baked textures.</li>
+<li><strong>Shadow Accuracy</strong>: Soft shadows can be expensive and
+difficult to implement correctly in a physically plausible way.</li>
+<li><strong>Procedural Tree Generation</strong>: Balancing visual
+richness with the limitations of browser-based rendering.</li>
+<li><strong>Shader Complexity</strong>: Combining multiple effects
+(SSAO, bloom, noise-based animation) in a coherent shader
+pipeline.</br></li>
 </ul>
 <h2 id="features">Features</h2>
 <table>
