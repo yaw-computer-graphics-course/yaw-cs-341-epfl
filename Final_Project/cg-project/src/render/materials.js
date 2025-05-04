@@ -53,8 +53,11 @@ class DiffuseMaterial extends Material {
 }
 
 class ReflectiveMaterial extends Material {
-    constructor(){
+    constructor({
+        texture = default_texture
+    }){
         super()
+        this.texture = texture;
         this.properties.push("reflective");
     }
 }
@@ -90,6 +93,14 @@ class TerrainMaterial extends Material {
  */
 export const sunset_sky = new BackgroundMaterial({
     texture: 'kloppenheim_07_puresky_blur.jpg'
+});
+
+export const sunset_sky2 = new BackgroundMaterial({
+    texture: 'kloppenheim_02_puresky.jpg'
+});
+
+export const mirror = new ReflectiveMaterial({
+    texture: 'marble.png'
 });
 
 export const gray = new DiffuseMaterial({

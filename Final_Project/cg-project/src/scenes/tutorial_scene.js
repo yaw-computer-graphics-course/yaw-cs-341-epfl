@@ -10,6 +10,7 @@ import {
 } from "../cg_libraries/cg_web.js";
 import { Scene } from "./scene.js";
 import { ResourceManager } from "../scene_resources/resource_manager.js";
+import { vec3 } from "../../lib/gl-matrix_3.3.0/esm/index.js";
 
 export class TutorialScene extends Scene {
 
@@ -30,14 +31,37 @@ export class TutorialScene extends Scene {
    * Scene setup
    */
   initialize_scene(){
+    const monkey = {
+      mesh_reference: "suzanne.obj",
+      material: MATERIALS.mirror,
+      translation: [0, 0, 0],
+      scale: [1, 1, 1],
+    };
+    this.actors['monkey'] = monkey;
+    this.resource_manager.add_procedural_mesh("mesh_sphere_env_map", cg_mesh_make_uv_sphere(16));
+    this.objects.push(monkey);
+    
 
-    // TODO
+    const object = {
+      translation: [1, 1, 1],
+      scale: [1, 1, 1],
+      mesh_reference: "10680_Dog_v2.obj",
+      material: MATERIALS.terrain
+    }
 
+    this.objects.push(object)
+    this.objects.push({
+      translation: [0, 0, 0],
+      scale: [80., 80., 80.],
+      mesh_reference: 'mesh_sphere_env_map',
+      material: MATERIALS.sunset_sky
+    });
+    
     this.lights.push({
       position : [0.0 , -2.0, 2.5],
       color: [1.0, 1.0, 0.9]
     });
-
+    this.ui_params.is_mirrored = true;
   }
 
   /**
@@ -45,8 +69,12 @@ export class TutorialScene extends Scene {
    */
   initialize_actor_actions(){
 
-    // TODO
-
+    for (const name in this.actors) {
+      const actor = this.actors[name];
+      actor.evolve = (dt) => { 
+        vec3.add(actor.translation, actor.translation, [0, 0, 0]);
+      };
+    }
   }
 
   /**
@@ -56,7 +84,22 @@ export class TutorialScene extends Scene {
   initialize_ui_params(){
 
     // TODO
+    create_hotkey_action("Preset view", "1", () => {
+      this.camera.set_preset_view({
+        distance_factor : 0.2,
+        angle_z : -Math.PI / 2,
+        angle_y : 0,
+        look_at : [0, 0, 0]
+      })
+    });
 
+    create_slider("Position", [0, 20], (i) => {
+      const monkey = this.actors['monkey'] 
+      vec3.scale(monkey.translation, [1, 1, 1], i * 0.1)
+    })
+    create_button_with_hotkey("Mirror", 'm', () => {
+      this.ui_params.is_mirrored = !this.ui_params.is_mirrored;
+    })
   }
 
 }

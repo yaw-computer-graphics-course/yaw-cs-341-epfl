@@ -136,7 +136,9 @@ export class ResourceManager{
     textures_to_load(){
         return [
             'kloppenheim_07_puresky_blur.jpg',
+            'kloppenheim_02_puresky.jpg',
             'pine.png',
+            'marble.png',
           ];
     }
 
@@ -152,12 +154,15 @@ export class ResourceManager{
             'noise.vert.glsl', 'noise.frag.glsl',
             `buffer_to_screen.vert.glsl`, `buffer_to_screen.frag.glsl`,
             'terrain.vert.glsl', 'terrain.frag.glsl',
+            'normals.vert.glsl', 'normals.frag.glsl',
           ];
     }
 
     meshes_to_load() {
         return [
         "pine.obj",
+        "suzanne.obj",
+        "10680_Dog_v2.obj"
       ];
     }
 
