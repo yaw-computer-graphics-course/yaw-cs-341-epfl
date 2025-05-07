@@ -87,18 +87,22 @@ title: Milestone Report CS-341 2025
 
 2. Show some preliminary results.
 
-	![Terrain scene without the Bloom effect.](images/bloom-before.png){width="300px"}
-	![Terrain scene with the Bloom effect.](images/bloom-after.png){width="300px"}
-	![Generated tree using L-Systems.](images/generated-tree.png){width="300px"}
+	| ![Terrain scene without the Bloom effect.](images/bloom-before.png){height="250px"} | ![Terrain scene with the Bloom effect.](images/bloom-after.png){height="250px"} |
+	|----------------------------------------------------------|---------------------------------------------------------------|
+	| *Figure 1: Terrain scene before applying the Bloom effect.* | *Figure 2: Terrain scene with Bloom effect using Gaussian blur.* |
 
+	| ![Generated tree using L-Systems.](images/generated-tree.png){width="318px"} | ![Terrain scene of a floating island.](images/plateform.jpg){width="300px"} |
+	|----------------------------------------------------------|---------------------------------------------------------------|
+	| *Figure 3: A tree generated using 3D L-Systems with cylindrical mesh branches.* | *Figure 4: Terrain scene of a floating island mesh.* |
+
+	</br></br>
 	Briefly describe the results you obtained until now and the overall state of the project.
 
-	We've had quite a few hiccups at the start of this project, the structure of the project seemed a bit complicated. After some time getting used to it, we managed to implement some things, although not completely. The L-Systems generated trees seem a bit lack luster, the lines are drawn as cylinder meshes but it quickly gets computationnally expensive after a few iterations. </br>
+	We've had quite a few hiccups at the start of this project, the structure of the project seemed a bit complicated. After some time getting used to it, we managed to implement some things, although not completely. The L-Systems generated trees seem a bit lack luster, the lines are drawn as cylinder meshes but it quickly gets computationnally expensive after a few iterations.</br>
 	
 	The Bloom effect implementation was confusing at first since it is a post-processing effect, so its shader renderer code is unlike the normals' one used in the tutorial. For now, we managed to implement a version using the Gaussian blur, but we still have some testing and adjustments to make.</br>
 	
 	We also managed to create a floating island on top of which we'll put together the whole scene. For that, we took the mesh of the PG1_noise assignment and reverted the z component, which gave us a flipped mountain mesh. We then shifted it to the top and added a plane mesh to avoid having them separated and give the impression of an island.</br>
-
 
 4. Report the number of hours each team member worked on the project.
 

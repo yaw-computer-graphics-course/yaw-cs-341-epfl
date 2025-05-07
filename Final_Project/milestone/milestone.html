@@ -53,11 +53,7 @@
 <h1 id="project-title">Project Title</h1>
 <h2 id="progress-summary">Progress Summary</h2>
 <ol type="1">
-<li><p>Summarize what you have accomplished so far.</p>
-<p>Enter your features from the proposal in the table below. For each
-feature, indicate whether you completed the implementation, it is work
-in progress, or you have to start it.</p>
-<table>
+<li><table>
 <thead>
 <tr>
 <th>
@@ -74,18 +70,18 @@ in progress, or you have to start it.</p>
 <tbody>
 <tr>
 <td>
-<p>Feature 1</p>
+<p>L-Systems</p>
 </td>
 <td>
-<p>5</p>
+<p>10</p>
 </td>
-<td style="background-color: #d4edda;">
-<p>Completed</p>
+<td style="background-color: #fff3cd;">
+<p>Work in progress</p>
 </td>
 </tr>
 <tr>
 <td>
-<p>Feature 2</p>
+<p>Bloom</p>
 </td>
 <td>
 <p>5</p>
@@ -96,19 +92,18 @@ in progress, or you have to start it.</p>
 </tr>
 <tr>
 <td>
-<p>Feature 3</p>
+<p>Mesh/Scene design</p>
 </td>
 <td>
-<p>10</p>
+<p>5</p>
 </td>
-<td style="background-color: #d4edda;">
-<p>Completed</p>
+<td style="background-color: #fff3cd;">
+<p>Work in progress</p>
 </td>
 </tr>
 <tr>
-<tr>
 <td>
-<p>Feature 4</p>
+<p>SSAO</p>
 </td>
 <td>
 <p>10</p>
@@ -117,22 +112,30 @@ in progress, or you have to start it.</p>
 <p>Upcoming</p>
 </td>
 </tr>
+<tr>
+<td>
+<p>Soft Shadows</p>
+</td>
+<td>
+<p>10</p>
+</td>
+<td style="background-color: #cce5ff;">
+<p>Upcoming</p>
+</td>
 </tr>
 <tr>
 <td>
-<p>Feature 5</p>
+<p>PTG</p>
 </td>
 <td>
-<p>20</p>
+<p>10</p>
 </td>
-<td style="background-color: #fff3cd;">
-<p>Work in progress</p>
+<td style="background-color: #cce5ff;">
+<p>Upcoming</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>Add a brief summary of the goals achieved each week. A few words per
-cell are sufficient.</p>
 <table>
 <caption>
 <p>Achieved Goals</p>
@@ -141,13 +144,13 @@ cell are sufficient.</p>
 <th>
 </th>
 <th>
-<p>Name 1</p>
+<p>Adam Bekkar</p>
 </th>
 <th>
-<p>Name 2</p>
+<p>Walid Ait Said</p>
 </th>
 <th>
-<p>Name 3</p>
+<p>Youssef Benhayoun Sadafi</p>
 </th>
 </tr>
 <tr>
@@ -155,10 +158,13 @@ cell are sufficient.</p>
 <p>Week 1 (Proposal)</p>
 </td>
 <td>
+<p>Write detailed proposal</p>
 </td>
 <td>
+<p>Adapt points and find relevant resources</p>
 </td>
 <td>
+<p>Find ideas and corresponding features</p>
 </td>
 </tr>
 <tr style="background-color: #f0f0f0;">
@@ -177,10 +183,14 @@ cell are sufficient.</p>
 <p>Week 3</p>
 </td>
 <td>
+<p>Try to find rules for 3D L-Systems and generate terrain structure</p>
 </td>
 <td>
+<p>Look into Post processing lighting effects and start Bloom shader
+code</p>
 </td>
 <td>
+<p>Look into L-systems and procedural generation</p>
 </td>
 </tr>
 <tr>
@@ -188,45 +198,79 @@ cell are sufficient.</p>
 <p>Week 4</p>
 </td>
 <td>
+<p>Work on Bloom implementation</p>
 </td>
 <td>
+<p>Work on Bloom implementation</p>
 </td>
 <td>
+<p>Work on Bloom implementation and start tree generation code</p>
 </td>
 </tr>
 </table></li>
 <li><p>Show some preliminary results.</p>
-<figure>
-<img src="images/demo.jpg" width="300"
-alt="An image showing your progress." />
-<figcaption aria-hidden="true">An image showing your
-progress.</figcaption>
-</figure>
-<figure>
-<video src="videos/demo.mp4" width="500" controls=""><a
-href="videos/demo.mp4">A video showing your progress.</a></video>
-<figcaption aria-hidden="true">A video showing your
-progress.</figcaption>
-</figure>
-<p>Briefly describe the results you obtained until now and the overall
-state of the project.</p>
-<p>TODO</p></li>
-<li><p>Optionally present the validation of any feature you have already
-implemented. This is not mandatory, but can help you get useful feedback
-for the final report: feature validation will be the main component
-determining your grade.</p>
-<p>Follow the following template for each feature you want to
-validate.</p>
-<ul>
-<li><p>Feature Name</p>
-<ul>
-<li><p>Implementation</p>
-<p>Briefly describe how you implemented the feature.</p></li>
-<li><p>Validation</p>
-<p>Provide evidence (plots, screenshots, animations, etc.) that the
-feature works as expected.</p></li>
-</ul></li>
-</ul></li>
+<table>
+<colgroup>
+<col style="width: 47%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr>
+<th><img src="images/bloom-before.png" height="250"
+alt="Terrain scene without the Bloom effect." /></th>
+<th><img src="images/bloom-after.png" height="250"
+alt="Terrain scene with the Bloom effect." /></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Figure 1: Terrain scene before applying the Bloom
+effect.</em></td>
+<td><em>Figure 2: Terrain scene with Bloom effect using Gaussian
+blur.</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col style="width: 47%" />
+<col style="width: 52%" />
+</colgroup>
+<thead>
+<tr>
+<th><img src="images/generated-tree.png" width="318"
+alt="Generated tree using L-Systems." /></th>
+<th><img src="images/plateform.jpg" width="300"
+alt="Terrain scene of a floating island." /></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Figure 3: A tree generated using 3D L-Systems with cylindrical
+mesh branches.</em></td>
+<td><em>Figure 4: Terrain scene of a floating island mesh.</em></td>
+</tr>
+</tbody>
+</table>
+<p></br></br> Briefly describe the results you obtained until now and
+the overall state of the project.</p>
+<p>We’ve had quite a few hiccups at the start of this project, the
+structure of the project seemed a bit complicated. After some time
+getting used to it, we managed to implement some things, although not
+completely. The L-Systems generated trees seem a bit lack luster, the
+lines are drawn as cylinder meshes but it quickly gets computationnally
+expensive after a few iterations.</br></p>
+<p>The Bloom effect implementation was confusing at first since it is a
+post-processing effect, so its shader renderer code is unlike the
+normals’ one used in the tutorial. For now, we managed to implement a
+version using the Gaussian blur, but we still have some testing and
+adjustments to make.</br></p>
+<p>We also managed to create a floating island on top of which we’ll put
+together the whole scene. For that, we took the mesh of the PG1_noise
+assignment and reverted the z component, which gave us a flipped
+mountain mesh. We then shifted it to the top and added a plane mesh to
+avoid having them separated and give the impression of an
+island.</br></p></li>
 <li><p>Report the number of hours each team member worked on the
 project.</p>
 <table>
@@ -237,13 +281,13 @@ project.</p>
 <th>
 </th>
 <th>
-<p>Name 1</p>
+<p>Adam Bekkar</p>
 </th>
 <th>
-<p>Name 2</p>
+<p>Walid Ait Said</p>
 </th>
 <th>
-<p>Name 3</p>
+<p>Youssef Benhayoun Sadafi</p>
 </th>
 </tr>
 <tr>
@@ -251,10 +295,13 @@ project.</p>
 <p>Week 1 (Proposal)</p>
 </td>
 <td>
+<p>5</p>
 </td>
 <td>
+<p>5</p>
 </td>
 <td>
+<p>5</p>
 </td>
 </tr>
 <tr style="background-color: #f0f0f0;">
@@ -273,10 +320,13 @@ project.</p>
 <p>Week 3</p>
 </td>
 <td>
+<p>10</p>
 </td>
 <td>
+<p>10</p>
 </td>
 <td>
+<p>10</p>
 </td>
 </tr>
 <tr>
@@ -284,23 +334,38 @@ project.</p>
 <p>Week 4</p>
 </td>
 <td>
+<p>16</p>
 </td>
 <td>
+<p>16</p>
 </td>
 <td>
+<p>16</p>
 </td>
 </tr>
 </table></li>
 <li><p>Is the project progressing as expected? Was your workload
 estimate correct? Critically reflect on your work plan and assess if you
 are on track.</p>
-<p>TODO</p></li>
+<p>The progression thus far is a bit underwhelming. It was harder than
+we thought mainly because the project is unguided so each time we want
+to implement something new we don’t know how to start, so hours and
+hours go into research and reading documentation. We also had to
+backtrack multiple times because the path we were taking wasn’t leading
+anywhere.</p>
+<p>Thus far, we are progressively getting the idea of how things should
+be structured and are still motivated to continue the
+adventure.</p></li>
 </ol>
 <h2 id="schedule-update">Schedule Update</h2>
 <ol type="1">
 <li><p>Acknowledge any delays or unexpected issues, and motivate
 proposed changes to the schedule, if needed.</p>
-<p>TODO</p></li>
+<p>We have a bit of delay regarding the schedule we had in mind, that
+can be a bit different from the one in the proposal. The reason for
+that, as stated above, is that we didn’t expect the difficulty of
+implementing a feature without being guided and how much time can be
+lost in backtracking from ideas that lead nowhere.</p></li>
 <li><p>Present the work plan for the remaining weeks.</p>
 <table>
 <caption>
@@ -310,13 +375,13 @@ proposed changes to the schedule, if needed.</p>
 <th>
 </th>
 <th>
-<p>Name 1</p>
+<p>Adam Bekkar</p>
 </th>
 <th>
-<p>Name 2</p>
+<p>Walid Ait Said</p>
 </th>
 <th>
-<p>Name 3</p>
+<p>Youssef Benhayoun Sadafi</p>
 </th>
 </tr>
 <tr>
@@ -324,10 +389,13 @@ proposed changes to the schedule, if needed.</p>
 <p>Week 5</p>
 </td>
 <td>
+<p>Look into lighting effetcs</p>
 </td>
 <td>
+<p>Finalize Bloom effect and work on mesh and scene design</p>
 </td>
 <td>
+<p>Continue on tree generation and look into fire and smoke textures</p>
 </td>
 </tr>
 <tr>
@@ -335,10 +403,13 @@ proposed changes to the schedule, if needed.</p>
 <p>Week 6</p>
 </td>
 <td>
+<p>Start implementing shaders for ambient occlusion</p>
 </td>
 <td>
+<p>Finalize the scene to be showcased and help with SSAO</p>
 </td>
 <td>
+<p>Work on the fire animation</p>
 </td>
 </tr>
 <tr>
@@ -346,10 +417,13 @@ proposed changes to the schedule, if needed.</p>
 <p>Week 7</p>
 </td>
 <td>
+<p>Edit the video to be showcased</p>
 </td>
 <td>
+<p>Implement UI and Record the video</p>
 </td>
 <td>
+<p>Write a detailed report</p>
 </td>
 </tr>
 </table></li>
