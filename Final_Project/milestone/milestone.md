@@ -7,10 +7,7 @@ title: Milestone Report CS-341 2025
 
 ## Progress Summary
 
-1. Summarize what you have accomplished so far.
-
-	Enter your features from the proposal in the table below. For each feature, indicate whether you completed the implementation, it is work in progress, or you have to start it.
-
+1.
 	<table>
 		<thead>
 			<tr>
@@ -21,50 +18,51 @@ title: Milestone Report CS-341 2025
 		</thead>
 		<tbody>
 			<tr>
-				<td>Feature 1</td>
-				<td>5</td>
-				<td style="background-color: #d4edda;">Completed</td>
-			</tr>
-			<tr>
-				<td>Feature 2</td>
-				<td>5</td>
-				<td style="background-color: #fff3cd;">Work in progress</td>
-			</tr>
-			<tr>
-				<td>Feature 3</td>
+				<td>L-Systems</td>
 				<td>10</td>
-				<td style="background-color: #d4edda;">Completed</td>
-			</tr>
-			<tr>
-				<tr>
-					<td>Feature 4</td>
-					<td>10</td>
-					<td style="background-color: #cce5ff;">Upcoming</td>
-				</tr>
-			</tr>
-			<tr>
-				<td>Feature 5</td>
-				<td>20</td>
 				<td style="background-color: #fff3cd;">Work in progress</td>
+			</tr>
+			<tr>
+				<td>Bloom</td>
+				<td>5</td>
+				<td style="background-color: #fff3cd;">Work in progress</td>
+			</tr>
+			<tr>
+				<td>Mesh/Scene design</td>
+				<td>5</td>
+				<td style="background-color: #fff3cd;">Work in progress</td>
+			</tr>
+			<tr>
+				<td>SSAO</td>
+				<td>10</td>
+				<td style="background-color: #cce5ff;">Upcoming</td>
+			</tr>
+			<tr>
+				<td>Soft Shadows</td>
+				<td>10</td>
+				<td style="background-color: #cce5ff;">Upcoming</td>
+			</tr>
+			<tr>
+				<td>PTG</td>
+				<td>10</td>
+				<td style="background-color: #cce5ff;">Upcoming</td>
 			</tr>
 		</tbody>
 	</table>
-
-	Add a brief summary of the goals achieved each week. A few words per cell are sufficient.
 
 	<table>
 		<caption>Achieved Goals</caption>
 		<tr>
 			<th></th>
-			<th>Name 1</th>
-			<th>Name 2</th>
-			<th>Name 3</th>
+			<th>Adam Bekkar</th>
+			<th>Walid Ait Said</th>
+			<th>Youssef Benhayoun Sadafi</th>
 		</tr>
 		<tr>
 			<td>Week 1 (Proposal)</td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>Write detailed proposal</td>
+			<td>Adapt points and find relevant resources</td>
+			<td>Find ideas and corresponding features</td>
 		</tr>
 		<tr style="background-color: #f0f0f0;">
 			<td>Week 2 (Easter)</td>
@@ -74,43 +72,32 @@ title: Milestone Report CS-341 2025
 		</tr>
 		<tr>
 			<td>Week 3</td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>Try to find rules for 3D L-Systems and generate terrain structure</td>
+			<td>Look into Post processing lighting effects and start Bloom shader code </td>
+			<td>Look into L-systems and procedural generation</td>
 		</tr>
 		<tr>
 			<td>Week 4</td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>Work on Bloom implementation</td>
+			<td>Work on Bloom implementation</td>
+			<td>Work on Bloom implementation and start tree generation code</td>
 		</tr>
 	</table>
 
 
 2. Show some preliminary results.
 
-	![An image showing your progress.](images/demo.jpg){width="300px"}
-
-	![A video showing your progress.](videos/demo.mp4){width="500px"}
+	![Terrain scene without the Bloom effect.](images/bloom-before.png){width="300px"}
+	![Terrain scene with the Bloom effect.](images/bloom-after.png){width="300px"}
+	![Generated tree using L-Systems.](images/generated-tree.png){width="300px"}
 
 	Briefly describe the results you obtained until now and the overall state of the project.
 
-	TODO
-
-
-3. Optionally present the validation of any feature you have already implemented. This is not mandatory, but can help you get useful feedback for the final report: feature validation will be the main component determining your grade. 
-
-	Follow the following template for each feature you want to validate.
-
-	- Feature Name
-
-		- Implementation
-
-			Briefly describe how you implemented the feature.
-
-		- Validation
-
-			Provide evidence (plots, screenshots, animations, etc.) that the feature works as expected.
+	We've had quite a few hiccups at the start of this project, the structure of the project seemed a bit complicated. After some time getting used to it, we managed to implement some things, although not completely. The L-Systems generated trees seem a bit lack luster, the lines are drawn as cylinder meshes but it quickly gets computationnally expensive after a few iterations. </br>
+	
+	The Bloom effect implementation was confusing at first since it is a post-processing effect, so its shader renderer code is unlike the normals' one used in the tutorial. For now, we managed to implement a version using the Gaussian blur, but we still have some testing and adjustments to make.</br>
+	
+	We also managed to create a floating island on top of which we'll put together the whole scene. For that, we took the mesh of the PG1_noise assignment and reverted the z component, which gave us a flipped mountain mesh. We then shifted it to the top and added a plane mesh to avoid having them separated and give the impression of an island.</br>
 
 
 4. Report the number of hours each team member worked on the project.
@@ -119,15 +106,15 @@ title: Milestone Report CS-341 2025
 		<caption>Worked Hours</caption>
 		<tr>
 			<th></th>
-			<th>Name 1</th>
-			<th>Name 2</th>
-			<th>Name 3</th>
+			<th>Adam Bekkar</th>
+			<th>Walid Ait Said</th>
+			<th>Youssef Benhayoun Sadafi</th>
 		</tr>
 		<tr>
 			<td>Week 1 (Proposal)</td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>5</td>
+			<td>5</td>
+			<td>5</td>
 		</tr>
 		<tr style="background-color: #f0f0f0;">
 			<td>Week 2 (Easter)</td>
@@ -137,27 +124,29 @@ title: Milestone Report CS-341 2025
 		</tr>
 		<tr>
 			<td>Week 3</td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>10</td>
+			<td>10</td>
+			<td>10</td>
 		</tr>
 		<tr>
 			<td>Week 4</td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>16</td>
+			<td>16</td>
+			<td>16</td>
 		</tr>
 	</table>
 
 5. Is the project progressing as expected? Was your workload estimate correct? Critically reflect on your work plan and assess if you are on track.
 
-	TODO
+	The progression thus far is a bit underwhelming. It was harder than we thought mainly because the project is unguided so each time we want to implement something new we don't know how to start, so hours and hours go into research and reading documentation. We also had to backtrack multiple times because the path we were taking wasn't leading anywhere.
+
+	Thus far, we are progressively getting the idea of how things should be structured and are still motivated to continue the adventure.
 
 ## Schedule Update
 
 1. Acknowledge any delays or unexpected issues, and motivate proposed changes to the schedule, if needed.
 
-	TODO
+	We have a bit of delay regarding the schedule we had in mind, that can be a bit different from the one in the proposal. The reason for that, as stated above, is that we didn't expect the difficulty of implementing a feature without being guided and how much time can be lost in backtracking from ideas that lead nowhere.
 
 2. Present the work plan for the remaining weeks.
 
@@ -165,25 +154,25 @@ title: Milestone Report CS-341 2025
 		<caption>Updated Schedule</caption>
 		<tr>
 			<th></th>
-			<th>Name 1</th>
-			<th>Name 2</th>
-			<th>Name 3</th>
+			<th>Adam Bekkar</th>
+			<th>Walid Ait Said</th>
+			<th>Youssef Benhayoun Sadafi</th>
 		</tr>
 		<tr>
 			<td>Week 5</td>
-			<td></td>
+			<td>Look into lighting effetcs</td>
 			<td></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>Week 6</td>
-			<td></td>
+			<td>Start implementing shaders for ambient occlusion</td>
 			<td></td>
 			<td></td>
 		</tr>
 		<tr>
 			<td>Week 7</td>
-			<td></td>
+			<td>Edit the video to be showcased</td>
 			<td></td>
 			<td></td>
 		</tr>
