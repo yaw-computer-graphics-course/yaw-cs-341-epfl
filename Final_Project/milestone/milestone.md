@@ -161,19 +161,19 @@ title: Milestone Report CS-341 2025
 		<tr>
 			<td>Week 5</td>
 			<td>Look into lighting effetcs</td>
-			<td></td>
-			<td></td>
+			<td>Finalize Bloom effect and work on mesh and scene design</td>
+			<td>Continue on tree generation and look into fire and smoke textures</td>
 		</tr>
 		<tr>
 			<td>Week 6</td>
 			<td>Start implementing shaders for ambient occlusion</td>
-			<td></td>
-			<td></td>
+			<td>Finalize the scene to be showcased and help with SSAO</td>
+			<td>Work on the fire animation</td>
 		</tr>
 		<tr>
 			<td>Week 7</td>
 			<td>Edit the video to be showcased</td>
-			<td></td>
-			<td></td>
+			<td>Implement UI and Record the video</td>
+			<td>Write a detailed report</td>
 		</tr>
 	</table>
