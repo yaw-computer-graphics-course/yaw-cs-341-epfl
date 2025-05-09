@@ -2,7 +2,7 @@
 import { TurntableCamera } from "../scene_resources/camera.js"
 import * as MATERIALS from "../render/materials.js"
 import { cg_mesh_make_uv_sphere } from "../cg_libraries/cg_mesh.js"
-import { terrain_build_mesh } from "../scene_resources/terrain_generation.js"
+import { terrain_build_mesh, ground_build_mesh } from "../scene_resources/terrain_generation.js"
 import { noise_functions } from "../render/shader_renderers/noise_sr.js"
 import { Scene } from "./scene.js"
 import { vec3 } from "../../lib/gl-matrix_3.3.0/esm/index.js"
@@ -51,10 +51,12 @@ export class DemoScene extends Scene {
       noise_functions.FBM_for_terrain, 
       {width: 96, height: 96, mouse_offset: [-12.24, 8.15]}
     );
-    this.WATER_LEVEL = -0.03125;
+    this.GROUND_LEVEL = 0.;
     this.TERRAIN_SCALE = [10,10,10];
-    const terrain_mesh = terrain_build_mesh(height_map, this.WATER_LEVEL);
+    const terrain_mesh = terrain_build_mesh(height_map, this.GROUND_LEVEL);
+    const ground_mesh = ground_build_mesh(height_map, this.GROUND_LEVEL);
     this.resource_manager.add_procedural_mesh("mesh_terrain", terrain_mesh);
+    this.resource_manager.add_procedural_mesh("mesh_ground", ground_mesh);
     this.resource_manager.add_procedural_mesh("mesh_sphere_env_map", cg_mesh_make_uv_sphere(16));
 
     /*
@@ -361,4 +363,3 @@ function pseudo_random_int(index) {
   index = (index * 48271) % 2147483647; // Prime modulus
   return (index & 0x7FFFFFFF); 
 }
-

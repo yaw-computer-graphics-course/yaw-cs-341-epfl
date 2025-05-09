@@ -107,6 +107,26 @@ export const pine = new DiffuseMaterial({
     shininess: 0.5
 });
 
+export const rock1 = new DiffuseMaterial({
+    texture: 'rock_texture_1.jpg',
+    shininess: 20.0
+});
+
+export const rock2 = new DiffuseMaterial({
+    texture: 'rock_texture_2.jpg',
+    shininess: 20.0
+});
+
+export const rock3 = new DiffuseMaterial({
+    texture: 'rock_texture_3.jpg',
+    shininess: 20.0
+});
+
+export const rock4 = new DiffuseMaterial({
+    texture: 'rock_texture_4.jpg',
+    shininess: 20.0
+});
+
 export const terrain = new TerrainMaterial({
     water_color: [0.29, 0.51, 0.62],
     grass_color: [0.33, 0.43, 0.18],

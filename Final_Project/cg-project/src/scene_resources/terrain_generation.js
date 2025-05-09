@@ -1,85 +1,136 @@
-
 import {vec2, vec3, vec4, mat2, mat3, mat4} from "../../lib/gl-matrix_3.3.0/esm/index.js"
 
 /**
  * Generate procedurally a terrain mesh using some procedural noise
- * @param {*} height_map a buffer texture that contains heigth values 
- * @param {*} WATER_LEVEL 
+ * @param {*} height_map a buffer texture that contains height values 
+ * @param {*} GROUND_LEVEL 
  * @returns 
  */
-export function terrain_build_mesh(height_map, WATER_LEVEL) {
+export function terrain_build_mesh(height_map, GROUND_LEVEL) {
 
-	const grid_width = height_map.width;
-	const grid_height = height_map.height;
+    const grid_width = height_map.width;
+    const grid_height = height_map.height;
 
-	const vertices = [];
-	const normals = [];
-	const faces = [];
+    const vertices = [];
+    const normals = [];
+    const faces = [];
+    const tex_coords = [];
 
-	// Map a 2D grid index (x, y) into a 1D index into the output vertex array.
-	function xy_to_v_index(x, y) {
-		return x + y*grid_width;
-	}
+    function xy_to_v_index(x, y) {
+        return x + y * grid_width;
+    }
 
-	for(let gy = 0; gy < grid_height; gy++) {
-		for(let gx = 0; gx < grid_width; gx++) {
-			const idx = xy_to_v_index(gx, gy);
-			let elevation = height_map.get(gx, gy) - 0.5; // we put the value between 0...1 so that it could be stored in a non-float texture on older browsers/GLES3, the -0.5 brings it back to -0.5 ... 0.5
+    for (let gy = 0; gy < grid_height; gy++) {
+        for (let gx = 0; gx < grid_width; gx++) {
+            const idx = xy_to_v_index(gx, gy);
+            let elevation = height_map.get(gx, gy) - 0.5;
 
-			// normal as finite difference of the height map
-			// dz/dx = (h(x+dx) - h(x-dx)) / (2 dx)
-			normals[idx] = vec3.normalize([0, 0, 0], [
-				-(height_map.get(gx+1, gy) - height_map.get(gx-1, gy)) / (2. / grid_width),
-				-(height_map.get(gx, gy+1) - height_map.get(gx, gy-1)) / (2. / grid_height),
-				1.,
-			]);
+			const nx = (gx / (grid_width - 1)) * 2 - 1;
+            const ny = (gy / (grid_height - 1)) * 2 - 1;
 
-			/*
-			Generate the displaced terrain vertex corresponding to integer grid location (gx, gy). 
-			The height (Z coordinate) of this vertex is determined by height_map.
-			If the point falls below WATER_LEVEL:
-			* it should be clamped back to WATER_LEVEL.
-			* the normal should be [0, 0, 1]
-	
-			The XY coordinates are calculated so that the full grid covers the square [-0.5, 0.5]^2 in the XY plane.
-			*/
+            // Calculate distance from center [0-1] range
+            const distFromCenter = Math.sqrt(nx*nx + ny*ny);
 
-			const vx = 1.0/grid_width * gx -0.5;
-			const vy = 1.0/grid_height * gy -0.5;
-			let vz = 0.;
-			if (elevation <= WATER_LEVEL) {
-				vz = WATER_LEVEL;
-				normals[idx] = [0,0,1];
-			}
-			else{
-				vz = elevation;
-			}
+            const vx = 1.0/grid_width * gx -0.5;
+            const vy = 1.0/grid_height * gy -0.5;
+			
+			// Check if we are at the boundary
+            if (gx <= 0 || gx >= grid_width - 1 || gy <= 0 || gy >= grid_height - 1) {
+                elevation = GROUND_LEVEL;
+				normals[idx] = [0, 0, -1]; // TODO: check these values
+            } else {
+                normals[idx] = vec3.normalize([0, 0, 0], [
+                    -(height_map.get(gx+1, gy) - height_map.get(gx-1, gy)) / (2. / grid_width),
+                    -(height_map.get(gx, gy+1) - height_map.get(gx, gy-1)) / (2. / grid_height),
+                    1.,
+                ]);
+            }
 
-			vertices[idx] = [vx, vy, vz];
-		}
-	}
+			const vz = Math.min(0.5 - 1/(distFromCenter + 1) - Math.abs(1.5*elevation), GROUND_LEVEL) - 0.001;
+            vertices[idx] = [vx, vy, vz];
+			const UV_SCALE = 1.0;
+			tex_coords[idx] = [gx * UV_SCALE / (grid_width - 1), gy * UV_SCALE / (grid_height - 1)];
+        }
+    }
 
-	for(let gy = 0; gy < grid_height - 1; gy++) {
-		for(let gx = 0; gx < grid_width - 1; gx++) {
-			/* 
-			Triangulate the grid cell whose lower lefthand corner is grid index (gx, gy).
-			You will need to create two triangles to fill each square.
-			*/
-			const va = xy_to_v_index(gx, gy);
-			const vb = xy_to_v_index(gx+1, gy);
-			const vc = xy_to_v_index(gx, gy+1);
-			const vd = xy_to_v_index(gx+1, gy+1);
+    for (let gy = 0; gy < grid_height - 1; gy++) {
+        for (let gx = 0; gx < grid_width - 1; gx++) {
+            const va = xy_to_v_index(gx, gy);
+            const vb = xy_to_v_index(gx + 1, gy);
+            const vc = xy_to_v_index(gx, gy + 1);
+            const vd = xy_to_v_index(gx + 1, gy + 1);
 
-			faces.push([va, vb, vc]);
-			faces.push([vb, vd, vc]);
-			// faces.push([v1, v2, v3]) // adds a triangle on vertex indices v1, v2, v3
-		}
-	}
+            faces.push([va, vb, vc]);
+            faces.push([vb, vd, vc]);
+        }
+    }
 
-	return {
-		vertex_positions: vertices,
-		vertex_normals: normals,
-		faces: faces,
-        vertex_tex_coords: []
-	}
+    return {
+        vertex_positions: vertices,
+        vertex_normals: normals,
+        faces: faces,
+        vertex_tex_coords: tex_coords
+    };
+}
+
+/**
+ * Generate a flat ground plane at the specified level
+ * @param {*} height_map a buffer texture - used to determine grid dimensions and match terrain mesh
+ * @param {*} GROUND_LEVEL the elevation of the ground plane
+ * @returns ground plane mesh data
+ */
+export function ground_build_mesh(height_map, GROUND_LEVEL) {
+    const grid_width = height_map.width;
+    const grid_height = height_map.height;
+
+    const vertices = [];
+    const normals = [];
+    const faces = [];
+    const tex_coords = [];
+
+    function xy_to_v_index(x, y) {
+        return x + y * grid_width;
+    }
+
+    // Generate vertices and normals for flat ground plane
+    for (let gy = 0; gy < grid_height; gy++) {
+        for (let gx = 0; gx < grid_width; gx++) {
+            const idx = xy_to_v_index(gx, gy);
+            
+            // Convert grid coordinates to vertex positions
+            const vx = 1.0/grid_width * gx - 0.5;
+            const vy = 1.0/grid_height * gy - 0.5;
+            
+            // All vertices are at GROUND_LEVEL for a flat plane
+            const vz = GROUND_LEVEL;
+
+            vertices[idx] = [vx, vy, vz];
+            
+            // All normals point straight up for a flat plane
+            normals[idx] = [0, 0, 1];
+            
+            // Generate texture coordinates
+            tex_coords[idx] = [gx/(grid_width-1), gy/(grid_height-1)];
+        }
+    }
+
+    // Generate faces
+    for (let gy = 0; gy < grid_height - 1; gy++) {
+        for (let gx = 0; gx < grid_width - 1; gx++) {
+            const va = xy_to_v_index(gx, gy);
+            const vb = xy_to_v_index(gx+1, gy);
+            const vc = xy_to_v_index(gx, gy+1);
+            const vd = xy_to_v_index(gx+1, gy+1);
+
+            faces.push([va, vb, vc]);
+            faces.push([vb, vd, vc]);
+        }
+    }
+
+    return {
+        vertex_positions: vertices,
+        vertex_normals: normals,
+        faces: faces,
+        vertex_tex_coords: tex_coords
+    }
 }
