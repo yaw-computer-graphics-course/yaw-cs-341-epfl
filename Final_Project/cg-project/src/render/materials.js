@@ -112,3 +112,23 @@ export const terrain = new TerrainMaterial({
     grass_color: [0.33, 0.43, 0.18],
     peak_color: [0.8, 0.5, 0.4]
 });
+
+export const stone = new DiffuseMaterial({
+    texture: 'Rock047_1K_Color.png',
+    shininess: 0.1
+});
+
+export const log = new DiffuseMaterial({
+    texture: 'Wood006_1K_Color.png',
+    shininess: 0.5
+});
+
+export const coal = new DiffuseMaterial({
+    texture: 'Rock035_1K_Color.png',
+    shininess: 0.8
+});
+
+export const branch = new DiffuseMaterial({
+    texture: 'Wood006_1K_Color.png',
+    shininess: 0.5
+});

@@ -137,6 +137,9 @@ export class ResourceManager{
         return [
             'kloppenheim_07_puresky_blur.jpg',
             'pine.png',
+            'Rock035_1K_Color.png',
+            'Rock047_1K_Color.png',
+            'Wood006_1K_Color.png',
           ];
     }
 
@@ -158,6 +161,10 @@ export class ResourceManager{
     meshes_to_load() {
         return [
         "pine.obj",
+        "Coal.obj",
+        "Log.obj",
+        "Stones.obj",
+        "Branches.obj",
       ];
     }
 

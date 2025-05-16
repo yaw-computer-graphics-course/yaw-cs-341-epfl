@@ -57,8 +57,10 @@ export class DemoScene extends Scene {
     this.resource_manager.add_procedural_mesh("mesh_terrain", terrain_mesh);
     this.resource_manager.add_procedural_mesh("mesh_sphere_env_map", cg_mesh_make_uv_sphere(16));
 
+    /*
     // Add some meshes dynamically - see more functions below
     place_random_trees(this.dynamic_objects, this.actors, terrain_mesh, this.TERRAIN_SCALE, this.WATER_LEVEL);
+    */
 
     // Add some meshes to the static objects list
     this.static_objects.push({
@@ -68,12 +70,50 @@ export class DemoScene extends Scene {
       material: MATERIALS.sunset_sky
     });
 
+    /*
     this.static_objects.push({
       translation: [0, 0, 0],
       scale: this.TERRAIN_SCALE,
       mesh_reference: 'mesh_terrain',
       material: MATERIALS.terrain
     });
+    */
+
+    const stones = {
+      mesh_reference: "Stones.obj",
+      material: MATERIALS.stone,
+      translation: [0, 0, 0],
+      scale: [5, 5, 5]
+    };
+    this.actors['stones'] = stones;
+    this.static_objects.push(stones);
+
+    const log = {
+      mesh_reference: "Log.obj",
+      material: MATERIALS.log,
+      translation: [0, 0, 0],
+      scale: [5, 5, 5]
+    };
+    this.actors['log'] = log;
+    this.static_objects.push(log);
+
+    const coal = {
+      mesh_reference: "Coal.obj",
+      material: MATERIALS.coal,
+      translation: [0, 0, 0],
+      scale: [5, 5, 5]
+    };
+    this.actors['coal'] = coal;
+    this.static_objects.push(coal);
+
+    const branches = {
+      mesh_reference: "Branches.obj",
+      material: MATERIALS.branch,
+      translation: [0, 0, 0],
+      scale: [5, 5, 5]
+    };
+    this.actors['branches'] = branches;
+    this.static_objects.push(branches);
 
     // Combine the dynamic & static objects into one array
     this.objects = this.static_objects.concat(this.dynamic_objects);
@@ -83,6 +123,7 @@ export class DemoScene extends Scene {
       this.actors[`light_${i}`] = light
     });
   }
+
 
   /**
    * Initialize the evolve function that describes the behaviour of each actor 
@@ -110,8 +151,29 @@ export class DemoScene extends Scene {
         light.evolve = (dt) => {
           const curr_pos = light.position;
           light.position = [curr_pos[0], curr_pos[1], this.ui_params.light_height[light_idx]];
-        }
+        };
       }
+      //Stones
+      else if (name.includes("stones")){
+        const stones = this.actors[name];
+        stones.evolve = (dt) => {};
+      }
+      //Log
+      else if (name.includes("log")){
+        const log = this.actors[name];
+        log.evolve = (dt) => {};
+      }
+      //Coal
+      else if (name.includes("coal")){
+        const coal = this.actors[name];
+        coal.evolve = (dt) => {};
+      }
+      //Branches
+      else if (name.includes("branches")){
+        const branches = this.actors[name];
+        branches.evolve = (dt) => {};
+      }
+
     }
   }
 
