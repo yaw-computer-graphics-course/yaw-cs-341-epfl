@@ -28,6 +28,48 @@ export class ProceduralTextureGenerator {
         this.buffer_to_screen = new BufferToScreenShaderRenderer(regl, resource_manager);
     }
 
+    generateFlameTexture(width, height) {
+        const flameBuffer = this.regl.framebuffer({
+          width,
+          height,
+          format: 'rgba',
+          type: 'float',
+        });
+        
+        const flameShaderCode = this.resource_manager.get_shader('flame_shader.glsl');
+        const flameShader = this.regl({
+          vert: `
+            precision mediump float;
+            attribute vec2 position;
+            void main() {
+              gl_Position = vec4(position, 0, 1);
+            }
+          `,
+          frag: flameShaderCode,
+          attributes: {
+            position: this.regl.buffer([
+              -1, -1,
+              1, -1,
+              1, 1,
+              -1, 1,
+            ]),
+          },
+          uniforms: {
+            time: this.regl.prop('time'),
+            resolution: [width, height],
+          },
+          count: 4,
+          primitive: 'triangle fan',
+        });
+        
+        this.regl.clear({ color: [0, 0, 0, 1] });
+        flameBuffer.use(() => {
+          flameShader({ time: Date.now() * 0.001 });
+        });
+        
+        return flameBuffer;
+    }
+
     /**
      * Create a new buffer in which to draw the result of the render
      * @returns 

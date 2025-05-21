@@ -127,6 +127,11 @@ export const rock4 = new DiffuseMaterial({
     shininess: 20.0
 });
 
+export const flame_material = new DiffuseMaterial({
+    texture: null, // will be updated later dynamically
+    shininess: 1.0
+});
+
 export const terrain = new TerrainMaterial({
     water_color: [0.29, 0.51, 0.62],
     grass_color: [0.33, 0.43, 0.18],

@@ -18,6 +18,17 @@ export class ResourceManager{
         this.resources = null;
     }
 
+    addTexture(name, texture) {
+      if (!this.textures) {
+        this.textures = {};
+      }
+      this.textures[name] = texture
+    }
+
+    getTexture(name) {
+      return this.textures[name];
+    }
+
     /**
      * Function to call right after creation. It will start loading 
      * all the wanted resources from the folder
@@ -155,6 +166,7 @@ export class ResourceManager{
             'noise.vert.glsl', 'noise.frag.glsl',
             `buffer_to_screen.vert.glsl`, `buffer_to_screen.frag.glsl`,
             'terrain.vert.glsl', 'terrain.frag.glsl',
+            'flame_shader.glsl',
           ];
     }
 
@@ -165,12 +177,11 @@ export class ResourceManager{
         "Log.obj",
         "Stones.obj",
         "Branches.obj",
+        "flame.obj"
       ];
     }
 
 }
-
-
 
 /**
  * Construct textures from basic colors.

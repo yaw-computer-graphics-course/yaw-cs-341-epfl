@@ -33,7 +33,8 @@ export class DemoScene extends Scene {
     this.initialize_actor_actions();
   }
 
-  initialize_scene(){
+  initialize_scene() {
+    this.oscillationAmplitude = 0.5; // Amplitude for flame movement
 
     // Add lights
     this.lights.push({
@@ -72,8 +73,7 @@ export class DemoScene extends Scene {
       material: MATERIALS.sunset_sky
     });
 
-    /*
-    this.static_objects.push({
+    /*this.static_objects.push({
       translation: [0, 0, 0],
       scale: this.TERRAIN_SCALE,
       mesh_reference: 'mesh_terrain',
@@ -117,6 +117,8 @@ export class DemoScene extends Scene {
     this.actors['branches'] = branches;
     this.static_objects.push(branches);
 
+    this.initialize_flame();
+
     // Combine the dynamic & static objects into one array
     this.objects = this.static_objects.concat(this.dynamic_objects);
 
@@ -126,11 +128,24 @@ export class DemoScene extends Scene {
     });
   }
 
+  initialize_flame() {
+    const flameTexture = this.procedural_texture_generator.generateFlameTexture(256, 256);
+    this.resource_manager.addTexture('flameTexture', flameTexture);
+
+    const flame = {
+        mesh_reference: 'flame.obj',
+        material: MATERIALS.flame_material,
+        translation: [0, 0, 0],
+        scale: [1, 1, 1],
+    };
+    this.actors['flame'] = flame;
+    this.static_objects.push(flame);
+ }
 
   /**
    * Initialize the evolve function that describes the behaviour of each actor 
    */
-  initialize_actor_actions(){
+  initialize_actor_actions() {
     
     for (const name in this.actors) {
       // Pine tree
@@ -153,6 +168,19 @@ export class DemoScene extends Scene {
         light.evolve = (dt) => {
           const curr_pos = light.position;
           light.position = [curr_pos[0], curr_pos[1], this.ui_params.light_height[light_idx]];
+        }
+      } else if (name.includes("flame")) {
+        const flame = this.actors[name];    
+        flame.evolve = (dt) => {
+          // Update texture only for the flame
+          if (flame.material.texture) {
+            const flameTexture = this.procedural_texture_generator.generateFlameTexture(256, 256);
+            this.resource_manager.addTexture('flameTexture', flameTexture);
+            flame.material.texture = this.resource_manager.get("flameTexture"); // Update with the current texture
+          }
+      
+          const time = Date.now() * 0.001;
+          flame.translation[1] = this.oscillationAmplitude * Math.sin(3 * time) + 1; // Animate the flame
         };
       }
       //Stones
@@ -253,7 +281,6 @@ export class DemoScene extends Scene {
     // Update the scene objects
     this.objects = this.static_objects.concat(this.dynamic_objects);
   }
-
 }
 
 
