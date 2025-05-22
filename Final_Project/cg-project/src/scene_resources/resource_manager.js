@@ -151,6 +151,7 @@ export class ResourceManager{
             'Rock035_1K_Color.png',
             'Rock047_1K_Color.png',
             'Wood006_1K_Color.png',
+            'rock_texture_1.jpg'
           ];
     }
 

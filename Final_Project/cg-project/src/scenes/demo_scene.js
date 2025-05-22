@@ -55,11 +55,24 @@ export class DemoScene extends Scene {
     this.TERRAIN_SCALE = [10, 10, 10];
     
     // Build terrain and ground meshes
-    const terrain_mesh = terrain_build_mesh(height_map, this.GROUND_LEVEL);
-    const ground_mesh = ground_build_mesh(height_map, this.GROUND_LEVEL);
-    this.resource_manager.add_procedural_mesh("mesh_terrain", terrain_mesh);
-    this.resource_manager.add_procedural_mesh("mesh_ground", ground_mesh);
     this.resource_manager.add_procedural_mesh("mesh_sphere_env_map", cg_mesh_make_uv_sphere(16));
+    const terrain_mesh = terrain_build_mesh(height_map, this.GROUND_LEVEL);
+    this.resource_manager.add_procedural_mesh("mesh_terrain", terrain_mesh);
+    this.static_objects.push({
+      translation: [0, 0, 0],
+      scale: this.TERRAIN_SCALE,
+      mesh_reference: 'mesh_terrain',
+      material: MATERIALS.rock1
+    });
+
+    const ground_mesh = ground_build_mesh(height_map, this.GROUND_LEVEL);
+    this.resource_manager.add_procedural_mesh("mesh_ground", ground_mesh);
+    this.static_objects.push({
+      translation: [0, 0, 0],
+      scale: this.TERRAIN_SCALE,
+      mesh_reference: 'mesh_ground',
+      material: MATERIALS.rock1
+    });
 
     // Add static objects
     this.setup_static_objects();
@@ -84,7 +97,7 @@ export class DemoScene extends Scene {
         mesh_reference: obj.mesh,
         material: obj.material,
         translation: [0, 0, 0],
-        scale: [5, 5, 5],
+        scale: [2, 2, 2],
       };
       this.actors[obj.name] = item;
       this.static_objects.push(item);
@@ -103,10 +116,11 @@ export class DemoScene extends Scene {
     const flame = {
         mesh_reference: 'flame.obj',
         material: this.flame_material,
-        translation: [0, 0, 1],
-        scale: [1, 1, 1],
+        translation: [0, 0, .4],
+        scale: [0.3, 0.3, 0.3],
     };
     this.dynamic_objects.push(flame);
+    this.actors["flame"] = flame;
   }
 
   /**
@@ -128,8 +142,12 @@ export class DemoScene extends Scene {
           }
         };
       }
+      else if (name.includes("flame")) {
+        const flame = this.actors[name]
+        flame.evolve = (dt) => { flame.material.updateColor() };
+      }
       // Lights
-      else if (name.includes("light")){
+      else if (name.includes("light")) {
         const light = this.actors[name];
         const light_idx = parseInt(name.split("_")[1]);
         light.evolve = (dt) => {

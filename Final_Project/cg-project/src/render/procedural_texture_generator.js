@@ -111,7 +111,7 @@ export class ProceduralTextureGenerator {
     }
     
     generate_flame_material() {
-      const flameMaterial = new MATERIALS.DiffuseMaterial({
+      const flameMaterial = new MATERIALS.FireMaterial({
           color: [1.0, 0.5, 0.0], // Bright orange color
           shininess: 0.1, // Optional shine factor
       });
