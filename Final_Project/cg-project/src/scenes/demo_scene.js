@@ -34,8 +34,6 @@ export class DemoScene extends Scene {
   }
 
   initialize_scene() {
-    this.oscillationAmplitude = 0.5; // Amplitude for flame movement
-
     // Add lights
     this.lights.push({
       position : [-4,-5,7],
@@ -60,11 +58,6 @@ export class DemoScene extends Scene {
     this.resource_manager.add_procedural_mesh("mesh_ground", ground_mesh);
     this.resource_manager.add_procedural_mesh("mesh_sphere_env_map", cg_mesh_make_uv_sphere(16));
 
-    /*
-    // Add some meshes dynamically - see more functions below
-    place_random_trees(this.dynamic_objects, this.actors, terrain_mesh, this.TERRAIN_SCALE, this.WATER_LEVEL);
-    */
-
     // Add some meshes to the static objects list
     this.static_objects.push({
       translation: [0, 0, 0],
@@ -72,14 +65,6 @@ export class DemoScene extends Scene {
       mesh_reference: 'mesh_sphere_env_map',
       material: MATERIALS.sunset_sky
     });
-
-    /*this.static_objects.push({
-      translation: [0, 0, 0],
-      scale: this.TERRAIN_SCALE,
-      mesh_reference: 'mesh_terrain',
-      material: MATERIALS.terrain
-    });
-    */
 
     const stones = {
       mesh_reference: "Stones.obj",
@@ -117,8 +102,6 @@ export class DemoScene extends Scene {
     this.actors['branches'] = branches;
     this.static_objects.push(branches);
 
-    this.initialize_flame();
-
     // Combine the dynamic & static objects into one array
     this.objects = this.static_objects.concat(this.dynamic_objects);
 
@@ -127,20 +110,6 @@ export class DemoScene extends Scene {
       this.actors[`light_${i}`] = light
     });
   }
-
-  initialize_flame() {
-    const flameTexture = this.procedural_texture_generator.generateFlameTexture(256, 256);
-    this.resource_manager.addTexture('flameTexture', flameTexture);
-
-    const flame = {
-        mesh_reference: 'flame.obj',
-        material: MATERIALS.flame_material,
-        translation: [0, 0, 0],
-        scale: [1, 1, 1],
-    };
-    this.actors['flame'] = flame;
-    this.static_objects.push(flame);
- }
 
   /**
    * Initialize the evolve function that describes the behaviour of each actor 
@@ -169,19 +138,6 @@ export class DemoScene extends Scene {
           const curr_pos = light.position;
           light.position = [curr_pos[0], curr_pos[1], this.ui_params.light_height[light_idx]];
         }
-      } else if (name.includes("flame")) {
-        const flame = this.actors[name];    
-        flame.evolve = (dt) => {
-          // Update texture only for the flame
-          if (flame.material.texture) {
-            const flameTexture = this.procedural_texture_generator.generateFlameTexture(256, 256);
-            this.resource_manager.addTexture('flameTexture', flameTexture);
-            flame.material.texture = this.resource_manager.get("flameTexture"); // Update with the current texture
-          }
-      
-          const time = Date.now() * 0.001;
-          flame.translation[1] = this.oscillationAmplitude * Math.sin(3 * time) + 1; // Animate the flame
-        };
       }
       //Stones
       else if (name.includes("stones")){
@@ -281,112 +237,4 @@ export class DemoScene extends Scene {
     // Update the scene objects
     this.objects = this.static_objects.concat(this.dynamic_objects);
   }
-}
-
-
-/**
- * Dynamically place some object on a mesh. 
- * Iterate over all vertices and randomly decide whether 
- * to place an object on it or not.
- * @param {*} objects 
- * @param {*} actors 
- * @param {*} terrain_mesh 
- * @param {*} TERRAIN_SCALE 
- * @param {*} water_level 
- */
-function place_random_trees(objects, actors, terrain_mesh, TERRAIN_SCALE, water_level){
-  
-  const up_vector = [0,0,1] 
-
-  // Iterate ovew the terrain vertices as a pair vertex (the position) 
-  // and its index in the array used for pseudo-randomness
-  terrain_mesh.vertex_positions.forEach((vertex, index) => {
-      const position = vertex;
-      const normal = terrain_mesh.vertex_normals[index];
-
-      // Decide wether or not place something on this vertex
-      const result = decide(index);
-
-      // If the decision function return 1 we choose to place a tree
-      if (result == 1){
-        // Check vertices is above water, below mountain, with gentle slope, and far from the boundary
-        if(
-          position[2] > water_level
-          && position[2] < 0.1 // mountain level
-          && vec3.angle(up_vector, normal) < Math.PI/180*40 
-          && position[0] > -0.45 && position[0] < 0.45  // avoid boundary
-          && position[1] > -0.45 && position[1] < 0.45
-        ){
-          // Add a new tree to the list of scene objects and actors
-          const tree = new_tree(position, TERRAIN_SCALE, index);
-          objects.push(tree);
-          actors[`tree_${objects.length}`] = tree;
-        }
-      }
-  });
-}
-
-
-/**
- * Update the scale and increase it linearly with time
- * @param {*} scale scale to update 
- * @param {*} dt 
- */
-function grow_tree(scale, dt){
-  const grow_factor = 0.1;
-  scale[0] = scale[0] + (dt*grow_factor);
-  scale[1] = scale[1] + (dt*grow_factor);
-  scale[2] = scale[2] + (dt*grow_factor);
-}
-
-/**
- * Given a vertex, decide wether to place something on it or not
- * @param {*} index of the vertex 
- * @returns 
- */
-function decide(index){
-  const chance = 10; // the higher this value, the less likely it is to place an object
-  const idx = (pseudo_random_int(index))%chance;
-  return idx
-}
-
-
-/**
- * Create a new tree with a pseudo random scale based on index
- * scale position and size regarding the terrain scale
- * @param {*} position where the tree will be
- * @param {*} TERRAIN_SCALE 
- * @param {*} index associated with the position
- * @returns 
- */
-function new_tree(position, TERRAIN_SCALE, index){
-
-  const min_size = 0.0001;
-  const max_size = 0.25;
-  
-  const scale = min_size + (max_size-min_size) * (pseudo_random_int(index)%1000)/1000;
-
-  return {
-      translation: vec3.mul([0,0,0], TERRAIN_SCALE, position),
-      scale: [
-        scale, 
-        scale, 
-        scale
-      ],
-          
-      mesh_reference: 'pine.obj',
-
-      material: MATERIALS.pine,
-  }
-}
-
-/**
- * Gives a pseudo random number based on an index value
- * @param {*} index random seed 
- * @returns a pseudo random int
- */
-function pseudo_random_int(index) {
-  index = (index ^ 0x5DEECE66D) & ((1 << 31) - 1);
-  index = (index * 48271) % 2147483647; // Prime modulus
-  return (index & 0x7FFFFFFF); 
 }
