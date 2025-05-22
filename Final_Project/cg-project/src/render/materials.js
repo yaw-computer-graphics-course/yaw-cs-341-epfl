@@ -38,7 +38,7 @@ class BackgroundMaterial extends Material {
     }
 }
 
-class DiffuseMaterial extends Material {
+export class DiffuseMaterial extends Material {
 
     constructor({
         texture = null, 

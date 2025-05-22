@@ -36,79 +36,77 @@ export class DemoScene extends Scene {
   initialize_scene() {
     // Add lights
     this.lights.push({
-      position : [-4,-5,7],
+      position: [-4, -5, 7],
       color: [0.75, 0.53, 0.45]
     });
     this.lights.push({
-      position : [6,4,6],
+      position: [6, 4, 6],
       color: [0.0, 0.0, 0.3]
     });
-    
-    // Add a procedurally generated mesh
+
+    // Compute height map using procedural texture
     const height_map = this.procedural_texture_generator.compute_texture(
       "perlin_heightmap", 
       noise_functions.FBM_for_terrain, 
-      {width: 96, height: 96, mouse_offset: [-12.24, 8.15]}
+      { width: 96, height: 96, mouse_offset: [-12.24, 8.15] }
     );
-    this.GROUND_LEVEL = 0.;
-    this.TERRAIN_SCALE = [10,10,10];
+
+    this.GROUND_LEVEL = 0.0;
+    this.TERRAIN_SCALE = [10, 10, 10];
+    
+    // Build terrain and ground meshes
     const terrain_mesh = terrain_build_mesh(height_map, this.GROUND_LEVEL);
     const ground_mesh = ground_build_mesh(height_map, this.GROUND_LEVEL);
     this.resource_manager.add_procedural_mesh("mesh_terrain", terrain_mesh);
     this.resource_manager.add_procedural_mesh("mesh_ground", ground_mesh);
     this.resource_manager.add_procedural_mesh("mesh_sphere_env_map", cg_mesh_make_uv_sphere(16));
 
-    // Add some meshes to the static objects list
-    this.static_objects.push({
-      translation: [0, 0, 0],
-      scale: [80., 80., 80.],
-      mesh_reference: 'mesh_sphere_env_map',
-      material: MATERIALS.sunset_sky
-    });
+    // Add static objects
+    this.setup_static_objects();
 
-    const stones = {
-      mesh_reference: "Stones.obj",
-      material: MATERIALS.stone,
-      translation: [0, 0, 0],
-      scale: [5, 5, 5]
-    };
-    this.actors['stones'] = stones;
-    this.static_objects.push(stones);
+    // Initialize dynamic objects
+    this.initialize_flame();
 
-    const log = {
-      mesh_reference: "Log.obj",
-      material: MATERIALS.log,
-      translation: [0, 0, 0],
-      scale: [5, 5, 5]
-    };
-    this.actors['log'] = log;
-    this.static_objects.push(log);
-
-    const coal = {
-      mesh_reference: "Coal.obj",
-      material: MATERIALS.coal,
-      translation: [0, 0, 0],
-      scale: [5, 5, 5]
-    };
-    this.actors['coal'] = coal;
-    this.static_objects.push(coal);
-
-    const branches = {
-      mesh_reference: "Branches.obj",
-      material: MATERIALS.branch,
-      translation: [0, 0, 0],
-      scale: [5, 5, 5]
-    };
-    this.actors['branches'] = branches;
-    this.static_objects.push(branches);
-
-    // Combine the dynamic & static objects into one array
+    // Combine static and dynamic objects
     this.objects = this.static_objects.concat(this.dynamic_objects);
+  }
 
-    // We add the (static) lights to the actor list to allow them to be modified from the UI
-    this.lights.forEach((light, i) => {
-      this.actors[`light_${i}`] = light
+  setup_static_objects() {
+    const objects = [
+      { name: "stones", mesh: "Stones.obj", material: MATERIALS.stone },
+      { name: "log", mesh: "Log.obj", material: MATERIALS.log },
+      { name: "coal", mesh: "Coal.obj", material: MATERIALS.coal },
+      { name: "branches", mesh: "Branches.obj", material: MATERIALS.branch },
+    ];
+
+    objects.forEach(obj => {
+      const item = {
+        mesh_reference: obj.mesh,
+        material: obj.material,
+        translation: [0, 0, 0],
+        scale: [5, 5, 5],
+      };
+      this.actors[obj.name] = item;
+      this.static_objects.push(item);
     });
+  }
+
+  initialize_flame() {
+    this.flame_material = this.procedural_texture_generator.generate_flame_material();
+
+    // Check if flame_material is valid
+    if (!this.flame_material || !Array.isArray(this.flame_material.properties)) {
+        console.error('Flame material is not defined correctly:', this.flame_material);
+        return; // Exit if the material is not valid
+    }
+
+    const flame = {
+        mesh_reference: 'flame.obj',
+        material: this.flame_material,
+        translation: [0, 0, 1],
+        scale: [1, 1, 1],
+    };
+    this.dynamic_objects.push(flame);
   }
 
   /**
@@ -193,48 +191,5 @@ export class DemoScene extends Scene {
     create_slider("Height light 2 ", [0, n_steps_slider], (i) => {
       this.ui_params.light_height[1] = min_light_height_2 + i * (max_light_height_2 - min_light_height_2) / n_steps_slider;
     });
-
-    // Add button to generate random terrain
-    create_button("Random terrain", () => {this.random_terrain()});
-  }
-
-  /**
-   * Generate a random terrain
-   */
-  random_terrain(){
-    const x = Math.round((Math.random()-0.5)*1000);
-    const y = Math.round((Math.random()-0.5)*1000);
-    console.log(`seed: [${x}, ${y}]`)
-    this.recompute_terrain([x, y]);
-  }
-
-  /**
-   * Allow the generate a new terrain without recreating the whole scene
-   * @param {*} offset the new offset to compute the noise for the heightmap
-   */
-  recompute_terrain(offset){
-    // Clear the list of dynamic objects
-    this.dynamic_objects = [];
-
-    // Compute a new height map
-    const height_map = this.procedural_texture_generator.compute_texture(
-      "perlin_heightmap", 
-      noise_functions.FBM_for_terrain, 
-      {width: 96, height: 96, mouse_offset: offset}
-    );
-
-    // Recompute the terrain mesh with the new heigthmap and replace
-    // the old one in the resources manager
-    const terrain_mesh = terrain_build_mesh(height_map, this.WATER_LEVEL);
-    this.resource_manager.add_procedural_mesh("mesh_terrain", terrain_mesh);
-    
-    // Place the trees on this new terrain
-    place_random_trees(this.dynamic_objects, this.actors, terrain_mesh, this.TERRAIN_SCALE, this.WATER_LEVEL);
-
-    // Reinitialize the actors actions
-    this.initialize_actor_actions();
-
-    // Update the scene objects
-    this.objects = this.static_objects.concat(this.dynamic_objects);
   }
 }

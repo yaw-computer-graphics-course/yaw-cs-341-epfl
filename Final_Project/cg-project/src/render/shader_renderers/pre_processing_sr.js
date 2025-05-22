@@ -16,9 +16,9 @@ export class PreprocessingShaderRenderer extends ShaderRenderer {
       resource_manager.resources["pre_processing.frag.glsl"] = pre_processing_fragment_shader();
 
       super(
-          regl, 
-          resource_manager, 
-          `pre_processing.vert.glsl`, 
+          regl,
+          resource_manager,
+          `pre_processing.vert.glsl`,
           `pre_processing.frag.glsl`
       );
     }
