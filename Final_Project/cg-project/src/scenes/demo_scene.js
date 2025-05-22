@@ -35,13 +35,14 @@ export class DemoScene extends Scene {
 
   initialize_scene() {
     // Add lights
+    /*
     this.lights.push({
       position: [-4, -5, 7],
       color: [0.75, 0.53, 0.45]
-    });
+    });*/
     this.lights.push({
-      position: [6, 4, 6],
-      color: [0.0, 0.0, 0.3]
+      position: [-4, 4, 6],
+      color: [3, 3, 3]
     });
 
     // Compute height map using procedural texture
@@ -208,6 +209,11 @@ export class DemoScene extends Scene {
     const max_light_height_2 = 8;
     create_slider("Height light 2 ", [0, n_steps_slider], (i) => {
       this.ui_params.light_height[1] = min_light_height_2 + i * (max_light_height_2 - min_light_height_2) / n_steps_slider;
+    });
+    // Add shadow softness control
+    create_slider("Shadow Softness", [0, n_steps_slider], (value) => {
+      const softness = value / 1000; // Scale to reasonable range
+      this.shadows_renderer.setSoftness(softness);
     });
   }
 }

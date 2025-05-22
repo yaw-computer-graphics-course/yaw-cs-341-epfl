@@ -1,31 +1,53 @@
 precision highp float;
 
-// Varying values passed from the vertex shader
+// Fragment position in view/camera space
 varying vec3 v2f_frag_pos;
 
-// Global variables specified in "uniforms" entry of the pipeline
-uniform vec3 light_position_cam; // light position in camera coordinates
+// Light position in view/camera space
+uniform vec3 light_position_cam;
+
+// Cube shadow map storing depths from the light's point of view
 uniform samplerCube cube_shadowmap;
+
+// Total number of lights (used for normalization in final output)
 uniform float num_lights;
 
+// Controls the softness of shadows by scaling the Poisson offsets
+uniform float shadow_softness;
+
+// 16 Poisson disk samples for PCF (Percentage Closer Filtering)
+uniform vec2 poissonDisk[16];
+
 void main() {
+    // Direction from fragment to light
+    vec3 light_dir = normalize(light_position_cam - v2f_frag_pos);
 
-	vec3 v = normalize(-v2f_frag_pos);
-	vec3 l = normalize(light_position_cam - v2f_frag_pos);
-	float dist_frag_light = length(v2f_frag_pos - light_position_cam);
+    // Distance from fragment to light (used for depth comparison)
+    float dist_frag_light = length(v2f_frag_pos - light_position_cam);
 
+    float shadow = 0.0;      // Accumulator for shadow intensity
+    float bias = 0.02;       // Small bias to reduce shadow acne
 
-	// get shadow map
-	vec4 result = textureCube(cube_shadowmap, -l);
-	float shadow_depth = result.r;
+    // Loop over Poisson disk offsets for soft shadow sampling
+    for(int i = 0; i < 16; i++) {
+        // Offset sampling direction slightly using scaled Poisson disk
+        vec3 sample_dir = normalize(light_dir + vec3(
+            poissonDisk[i].x * shadow_softness,
+            poissonDisk[i].y * shadow_softness,
+            0.0
+        ));
 
-	vec3 color = vec3(0.0);
+        // Fetch depth from cube shadow map (reverse direction for lookup)
+        float sample_depth = textureCube(cube_shadowmap, -sample_dir).r;
 
-	// if the distance of the fragment from the light is farther 
-	// than the one we saved in the cube map, then this fragment is in shadows
-	if ((dist_frag_light > 1.01 *shadow_depth)){
-		color = vec3(1.0/num_lights);
-	}
+        // Shadow test: if fragment is further than sampled depth, it's in shadow
+        shadow += (dist_frag_light - bias > sample_depth) ? 1.0 : 0.0;
+    }
 
-	gl_FragColor = vec4(color, 1.); // output: RGBA in 0..1 range
+    // Average the shadow samples (PCF result)
+    shadow /= 16.0;
+
+    // Final output: gray level proportional to shadow intensity
+    vec3 color = vec3(shadow / num_lights);
+    gl_FragColor = vec4(color, 1.0);
 }

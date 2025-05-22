@@ -24,6 +24,26 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
         // Here we instanciante the ShadowMapShaderRenderer directly into the ShadowsShaderRenderer 
         // because the latter needs to pass shadow_map render function to the env_capture to generate the cube_map 
         this.shadow_map = new ShadowMapShaderRenderer(regl, resource_manager);
+        this.shadow_softness = 0.05; // Default softness value
+        // 16 Poisson disk samples for PCF (Percentage Closer Filtering)
+        this.poissonDisk = [
+            [-0.94201624, -0.39906216],
+            [0.94558609, -0.76890725],
+            [-0.094184101, -0.92938870],
+            [0.34495938, 0.29387760],
+            [-0.91588581, 0.45771432],
+            [-0.81544232, -0.87912464],
+            [-0.38277543, 0.27676845],
+            [0.97484398, 0.75648379],
+            [0.44323325, -0.97511554],
+            [0.53742981, -0.47373420],
+            [-0.26496911, -0.41893023],
+            [0.79197514, 0.19090188],
+            [-0.24188840, 0.99706507],
+            [-0.81409955, 0.91437590],
+            [0.19984126, 0.78641367],
+            [0.14383161, -0.14100790]
+        ];
     }
 
     /**
@@ -40,6 +60,9 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
         this.regl.clear({color: [0,0,0,1]});
 
         const num_lights = scene.lights.length;
+
+        const shadow_softness = this.shadow_softness;
+        const poissonDisk = this.poissonDisk;
 
         scene.lights.forEach(light => {
             // Transform light position into camera space
@@ -70,6 +93,9 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
                     num_lights: num_lights,
 
                     cube_shadowmap: cube_shadowmap,
+
+                    shadow_softness: shadow_softness,
+                    poissonDisk: poissonDisk,
                 });
             }
 
@@ -127,7 +153,15 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
 
             // Cube map
             cube_shadowmap: regl.prop('cube_shadowmap'),
+            // Softness value
+            shadow_softness: regl.prop('shadow_softness'),
+
+            // Poisson Disk for soft shadows (PCF)
+            poissonDisk: regl.prop('poissonDisk'),
         };
     }
 
+    setSoftness(value) {
+        this.shadow_softness = value;
+    }
 }
