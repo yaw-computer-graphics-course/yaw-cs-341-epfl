@@ -70,12 +70,14 @@ export class ProceduralTextureGenerator {
         }
 
         // Render the texture in the buffer
+        const current_time = Date.now() * 0.001; // convert to seconds
         this.noise.render(
             this.mesh_quad_2d,
             buffer, 
             function_type, 
             zoom_factor,
             vec2.negate([0, 0], mouse_offset),
+            current_time,
         )
 
         // Convert the buffer to an array of float data that can be queried
@@ -98,12 +100,14 @@ export class ProceduralTextureGenerator {
             buffer.resize(width, height)
         }
         
+        const current_time = Date.now() * 0.001; // convert to seconds
         this.noise.render(
             this.mesh_quad_2d,
             buffer, 
             function_type, 
             zoom_factor,
             vec2.negate([0, 0], mouse_offset),
+            current_time,
         )
 
         // Display

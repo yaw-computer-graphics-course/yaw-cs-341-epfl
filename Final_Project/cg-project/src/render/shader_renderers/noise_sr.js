@@ -11,7 +11,8 @@ export const noise_functions = {
     Turbulence: "tex_turbulence",
     Map: "tex_map",
     Wood: "tex_wood",
-    FBM_for_terrain: "tex_fbm_for_terrain"
+    FBM_for_terrain: "tex_fbm_for_terrain",
+    Flame: "tex_flame",
 };
 
 
@@ -39,23 +40,23 @@ export class NoiseShaderRenderer extends ShaderRenderer {
      * @param {*} viewer_scale 
      * @param {*} viewer_position 
      */
-    render(mesh_quad_2d, noise_buffer, shader_func_name, viewer_scale, viewer_position){
-
+    render(mesh_quad_2d, noise_buffer, shader_func_name, viewer_scale, viewer_position, time) {
         this.regl.clear({
             framebuffer: noise_buffer,
-            color: [0, 0, 0, 1], 
-        })
-
+            color: [0, 0, 0, 1],
+        });
+    
         const inputs = [];
-
+    
         inputs.push({
             mesh_quad_2d: mesh_quad_2d,
-            viewer_position : viewer_position,
-            viewer_scale : viewer_scale,
-            shader_frag : this.generate_frag_shader(shader_func_name),
-            noise_buffer : noise_buffer,
-        })
-
+            viewer_position: viewer_position,
+            viewer_scale: viewer_scale,
+            shader_frag: this.generate_frag_shader(shader_func_name),
+            noise_buffer: noise_buffer,
+            u_time: time,
+        });
+    
         this.pipeline(inputs);
     }
 
@@ -81,26 +82,22 @@ export class NoiseShaderRenderer extends ShaderRenderer {
     }
 
     // Overwrite the pipeline
-    init_pipeline(){
+    init_pipeline() {
         const regl = this.regl;
-
+    
         return regl({
             attributes: {
-                vertex_positions: regl.prop('mesh_quad_2d.vertex_positions')
+                vertex_positions: regl.prop('mesh_quad_2d.vertex_positions'),
             },
-
             elements: regl.prop('mesh_quad_2d.faces'),
-            
             uniforms: {
                 viewer_position: regl.prop('viewer_position'),
-                viewer_scale:    regl.prop('viewer_scale'),
+                viewer_scale: regl.prop('viewer_scale'),
+                u_time: regl.prop('u_time'), // Bind the u_time uniform here
             },
-                    
             vert: this.vert_shader,
             frag: regl.prop('shader_frag'),
-
             framebuffer: regl.prop('noise_buffer'),
-        })
-    } 
-
+        });
+    }
 }

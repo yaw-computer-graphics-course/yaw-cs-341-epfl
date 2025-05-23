@@ -3,6 +3,7 @@ import { TurntableCamera } from "../scene_resources/camera.js"
 import * as MATERIALS from "../render/materials.js"
 import { cg_mesh_make_uv_sphere } from "../cg_libraries/cg_mesh.js"
 import { terrain_build_mesh, ground_build_mesh } from "../scene_resources/terrain_generation.js"
+import { fire_build_mesh } from "../scene_resources/fire_generation.js"
 import { noise_functions } from "../render/shader_renderers/noise_sr.js"
 import { Scene } from "./scene.js"
 import { vec3 } from "../../lib/gl-matrix_3.3.0/esm/index.js"
@@ -105,6 +106,28 @@ export class DemoScene extends Scene {
     });
   }
 
+  /*initialize_flame() {
+    const flame_height_map = this.procedural_texture_generator.compute_texture(
+        "fire_heightmap",
+        noise_functions.Flame,
+        { width: 96, height: 96 }
+    );
+
+    const flame = fire_build_mesh(flame_height_map, this.GROUND_LEVEL + 0.2, Date.now() * 0.001); // To be adjusted
+    this.resource_manager.add_procedural_mesh("mesh_flame", flame);
+    
+    this.flame_material = this.procedural_texture_generator.generate_flame_material();
+    
+    const flame_obj = {
+        mesh_reference: 'mesh_flame',
+        material: this.flame_material,
+        translation: [0, 0, 0.6], // Slightly above ground
+        scale: [1, 1, 1],
+    };
+    this.dynamic_objects.push(flame_obj);
+    this.actors["flame"] = flame_obj;
+  }*/
+
   initialize_flame() {
     this.flame_material = this.procedural_texture_generator.generate_flame_material();
 
@@ -144,8 +167,11 @@ export class DemoScene extends Scene {
         };
       }
       else if (name.includes("flame")) {
-        const flame = this.actors[name]
-        flame.evolve = (dt) => { flame.material.updateColor() };
+
+        const flame = this.actors[name];
+        flame.evolve = (dt) => {
+            flame.material.updateColor();
+        };
       }
       // Lights
       else if (name.includes("light")) {
