@@ -41,8 +41,8 @@ export class DemoScene extends Scene {
       color: [0.75, 0.53, 0.45]
     });*/
     this.lights.push({
-      position: [-4, 4, 6],
-      color: [3, 3, 3]
+      position: [0, 0, 4],
+      color: [0.7, 0.0, 0.0]
     });
 
     // Compute height map using procedural texture
