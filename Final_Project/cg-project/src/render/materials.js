@@ -73,7 +73,6 @@ export class FireMaterial extends Material {
         
         // Clamp values to ensure they stay within [0, 1]
         this.color = this.color.map(c => Math.max(0, Math.min(c, 1)));
-        console.log("Updated Color: ", this.color);
     }
 }
 

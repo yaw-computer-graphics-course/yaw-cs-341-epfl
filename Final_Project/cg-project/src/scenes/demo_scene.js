@@ -36,15 +36,7 @@ export class DemoScene extends Scene {
 
   initialize_scene() {
     // Add lights
-    /*
-    this.lights.push({
-      position: [-4, -5, 7],
-      color: [0.75, 0.53, 0.45]
-    });*/
-    this.lights.push({
-      position: [0, 0, 4],
-      color: [0.7, 0.0, 0.0]
-    });
+    this.initialize_lights();
 
     // Compute height map using procedural texture
     const height_map = this.procedural_texture_generator.compute_texture(
@@ -106,6 +98,25 @@ export class DemoScene extends Scene {
     });
   }
 
+  initialize_lights() {
+    // Add initial lights
+    this.lights.push({
+      position: [0, 0, 4],
+      color: [0.7, 0.0, 0.0]
+    });
+  
+    // Add dynamic lights for flame objects
+    const flameLight = {
+      position: [0, 0, 0],
+      color: [1.0, 0.7, 0.0],
+      intensity: 5.0
+    };
+    this.lights.push(flameLight);
+  
+    // Store the flame light for later reference
+    this.flameLight = flameLight;
+  }
+
   initialize_flame() {
     // Use a time-dependent method for height map creation
     const timeFactor = Date.now() / 1000; // Getting the current time in seconds
@@ -153,8 +164,8 @@ export class DemoScene extends Scene {
         const flame = this.actors[name];
         let lastUpdateTime = 0;     // Keep track of the last update time
         //const updateInterval = 0.090;
-        const updateInterval = 0.08;
-
+        const updateInterval = 0.1;
+  
         flame.evolve = (dt) => {
           lastUpdateTime += dt;
           if (lastUpdateTime < updateInterval) {
@@ -162,7 +173,7 @@ export class DemoScene extends Scene {
           }
           lastUpdateTime = 0;
           // Use a time-dependent method for height map creation
-          const timeFactor = Date.now() / 1000; // Getting the current time in seconds
+          const timeFactor = (Date.now() / 1000) * 3; // Multiply by 3 for 3x speed
           const new_height_map = this.create_height_map(
               Math.sin(timeFactor) * 10, // Use a sine function for smooth oscillation
               Math.cos(timeFactor) * 10  // Similarly for the Y offset
@@ -175,7 +186,7 @@ export class DemoScene extends Scene {
           }
           
           // Regenerate the flame mesh with the new height map
-          const new_mesh = fire_build_mesh(new_height_map, this.GROUND_LEVEL + 0.2);
+          const new_mesh = fire_build_mesh(new_height_map, this.GROUND_LEVEL + 0.2, timeFactor); // Pass time to fire_build_mesh
           
           // Update the resource manager and reference for the flame object
           this.resource_manager.add_procedural_mesh("mesh_flame", new_mesh);
