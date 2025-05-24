@@ -1,7 +1,6 @@
-import {vec2, vec3, vec4, mat2, mat3, mat4} from "../../lib/gl-matrix_3.3.0/esm/index.js"
+import { vec2, vec3, vec4, mat2, mat3, mat4 } from "../../lib/gl-matrix_3.3.0/esm/index.js";
 
-// Custom function to generate procedural fire effects
-export function fire_build_mesh(height_map, fire_level, time) {
+export function fire_build_mesh(height_map, fire_level) {
     const grid_width = height_map.width;
     const grid_height = height_map.height;
 
@@ -10,7 +9,6 @@ export function fire_build_mesh(height_map, fire_level, time) {
     const faces = [];
     const tex_coords = [];
 
-    // Function to convert 2D coordinates to vertex index
     function xy_to_v_index(x, y) {
         return x + y * grid_width;
     }
@@ -18,32 +16,36 @@ export function fire_build_mesh(height_map, fire_level, time) {
     for (let gy = 0; gy < grid_height; gy++) {
         for (let gx = 0; gx < grid_width; gx++) {
             const idx = xy_to_v_index(gx, gy);
-            const elevation = height_map.get(gx, gy); // Get height value from height_map
+            let elevation = height_map.get(gx, gy) - 0.5;
 
-            // Calculate the flame height using a Gaussian-like function
-            const centerX = grid_width / 2;
-            const width = grid_width * 0.2; // Control the width of the flame
-            const distance = Math.abs(gx - centerX);
-            const peak = fire_level * Math.exp(-Math.pow(distance / width, 2)); // Gaussian-like
+			const nx = (gx / (grid_width - 1)) * 2 - 1;
+            const ny = (gy / (grid_height - 1)) * 2 - 1;
 
-            // Use smooth random flicker effect
-            const flicker = Math.sin(time * 10 + gx * 0.1) * 0.1;
-            const flame_height = Math.max(0, elevation + peak + flicker);
+            // Calculate distance from center [0-1] range
+            const distFromCenter = Math.sqrt(nx*nx + ny*ny);
 
-            // Flame position
-            const vx = (1.0 / grid_width * gx) - 0.5;
-            const vy = (1.0 / grid_height * gy) - 0.5;
-            const vz = flame_height;
+            const vx = 1.0/grid_width * gx -0.5;
+            const vy = 1.0/grid_height * gy -0.5;
+			
+			// Check if we are at the boundary
+            if (gx <= 0 || gx >= grid_width - 1 || gy <= 0 || gy >= grid_height - 1) {
+                elevation = fire_level;
+				normals[idx] = [0, 0, -1]; // TODO: check these values
+            } else {
+                normals[idx] = vec3.normalize([0, 0, 0], [
+                    -(height_map.get(gx+1, gy) - height_map.get(gx-1, gy)) / (2. / grid_width),
+                    -(height_map.get(gx, gy+1) - height_map.get(gx, gy-1)) / (2. / grid_height),
+                    1.,
+                ]);
+            }
 
-            vertices[idx] = [vx, vy, vz]; // Position in 3D space
-
-            // Normals and texture coordinates
-            normals[idx] = [0, 0, 1]; // Normal facing up
-            tex_coords[idx] = [gx / (grid_width - 1), gy / (grid_height - 1)];
+			const vz =  - Math.min(0.5 - 1/(distFromCenter + 1) - Math.abs(1.5*elevation), fire_level) + 0.001;
+            vertices[idx] = [vx, vy, vz];
+			const UV_SCALE = 1.0;
+			tex_coords[idx] = [gx * UV_SCALE / (grid_width - 1), gy * UV_SCALE / (grid_height - 1)];
         }
     }
 
-    // Create faces for the mesh
     for (let gy = 0; gy < grid_height - 1; gy++) {
         for (let gx = 0; gx < grid_width - 1; gx++) {
             const va = xy_to_v_index(gx, gy);

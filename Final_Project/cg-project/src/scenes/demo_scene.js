@@ -106,14 +106,15 @@ export class DemoScene extends Scene {
     });
   }
 
-  /*initialize_flame() {
-    const flame_height_map = this.procedural_texture_generator.compute_texture(
-        "fire_heightmap",
-        noise_functions.Flame,
-        { width: 96, height: 96 }
+  initialize_flame() {
+    const height_map = this.procedural_texture_generator.compute_texture(
+      "perlin_heightmap", 
+      noise_functions.FBM_for_terrain,
+      { width: 96, height: 96, mouse_offset: [-12.24, 8.15] }
     );
 
-    const flame = fire_build_mesh(flame_height_map, this.GROUND_LEVEL + 0.2, Date.now() * 0.001); // To be adjusted
+    const flame = fire_build_mesh(height_map, this.GROUND_LEVEL + 0.2);
+    //const flame = terrain_build_mesh(height_map, this.GROUND_LEVEL)
     this.resource_manager.add_procedural_mesh("mesh_flame", flame);
     
     this.flame_material = this.procedural_texture_generator.generate_flame_material();
@@ -121,14 +122,14 @@ export class DemoScene extends Scene {
     const flame_obj = {
         mesh_reference: 'mesh_flame',
         material: this.flame_material,
-        translation: [0, 0, 0.6], // Slightly above ground
+        translation: [0, 0, 1], // Slightly above ground
         scale: [1, 1, 1],
     };
     this.dynamic_objects.push(flame_obj);
     this.actors["flame"] = flame_obj;
-  }*/
+  }
 
-  initialize_flame() {
+  /*initialize_flame() {
     this.flame_material = this.procedural_texture_generator.generate_flame_material();
 
     // Check if flame_material is valid
@@ -145,7 +146,7 @@ export class DemoScene extends Scene {
     };
     this.dynamic_objects.push(flame);
     this.actors["flame"] = flame;
-  }
+  }*/
 
   /**
    * Initialize the evolve function that describes the behaviour of each actor 
@@ -167,10 +168,31 @@ export class DemoScene extends Scene {
         };
       }
       else if (name.includes("flame")) {
-
         const flame = this.actors[name];
+        const amplitude = 0.2; // How high/low the flame moves
+        const speed = 2; // Speed of the oscillation
+
         flame.evolve = (dt) => {
-            flame.material.updateColor();
+            const currentTime = performance.now() * 0.001; // Get time in seconds
+            const fire_level = Math.abs(Math.sin(currentTime)) * 0.5; // Use a value based on time
+
+            // Regenerate the height map and flame mesh
+            const height_map = this.procedural_texture_generator.compute_texture(
+                "perlin_heightmap", 
+                noise_functions.FBM_for_terrain, 
+                { width: 96, height: 96, mouse_offset: [-12.24, 8.15] }
+            );
+
+            // Generate the new flame mesh using the updated fire_level
+            const new_mesh = fire_build_mesh(height_map, this.GROUND_LEVEL + fire_level);
+            
+            // Update resource manager with the new mesh
+            this.resource_manager.add_procedural_mesh("mesh_flame", new_mesh);
+            flame.mesh_reference = "mesh_flame";
+
+            // Update the y position to create an oscillating effect
+            flame.translation[2] = 1 + amplitude * Math.sin(speed * currentTime);
+            flame.material.updateColor(); // Update color based on the material logic
         };
       }
       // Lights
@@ -202,7 +224,6 @@ export class DemoScene extends Scene {
         const branches = this.actors[name];
         branches.evolve = (dt) => {};
       }
-
     }
   }
 

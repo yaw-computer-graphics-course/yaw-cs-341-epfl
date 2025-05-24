@@ -208,39 +208,6 @@ float rand(float x) {
     return fract(sin(x * 12.9898) * 43758.5453);
 }
 
-vec3 tex_flame(vec2 point) {
-    float freq = 2.0;    // Higher frequency for sharpness
-    float ampl = 0.5;    // Initial amplitude
-    float base_noise = 0.0;
-
-    // Layer multiple octaves of noise for more chaotic patterns
-    for (int i = 0; i < num_octaves; i++) {
-        base_noise += ampl * perlin_noise(freq * point);
-        freq *= 2.0;      // Increase frequency more aggressively
-        ampl *= 0.5;      // Decrease amplitude to add sharpness
-    }
-
-    // Flickering effect
-    float flicker = sin(point.x * 12.0 + u_time * 4.0) * 0.2; // More pronounced flicker
-    float brightness = base_noise + flicker;
-
-    // Control brightness with sharp edges
-    brightness = smoothstep(0.3, 1.0, brightness); // Adjusted for sharp transitions
-
-    // Define a color gradient for sharp flame peaks
-    vec3 low_color = vec3(1.0, 0.4, 0.0);  // Deep orange
-    vec3 high_color = vec3(1.0, 0.9, 0.5); // Light yellow
-
-    // Create a sharp gradient effect based on brightness
-    vec3 fire_color = mix(low_color, high_color, brightness);
-
-    // Introduce jaggedness by modifying the shape more dramatically
-    point.y += sin(point.x * 3.0 + u_time * 3.0) * 0.1; // Create chaotic peak shapes
-    point.x += 0.1 * (0.5 - rand(point.y)); // Randomize horizontal position for jaggedness
-
-    return fire_color;
-}
-
 // ==============================================================
 // 2D Fractional Brownian Motion
 
