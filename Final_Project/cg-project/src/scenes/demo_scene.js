@@ -121,8 +121,7 @@ export class DemoScene extends Scene {
     // Use a time-dependent method for height map creation
     const timeFactor = Date.now() / 1000; // Getting the current time in seconds
     const initial_height_map = this.create_height_map(
-        Math.sin(timeFactor) * 10, // Use a sine function for smooth oscillation
-        Math.cos(timeFactor) * 10  // Similarly for the Y offset
+        Math.log(10 * timeFactor), Math.log(10 * timeFactor)
     );
 
     const flame = fire_build_mesh(initial_height_map, this.GROUND_LEVEL + 0.2);
@@ -166,32 +165,25 @@ export class DemoScene extends Scene {
         //const updateInterval = 0.090;
         const updateInterval = 0.1;
   
-        flame.evolve = (dt) => {
+        flame.evolve = dt => {
           lastUpdateTime += dt;
-          if (lastUpdateTime < updateInterval) {
+          if (lastUpdateTime < updateInterval) return;
+    
+          lastUpdateTime = 0;
+          const timeFactor = (Date.now() / 1000) * 7;
+          const new_height_map = this.create_height_map(
+            Math.sin(timeFactor) * 5,
+            Math.cos(timeFactor) * 4
+          );
+    
+          if (!new_height_map || !new_height_map.data) {
+            console.error("Invalid height map", new_height_map);
             return;
           }
-          lastUpdateTime = 0;
-          // Use a time-dependent method for height map creation
-          const timeFactor = (Date.now() / 1000) * 3; // Multiply by 3 for 3x speed
-          const new_height_map = this.create_height_map(
-              Math.sin(timeFactor) * 10, // Use a sine function for smooth oscillation
-              Math.cos(timeFactor) * 10  // Similarly for the Y offset
-          );
-          
-          // Check that new_height_map is valid
-          if (!new_height_map || !new_height_map.data) {
-              console.error("New height map is invalid", new_height_map);
-              return; // Exit if the height map is not defined correctly
-          }
-          
-          // Regenerate the flame mesh with the new height map
-          const new_mesh = fire_build_mesh(new_height_map, this.GROUND_LEVEL + 0.2, timeFactor); // Pass time to fire_build_mesh
-          
-          // Update the resource manager and reference for the flame object
+    
+          const new_mesh = fire_build_mesh(new_height_map, this.GROUND_LEVEL + 0.2, timeFactor);
           this.resource_manager.add_procedural_mesh("mesh_flame", new_mesh);
           flame.mesh_reference = "mesh_flame";
-          
           flame.material.updateColor();
         };
       }

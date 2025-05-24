@@ -28,9 +28,9 @@ class PerlinNoise {
     }
 
     seededRandom(seed) {
-        let x = Math.sin(seed) * 10000;
+        let x = Math.log(seed) * 10000;
         return function() {
-            x = Math.sin(x) * 10000;
+            x = Math.log(x) * 10000;
             return x - Math.floor(x);
         };
     }
@@ -196,10 +196,10 @@ export function fire_build_mesh(height_map, fire_level, time = 0) {
             // Combine all effects
             const totalDisplacement = flameDisplacement + upwardBias;
             
-            const vz = -Math.min(
-                0.5 - 1 / (distFromCenter + 1) - Math.abs(1.5 * elevation) + totalDisplacement, 
+            const vz = -Math.exp(distFromCenter) -Math.min(
+                0.5 - 1 / (distFromCenter + 1) - Math.abs(1.5 * elevation) + 2. * totalDisplacement, 
                 fire_level
-            ) + 0.001;
+            ) + 3.001;
 
             vertices[idx] = [vx, vy, vz];
             
