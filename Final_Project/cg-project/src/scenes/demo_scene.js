@@ -1,5 +1,3 @@
-
-import { TurntableCamera } from "../scene_resources/camera.js"
 import * as MATERIALS from "../render/materials.js"
 import { cg_mesh_make_uv_sphere } from "../cg_libraries/cg_mesh.js"
 import { terrain_build_mesh, ground_build_mesh } from "../scene_resources/terrain_generation.js"
@@ -10,11 +8,6 @@ import { create_slider, create_hotkey_action, create_button_with_hotkey } from "
 import { ResourceManager } from "../scene_resources/resource_manager.js"
 import { ProceduralTextureGenerator } from "../render/procedural_texture_generator.js"
 import tree_build_mesh from "../scene_resources/tree_generation.js"
-import { vec3 } from "../../lib/gl-matrix_3.3.0/esm/index.js"
-import { create_button, create_slider, create_hotkey_action, create_button_with_hotkey } from "../cg_libraries/cg_web.js"
-import { ResourceManager } from "../scene_resources/resource_manager.js"
-import { ProceduralTextureGenerator } from "../render/procedural_texture_generator.js"
-import { Material } from "../../lib/webgl-obj-loader_2.0.8/webgl-obj-loader.module.js"
 
 
 export class DemoScene extends Scene {
@@ -25,12 +18,11 @@ export class DemoScene extends Scene {
    * @param {ResourceManager} resource_manager 
    * @param {ProceduralTextureGenerator} procedural_texture_generator 
    */
-  constructor(resource_manager, procedural_texture_generator, scene_renderer){
+  constructor(resource_manager, procedural_texture_generator){
     super();
 
     this.resource_manager = resource_manager;    
     this.procedural_texture_generator = procedural_texture_generator;
-    this.scene_renderer = scene_renderer;
 
     // Additional helper lists to better organize dynamic object generation
     this.static_objects = [];
@@ -411,9 +403,8 @@ export class DemoScene extends Scene {
         this.ui_params.use_ssao = !this.ui_params.use_ssao;
     });
 
-    create_hotkey_action("Soft Shadows", 's', () => {
+    create_hotkey_action("Soft Shadows", "s", () => {
       this.ui_params.use_soft_shadows = !this.ui_params.use_soft_shadows;
-      this.scene_renderer.setShadowType(this.ui_params.use_soft_shadows);
     })
   }
 }

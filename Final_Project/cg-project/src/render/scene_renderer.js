@@ -94,15 +94,6 @@ export class SceneRenderer {
     }
 
     /**
-     * Sets the shadow type (hard or soft).
-     * @param {boolean} use_soft_shadows - True for soft shadows, false for hard shadows.
-     */
-    setShadowType(use_soft_shadows) {
-        this.shadows.setShadowShader(use_soft_shadows);
-    }
-
-
-    /**
      * Core function to render a scene
      * Call the render passes in this function
      * @param {*} scene_state the description of the scene, time, dynamically modified parameters, etc.
@@ -171,7 +162,7 @@ export class SceneRenderer {
             this.pre_processing.render(scene_state);
 
             // Render the shadows
-            this.shadows.render(scene_state, scene.ui_params.shadow_softness);
+            this.shadows.render(scene_state, scene.ui_params.shadow_softness, scene.ui_params.use_soft_shadows);
         })
 
         /*---------------------------------------------------------------

@@ -18,7 +18,7 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
             regl, 
             resource_manager, 
             `point_light_shadows.vert.glsl`, 
-            `point_light_hard_shadows.frag.glsl` // Initialize with hard shadows
+            `point_light_soft_shadows.frag.glsl` // Initialize with hard shadows
         );
         this.env_capture = new EnvironmentCapture(regl, resource_manager);
         // Here we instanciante the ShadowMapShaderRenderer directly into the ShadowsShaderRenderer 
@@ -48,48 +48,6 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
         // Store references to both shader paths and load their respective pipelines
         this.hard_shadow_frag_shader = resource_manager.get_shader(`point_light_hard_shadows.frag.glsl`);
         this.soft_shadow_frag_shader = resource_manager.get_shader(`point_light_soft_shadows.frag.glsl`);
-
-        // Create separate pipeline commands for hard and soft shadows
-        // We override init_pipeline to create these specific commands
-        this.hard_shadow_pipeline_command = this.create_pipeline_command(this.hard_shadow_frag_shader);
-        this.soft_shadow_pipeline_command = this.create_pipeline_command(this.soft_shadow_frag_shader);
-        
-        // Set the initial active pipeline
-        this.pipeline = this.hard_shadow_pipeline_command;
-
-    }
-
-    /** 
-     * Helper function to create a pipeline command for a given fragment shader.
-     * This bypasses the default this.frag_shader set in the super constructor.
-     * @param {string} fragShaderContent The content of the fragment shader.
-     * @returns {Function} The regl command.
-     */
-    create_pipeline_command(fragShaderContent) {
-        const regl = this.regl;
-
-        return regl({
-            attributes: this.attributes(regl),
-            elements: regl.prop('mesh.faces'),
-            depth: this.depth(),
-            cull: this.cull(),
-            blend: this.blend(),
-            uniforms: this.uniforms(regl),
-            vert: this.vert_shader, // Use the vertex shader loaded in the superclass**
-            frag: fragShaderContent,
-        });
-    }
-
-    /**
-     * Switches the active shadow shader (hard or soft).
-     * @param {boolean} use_soft_shadows - True to use soft shadows, false for hard shadows.
-     */
-    setShadowShader(use_soft_shadows) {
-        if (use_soft_shadows) {
-            this.pipeline = this.soft_shadow_pipeline_command;
-        } else {
-            this.pipeline = this.hard_shadow_pipeline_command;
-        }
     }
 
     /**
@@ -97,7 +55,7 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
      * White means "shadows" black means "no shadows"
      * @param {*} scene_state 
      */
-    render(scene_state, shadow_softness = 0.05){
+    render(scene_state, shadow_softness = 0.05, use_soft_shadows=false){
 
         const scene = scene_state.scene;
         const inputs = [];
@@ -109,8 +67,9 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
 
         const poissonDisk = this.poissonDisk;
 
-        // Use the currently active pipeline
-        const current_pipeline = this.pipeline;
+        this.frag_shader = use_soft_shadows ? this.soft_shadow_frag_shader : this.hard_shadow_frag_shader;
+
+        this.pipeline = this.init_pipeline();
 
         scene.lights.forEach(light => {
             // Transform light position into camera space
@@ -147,13 +106,13 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
                 });
             }
 
-            current_pipeline(inputs);
+            this.pipeline(inputs);
         });
     }
 
 
     exclude_object(obj){
-        return !obj.material.properties.includes('shadow')
+        return obj.material.properties.includes('environment')
     }
 
     compute_shadow_cube_map(scene_state, light){
