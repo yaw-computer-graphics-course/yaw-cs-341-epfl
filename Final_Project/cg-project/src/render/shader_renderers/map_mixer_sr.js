@@ -26,7 +26,7 @@ export class MapMixerShaderRenderer extends ShaderRenderer {
      * @param {*} rendered_shadows a texture containing the shadows information
      * @param {*} rendered_blinn_phong a texture with the objects colors & shading 
      */
-    render(scene_state, rendered_shadows, rendered_blinn_phong){
+    render(scene_state, rendered_shadows, rendered_blinn_phong, rendered_ssao, ui_ssao_strength, ui_use_ssao){
 
         const scene = scene_state.scene;
         const inputs = [];
@@ -54,6 +54,10 @@ export class MapMixerShaderRenderer extends ShaderRenderer {
                 shadows: rendered_shadows,
 
                 blinn_phong: rendered_blinn_phong,
+
+                ssao: rendered_ssao,
+                ssao_strength: ui_ssao_strength,
+                use_ssao: ui_use_ssao,
             });
         }
 
@@ -71,6 +75,9 @@ export class MapMixerShaderRenderer extends ShaderRenderer {
 
             shadows: regl.prop("shadows"),
             blinn_phong: regl.prop("blinn_phong"),
+            ssao: regl.prop('ssao'),
+            ssao_strength: regl.prop('ssao_strength'),
+            use_ssao: regl.prop('use_ssao'),
         };
     }
 }

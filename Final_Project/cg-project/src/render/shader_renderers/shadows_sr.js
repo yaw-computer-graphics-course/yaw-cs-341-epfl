@@ -24,7 +24,7 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
         // Here we instanciante the ShadowMapShaderRenderer directly into the ShadowsShaderRenderer 
         // because the latter needs to pass shadow_map render function to the env_capture to generate the cube_map 
         this.shadow_map = new ShadowMapShaderRenderer(regl, resource_manager);
-        this.shadow_softness = 0.05; // Default softness value
+        
         // 16 Poisson disk samples for PCF (Percentage Closer Filtering)
         this.poissonDisk = [
             [-0.94201624, -0.39906216],
@@ -51,7 +51,7 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
      * White means "shadows" black means "no shadows"
      * @param {*} scene_state 
      */
-    render(scene_state){
+    render(scene_state, shadow_softness = 0.05){
 
         const scene = scene_state.scene;
         const inputs = [];
@@ -61,7 +61,6 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
 
         const num_lights = scene.lights.length;
 
-        const shadow_softness = this.shadow_softness;
         const poissonDisk = this.poissonDisk;
 
         scene.lights.forEach(light => {

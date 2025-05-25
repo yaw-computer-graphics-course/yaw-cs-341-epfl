@@ -167,6 +167,11 @@ export class ResourceManager{
             'noise.vert.glsl', 'noise.frag.glsl',
             `buffer_to_screen.vert.glsl`, `buffer_to_screen.frag.glsl`,
             'terrain.vert.glsl', 'terrain.frag.glsl',
+            'normals.vert.glsl','normals.frag.glsl',
+            'positions.vert.glsl','positions.frag.glsl',
+            'texcoords.vert.glsl',
+            'ssao.frag.glsl',
+            'ssao_blur.frag.glsl',
           ];
     }
 

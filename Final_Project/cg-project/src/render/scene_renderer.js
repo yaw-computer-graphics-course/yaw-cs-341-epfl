@@ -7,6 +7,10 @@ import { MapMixerShaderRenderer } from "./shader_renderers/map_mixer_sr.js"
 import { TerrainShaderRenderer } from "./shader_renderers/terrain_sr.js"
 import { PreprocessingShaderRenderer } from "./shader_renderers/pre_processing_sr.js"
 import { ResourceManager } from "../scene_resources/resource_manager.js"
+import { PositionsShaderRenderer } from "./shader_renderers/positions_sr.js"
+import { NormalsShaderRenderer } from "./shader_renderers/normals_sr.js"
+import { SSAOShaderRenderer } from "./shader_renderers/ssao_sr.js"
+import { SSAOBlurShaderRenderer } from "./shader_renderers/ssao_blur_sr.js"
 
 export class SceneRenderer {
 
@@ -32,9 +36,18 @@ export class SceneRenderer {
         this.shadows = new ShadowsShaderRenderer(regl, resource_manager);
         this.map_mixer = new MapMixerShaderRenderer(regl, resource_manager);
 
+        this.positions = new PositionsShaderRenderer(regl, resource_manager);
+        this.normals = new NormalsShaderRenderer(regl, resource_manager);
+        this.ssao = new SSAOShaderRenderer(regl, resource_manager);
+        this.ssao_with_blur = new SSAOBlurShaderRenderer(regl, resource_manager);
+
         // Create textures & buffer to save some intermediate renders into a texture
         this.create_texture_and_buffer("shadows", {}); 
         this.create_texture_and_buffer("base", {}); 
+        this.create_texture_and_buffer("positions", {});
+        this.create_texture_and_buffer("normals", {});
+        this.create_texture_and_buffer("ssao", {});
+        this.create_texture_and_buffer("ssao_with_blur", {});
     }
 
     /**
@@ -102,6 +115,15 @@ export class SceneRenderer {
         scene.camera.compute_objects_transformation_matrices(scene.objects);
 
         /*---------------------------------------------------------------
+            0.5 SSAO Render Passes
+        ---------------------------------------------------------------*/
+
+        this.render_in_texture("positions", () => this.positions.render(scene_state));
+        this.render_in_texture("normals", () => this.normals.render(scene_state));
+        this.render_in_texture("ssao", () => this.ssao.render(scene_state, this.texture("positions"), this.texture("normals")));
+        this.render_in_texture("ssao_with_blur", () => this.ssao_with_blur.render(scene_state, this.texture("ssao")));
+
+        /*---------------------------------------------------------------
             1. Base Render Passes
         ---------------------------------------------------------------*/
 
@@ -140,7 +162,7 @@ export class SceneRenderer {
             this.pre_processing.render(scene_state);
 
             // Render the shadows
-            this.shadows.render(scene_state);
+            this.shadows.render(scene_state, scene.ui_params.shadow_softness);
         })
 
         /*---------------------------------------------------------------
@@ -148,14 +170,17 @@ export class SceneRenderer {
         ---------------------------------------------------------------*/
 
         // Mix the base color of the scene with the shadows information to create the final result
-        this.map_mixer.render(scene_state, this.texture("shadows"), this.texture("base"));
+        this.map_mixer.render(
+            scene_state,
+            this.texture("shadows"),
+            this.texture("base"),
+            this.texture("ssao_with_blur"),
+            scene.ui_params.ssao_strength,
+            scene.ui_params.use_ssao ? 1 : 0,
+        );
 
         // Visualize cubemap
         // this.mirror.env_capture.visualize();
 
     }
 }
-
-
-
-

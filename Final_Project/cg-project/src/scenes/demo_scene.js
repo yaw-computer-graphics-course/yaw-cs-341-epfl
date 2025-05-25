@@ -6,8 +6,7 @@ import { terrain_build_mesh, ground_build_mesh } from "../scene_resources/terrai
 import { fire_build_mesh } from "../scene_resources/fire_generation.js"
 import { noise_functions } from "../render/shader_renderers/noise_sr.js"
 import { Scene } from "./scene.js"
-import { vec3 } from "../../lib/gl-matrix_3.3.0/esm/index.js"
-import { create_button, create_slider, create_hotkey_action } from "../cg_libraries/cg_web.js"
+import { create_slider, create_hotkey_action, create_button_with_hotkey } from "../cg_libraries/cg_web.js"
 import { ResourceManager } from "../scene_resources/resource_manager.js"
 import { ProceduralTextureGenerator } from "../render/procedural_texture_generator.js"
 
@@ -297,6 +296,12 @@ export class DemoScene extends Scene {
 
     this.ui_params.light_height = [7, 6];
 
+    this.ui_params.ssao_strength = 0.5;
+
+    this.ui_params.use_ssao = true;
+
+    this.ui_params.shadow_softness = 0.05;
+
     // Set preset view
     create_hotkey_action("Preset view", "1", () => {
       this.camera.set_preset_view({
@@ -321,8 +326,18 @@ export class DemoScene extends Scene {
     });
     // Add shadow softness control
     create_slider("Shadow Softness", [0, n_steps_slider], (value) => {
-      const softness = value / 1000; // Scale to reasonable range
-      this.shadows_renderer.setSoftness(softness);
+      this.ui_params.shadow_softness = value / 1000;
     });
+
+    // SSAO strength slider
+    create_slider("SSAO Strength", [0, n_steps_slider], (i) => {
+        this.ui_params.ssao_strength = i / n_steps_slider; // Range [0,1]
+    });
+
+    // SSAO toggle
+    create_button_with_hotkey("Toggle SSAO", "s", () => {
+        this.ui_params.use_ssao = !this.ui_params.use_ssao;
+    });
+
   }
 }
