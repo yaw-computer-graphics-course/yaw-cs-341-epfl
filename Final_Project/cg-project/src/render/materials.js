@@ -185,3 +185,13 @@ export const branch = new DiffuseMaterial({
     shininess: 0.5
 });
 branch.properties.push("shadow");
+
+export const bench = new DiffuseMaterial({
+    texture: 'eb_hipster_bench_01_c.png',
+    shininess: 0.5
+});
+
+export const firewood = new DiffuseMaterial({
+    texture: 'firewood.png',
+    shininess: 0.5
+});

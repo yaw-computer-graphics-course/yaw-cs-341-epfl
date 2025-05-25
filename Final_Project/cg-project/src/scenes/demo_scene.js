@@ -10,6 +10,11 @@ import { create_slider, create_hotkey_action, create_button_with_hotkey } from "
 import { ResourceManager } from "../scene_resources/resource_manager.js"
 import { ProceduralTextureGenerator } from "../render/procedural_texture_generator.js"
 import tree_build_mesh from "../scene_resources/tree_generation.js"
+import { vec3 } from "../../lib/gl-matrix_3.3.0/esm/index.js"
+import { create_button, create_slider, create_hotkey_action, create_button_with_hotkey } from "../cg_libraries/cg_web.js"
+import { ResourceManager } from "../scene_resources/resource_manager.js"
+import { ProceduralTextureGenerator } from "../render/procedural_texture_generator.js"
+import { Material } from "../../lib/webgl-obj-loader_2.0.8/webgl-obj-loader.module.js"
 
 
 export class DemoScene extends Scene {
@@ -20,11 +25,12 @@ export class DemoScene extends Scene {
    * @param {ResourceManager} resource_manager 
    * @param {ProceduralTextureGenerator} procedural_texture_generator 
    */
-  constructor(resource_manager, procedural_texture_generator){
+  constructor(resource_manager, procedural_texture_generator, scene_renderer){
     super();
 
     this.resource_manager = resource_manager;    
     this.procedural_texture_generator = procedural_texture_generator;
+    this.scene_renderer = scene_renderer;
 
     // Additional helper lists to better organize dynamic object generation
     this.static_objects = [];
@@ -121,6 +127,33 @@ export class DemoScene extends Scene {
       this.actors[obj.name] = item;
       this.static_objects.push(item);
     });
+    // bench 1
+    const item1 = {
+      mesh_reference: "bench1.obj",
+      material: MATERIALS.bench,
+      translation: [0, 3, 0],
+      scale: [2, 2, 2],
+    };
+    this.actors["bench1"] = item1;
+    this.static_objects.push(item1);
+    // bench 2
+    const item2 = {
+      mesh_reference: "bench2.obj",
+      material: MATERIALS.bench,
+      translation: [-3, -3, 0],
+      scale: [2, 2, 2],
+    };
+    this.actors["bench2"] = item2;
+    this.static_objects.push(item2);
+    // firewood
+    const item3 = {
+      mesh_reference: "firewood.obj",
+      material: MATERIALS.firewood,
+      translation: [2.5, 2.5, 0],
+      scale: [2, 2, 2],
+    };
+    this.actors["firewood"] = item3;
+    this.static_objects.push(item3);
   }
 
   initialize_lights() {
@@ -290,6 +323,21 @@ export class DemoScene extends Scene {
         const branches = this.actors[name];
         branches.evolve = (dt) => {};
       }
+      //Benches
+      else if (name.includes("bench1")){
+        const bench1 = this.actors[name];
+        bench1.evolve = (dt) => {};
+      }
+      else if (name.includes("bench2")){
+        const bench2 = this.actors[name];
+        bench2.evolve = (dt) => {};
+      }
+      //firewood
+      else if (name.includes("firewood")){
+        const firewood = this.actors[name];
+        firewood.evolve = (dt) => {};
+      }
+
     }
   }
 
@@ -324,6 +372,7 @@ export class DemoScene extends Scene {
     this.ui_params.use_ssao = true;
 
     this.ui_params.shadow_softness = 0.05;
+    this.ui_params.use_soft_shadows = true; // Initial state: soft shadows
 
     // Set preset view
     create_hotkey_action("Preset view", "1", () => {
@@ -358,9 +407,13 @@ export class DemoScene extends Scene {
     });
 
     // SSAO toggle
-    create_button_with_hotkey("Toggle SSAO", "s", () => {
+    create_button_with_hotkey("Toggle SSAO", "a", () => {
         this.ui_params.use_ssao = !this.ui_params.use_ssao;
     });
 
+    create_hotkey_action("Soft Shadows", 's', () => {
+      this.ui_params.use_soft_shadows = !this.ui_params.use_soft_shadows;
+      this.scene_renderer.setShadowType(this.ui_params.use_soft_shadows);
+    })
   }
 }

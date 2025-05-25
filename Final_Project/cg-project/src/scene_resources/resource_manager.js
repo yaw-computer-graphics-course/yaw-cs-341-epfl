@@ -151,14 +151,16 @@ export class ResourceManager{
             'Rock035_1K_Color.png',
             'Rock047_1K_Color.png',
             'Wood006_1K_Color.png',
-            'rock_texture_1.jpg'
+            'rock_texture_1.jpg',
+            'eb_hipster_bench_01_c.png',
+            "firewood.png",
           ];
     }
 
     shaders_to_load(){
         return [
             'blinn_phong.vert.glsl', 'blinn_phong.frag.glsl',
-            'point_light_shadows.vert.glsl', 'point_light_shadows.frag.glsl',
+            'point_light_shadows.vert.glsl', 'point_light_soft_shadows.frag.glsl',
             'flat_color.vert.glsl', 'flat_color.frag.glsl',
             'map_mixer.vert.glsl', 'map_mixer.frag.glsl',
             'mirror.vert.glsl', 'mirror.frag.glsl',
@@ -172,6 +174,7 @@ export class ResourceManager{
             'texcoords.vert.glsl',
             'ssao.frag.glsl',
             'ssao_blur.frag.glsl',
+            'flame_shader.glsl', 'point_light_hard_shadows.frag.glsl'
           ];
     }
 
@@ -182,6 +185,9 @@ export class ResourceManager{
         "Log.obj",
         "Stones.obj",
         "Branches.obj",
+        "flame.obj",
+        "bench1.obj", "bench2.obj",
+        "firewood.obj",
       ];
     }
 
