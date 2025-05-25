@@ -9,6 +9,7 @@ import { Scene } from "./scene.js"
 import { create_slider, create_hotkey_action, create_button_with_hotkey } from "../cg_libraries/cg_web.js"
 import { ResourceManager } from "../scene_resources/resource_manager.js"
 import { ProceduralTextureGenerator } from "../render/procedural_texture_generator.js"
+import tree_build_mesh from "../scene_resources/tree_generation.js"
 
 
 export class DemoScene extends Scene {
@@ -80,6 +81,8 @@ export class DemoScene extends Scene {
     this.objects = this.static_objects.concat(this.dynamic_objects);
   }
 
+
+
   setup_static_objects() {
     const objects = [
       { name: "stones", mesh: "Stones.obj", material: MATERIALS.stone },
@@ -87,6 +90,26 @@ export class DemoScene extends Scene {
       { name: "coal", mesh: "Coal.obj", material: MATERIALS.coal },
       { name: "branches", mesh: "Branches.obj", material: MATERIALS.branch },
     ];
+
+    for (let i = 0; i < 5; i++) {
+      const radius = 7; // Increase this value for a larger circle
+      const angle = i * 2 * Math.PI / 5;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+
+      const tree_mesh = tree_build_mesh();
+      const mesh_name = `mesh_tree_${i}`;
+      this.resource_manager.add_procedural_mesh(mesh_name, tree_mesh);
+
+      const tree_obj = {
+        mesh_reference: mesh_name,
+        material: MATERIALS.gray,
+        translation: [x, y, -0.25],
+        scale: [10, 10, 10],
+      };
+      this.static_objects.push(tree_obj);
+      this.actors[`tree_${i}`] = tree_obj;
+    }
 
     objects.forEach(obj => {
       const item = {
