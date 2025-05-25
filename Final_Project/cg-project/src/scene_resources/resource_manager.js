@@ -154,6 +154,9 @@ export class ResourceManager{
             'rock_texture_1.jpg',
             'eb_hipster_bench_01_c.png',
             "firewood.png",
+            "grass.jpg",
+            "Wood.png",
+            "green-grass-texture.jpg",
           ];
     }
 
@@ -188,6 +191,7 @@ export class ResourceManager{
         "flame.obj",
         "bench1.obj", "bench2.obj",
         "firewood.obj",
+        "chest.obj",
       ];
     }
 

@@ -66,7 +66,7 @@ export class DemoScene extends Scene {
       translation: [0, 0, 0],
       scale: this.TERRAIN_SCALE,
       mesh_reference: 'mesh_ground',
-      material: MATERIALS.rock1
+      material: MATERIALS.grass
     });
 
     // Add static objects
@@ -146,6 +146,15 @@ export class DemoScene extends Scene {
     };
     this.actors["firewood"] = item3;
     this.static_objects.push(item3);
+    // Chest
+    const item4 = {
+      mesh_reference: "chest.obj",
+      material: MATERIALS.chest_tex,
+      translation: [-2, 9, 0],
+      scale: [.7, .7, .7],
+    };
+    this.actors["chest"] = item4;
+    this.static_objects.push(item4);
   }
 
   initialize_lights() {
@@ -171,8 +180,7 @@ export class DemoScene extends Scene {
     // Add dynamic lights for flame objects
     const flameLight = {
       position: [0, 0, maxElevation], 
-      color: [1.0, 0., 0.0],
-      intensity: 5.0
+      color: [1.0, 0.0, 0.0],
     };
     
     this.lights.push(flameLight);
@@ -210,6 +218,15 @@ export class DemoScene extends Scene {
     const initial_height_map = this.create_height_map(96, 96);
 
     this.flame_height_map = initial_height_map;
+
+    this.flame_index = 0;
+
+    // Define the distinct colors
+    this.flame_colors = [
+        [1.0, 0.78, 0.3],   // Red
+        [1.0, 0.55, 0.2],  // Orange
+        [0.85, 0.32, 0.1]    // Yellow
+    ];
 
     const flame = fire_build_mesh(initial_height_map, this.GROUND_LEVEL + 0.2);
     //const flame = terrain_build_mesh(height_map, this.GROUND_LEVEL)
@@ -272,16 +289,8 @@ export class DemoScene extends Scene {
           flame.mesh_reference = "mesh_flame";
           
           const time = performance.now() * 0.001; // Convert in seconds
-          const cycle = Math.floor(Math.sin(time * 2) * 1.2 + 1); // 0, 1, or 2
-
-          // Define the distinct colors
-          const colors = [
-              [1.0, 0.0, 0.0],   // Red
-              [1.0, 0.0, 0.4],  // Orange
-              [1.0, 0.3, 0.0]    // Yellow
-          ];
-
-          const color = colors[Math.max(Math.min(cycle, 2), 0)]
+          this.flame_index = (this.flame_index + 1) % 3
+          const color = this.flame_colors[this.flame_index]
           this.resource_manager.update_flame_color(color)
         };
       }
@@ -295,41 +304,10 @@ export class DemoScene extends Scene {
           this.update_flame_light();
         }
       }
-      //Stones
-      else if (name.includes("stones")){
-        const stones = this.actors[name];
-        stones.evolve = (dt) => {};
+      else {
+        const actor = this.actors[name];
+        actor.evolve = (dt) => {}
       }
-      //Log
-      else if (name.includes("log")){
-        const log = this.actors[name];
-        log.evolve = (dt) => {};
-      }
-      //Coal
-      else if (name.includes("coal")){
-        const coal = this.actors[name];
-        coal.evolve = (dt) => {};
-      }
-      //Branches
-      else if (name.includes("branches")){
-        const branches = this.actors[name];
-        branches.evolve = (dt) => {};
-      }
-      //Benches
-      else if (name.includes("bench1")){
-        const bench1 = this.actors[name];
-        bench1.evolve = (dt) => {};
-      }
-      else if (name.includes("bench2")){
-        const bench2 = this.actors[name];
-        bench2.evolve = (dt) => {};
-      }
-      //firewood
-      else if (name.includes("firewood")){
-        const firewood = this.actors[name];
-        firewood.evolve = (dt) => {};
-      }
-
     }
   }
 
@@ -389,7 +367,7 @@ export class DemoScene extends Scene {
       this.ui_params.light_height[1] = min_light_height_2 + i * (max_light_height_2 - min_light_height_2) / n_steps_slider;
     });
     // Add shadow softness control
-    create_slider("Shadow Softness", [0, n_steps_slider], (value) => {
+    create_slider("Shadow Softness", [0, 200], (value) => {
       this.ui_params.shadow_softness = value / 1000;
     });
 

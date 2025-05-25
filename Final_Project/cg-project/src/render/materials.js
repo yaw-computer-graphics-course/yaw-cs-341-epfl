@@ -191,3 +191,13 @@ export const firewood = new DiffuseMaterial({
     texture: 'firewood.png',
     shininess: 0.5
 });
+
+export const grass = new DiffuseMaterial({
+    texture: 'green-grass-texture.jpg',
+    shininess: 5,
+});
+
+export const chest_tex = new DiffuseMaterial({
+    texture: 'Wood.png',
+    shininess: 5,
+});
