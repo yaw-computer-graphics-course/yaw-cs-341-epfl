@@ -158,7 +158,7 @@ export class ResourceManager{
     shaders_to_load(){
         return [
             'blinn_phong.vert.glsl', 'blinn_phong.frag.glsl',
-            'point_light_shadows.vert.glsl', 'point_light_shadows.frag.glsl',
+            'point_light_shadows.vert.glsl', 'point_light_soft_shadows.frag.glsl',
             'flat_color.vert.glsl', 'flat_color.frag.glsl',
             'map_mixer.vert.glsl', 'map_mixer.frag.glsl',
             'mirror.vert.glsl', 'mirror.frag.glsl',
@@ -167,7 +167,7 @@ export class ResourceManager{
             'noise.vert.glsl', 'noise.frag.glsl',
             `buffer_to_screen.vert.glsl`, `buffer_to_screen.frag.glsl`,
             'terrain.vert.glsl', 'terrain.frag.glsl',
-            'flame_shader.glsl',
+            'flame_shader.glsl', 'point_light_hard_shadows.frag.glsl'
           ];
     }
 
