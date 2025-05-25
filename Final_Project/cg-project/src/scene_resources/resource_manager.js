@@ -151,7 +151,9 @@ export class ResourceManager{
             'Rock035_1K_Color.png',
             'Rock047_1K_Color.png',
             'Wood006_1K_Color.png',
-            'rock_texture_1.jpg'
+            'rock_texture_1.jpg',
+            'eb_hipster_bench_01_c.png',
+            "firewood.png",
           ];
     }
 
@@ -178,7 +180,9 @@ export class ResourceManager{
         "Log.obj",
         "Stones.obj",
         "Branches.obj",
-        "flame.obj"
+        "flame.obj",
+        "bench1.obj", "bench2.obj",
+        "firewood.obj",
       ];
     }
 
