@@ -113,28 +113,6 @@ export class ProceduralTextureGenerator {
         // Display
         this.buffer_to_screen.render(this.mesh_quad_2d, buffer);
     }
-    
-    generate_flame_material() {
-      const flameMaterial = new MATERIALS.FireMaterial({
-          color: [1.0, 0.5, 0.0], // Bright orange color
-          shininess: 0.1, // Optional shine factor
-      });
-  
-      // Ensure the properties array is initialized
-      if (!flameMaterial.properties) {
-          flameMaterial.properties = [];
-      }
-  
-      flameMaterial.properties.push("flame"); // Add a custom property if required
-      return flameMaterial;
-    }
-
-    compute_flame_texture() {
-        // Here, implement noise or any procedural texture logic specifically for flames
-        const flameTexture = this.new_buffer(); // can use a framebuffer to render flames
-        // Render logic goes here, e.g., noise rendering for flame characteristics
-        return flameTexture; // Return the generated flame texture/redrawn buffer
-    }
 
     /**
      * Create the simple square mesh on which the texture is displayed

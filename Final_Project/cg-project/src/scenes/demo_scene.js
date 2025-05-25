@@ -128,11 +128,9 @@ export class DemoScene extends Scene {
     //const flame = terrain_build_mesh(height_map, this.GROUND_LEVEL)
     this.resource_manager.add_procedural_mesh("mesh_flame", flame);
     
-    this.flame_material = this.procedural_texture_generator.generate_flame_material();
-    
     const flame_obj = {
         mesh_reference: 'mesh_flame',
-        material: this.flame_material,
+        material: MATERIALS.flame_material,
         translation: [0, 0, 0],
         scale: [.7, .7, .7],
     };

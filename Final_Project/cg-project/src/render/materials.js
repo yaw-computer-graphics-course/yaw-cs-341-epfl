@@ -126,6 +126,11 @@ export const gold = new DiffuseMaterial({
     shininess: 14.0
 });
 
+export const flame_material = new FireMaterial({
+    texture: 'tex_flame',
+    shininess: 14.0
+});
+
 export const pine = new DiffuseMaterial({
     texture: 'pine.png',
     shininess: 0.5

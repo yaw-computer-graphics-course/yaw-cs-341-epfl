@@ -167,7 +167,6 @@ export class ResourceManager{
             'noise.vert.glsl', 'noise.frag.glsl',
             `buffer_to_screen.vert.glsl`, `buffer_to_screen.frag.glsl`,
             'terrain.vert.glsl', 'terrain.frag.glsl',
-            'flame_shader.glsl',
           ];
     }
 
@@ -178,7 +177,6 @@ export class ResourceManager{
         "Log.obj",
         "Stones.obj",
         "Branches.obj",
-        "flame.obj"
       ];
     }
 
@@ -213,7 +211,5 @@ function generate_textures(regl, resources) {
     resources['tex_water_identifier'] = make_texture_from_color([0.0, 0.0, 1.0])
     resources['tex_water_wall_identifier'] = make_texture_from_color([0.0, 1.0, 1.0])
     resources['tex_terrain'] = make_texture_from_color([1.0, 0.0, 0.0])
-  
+    resources['tex_flame'] = make_texture_from_color([1.0, 0.0, 0.0])
   }
-  
-
