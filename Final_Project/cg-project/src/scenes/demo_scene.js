@@ -35,13 +35,16 @@ export class DemoScene extends Scene {
   }
 
   initialize_scene() {
-    // Add lights
+    // Compute the initial height map for flames if required
+    this.flame_height_map = this.create_height_map(0, 0); // Initial offsets for height map creation
+
+    // Initialize lights after the flame height map is available
     this.initialize_lights();
 
-    // Compute height map using procedural texture
+    // Compute height map for terrain using procedural texture
     const height_map = this.procedural_texture_generator.compute_texture(
       "perlin_heightmap", 
-      noise_functions.FBM_for_terrain, 
+      noise_functions.FBM_for_terrain,
       { width: 96, height: 96, mouse_offset: [-12.24, 8.15] }
     );
 
@@ -99,30 +102,67 @@ export class DemoScene extends Scene {
   }
 
   initialize_lights() {
-    // Add initial lights
-    this.lights.push({
-      position: [0, 0, 4],
-      color: [0.7, 0.0, 0.0]
-    });
-  
+    const height_map = this.flame_height_map; 
+
+    // Ensure flame_height_map is available before calculating max elevation
+    if (!height_map || !height_map.data) {
+        console.error("Height map is not available");
+        return;
+    }
+
+    let maxElevation = -Infinity;
+
+    for (let gx = 0; gx < height_map.width; gx++) {
+        for (let gy = 0; gy < height_map.height; gy++) {
+            const elevation = height_map.data[gx + gy * height_map.width]; // accessing elevation directly
+            if (elevation > maxElevation) {
+                maxElevation = elevation;
+            }
+        }
+    }
+
     // Add dynamic lights for flame objects
     const flameLight = {
-      position: [0, 0, 0],
-      color: [1.0, 0.7, 0.0],
+      position: [0, 0, maxElevation], 
+      color: [1.0, 0., 0.0],
       intensity: 5.0
     };
+    
     this.lights.push(flameLight);
   
     // Store the flame light for later reference
     this.flameLight = flameLight;
   }
 
+  update_flame_light() {
+    if (this.flameLight) {
+        const height_map = this.flame_height_map;
+
+        if (!height_map || !height_map.data) {
+            console.error("Height map is not available");
+            return;
+        }
+
+        let maxElevation = -Infinity;
+
+        for (let gx = 0; gx < height_map.width; gx++) {
+            for (let gy = 0; gy < height_map.height; gy++) {
+                const elevation = height_map.data[gx + gy * height_map.width];
+                if (elevation > maxElevation) {
+                    maxElevation = elevation;
+                }
+            }
+        }
+
+        // Update the position of the flame light to the new max elevation
+        this.flameLight.position[2] = maxElevation; 
+    }
+  }
+
   initialize_flame() {
-    // Use a time-dependent method for height map creation
-    const timeFactor = Date.now() / 1000; // Getting the current time in seconds
-    const initial_height_map = this.create_height_map(
-        Math.log(10 * timeFactor), Math.log(10 * timeFactor)
-    );
+    const initial_height_map = this.create_height_map(96, 96);
+
+    this.flame_height_map = initial_height_map;
 
     const flame = fire_build_mesh(initial_height_map, this.GROUND_LEVEL + 0.2);
     //const flame = terrain_build_mesh(height_map, this.GROUND_LEVEL)
@@ -173,6 +213,7 @@ export class DemoScene extends Scene {
             Math.sin(timeFactor) * 5,
             Math.cos(timeFactor) * 4
           );
+          this.flame_height_map = new_height_map;
     
           if (!new_height_map || !new_height_map.data) {
             console.error("Invalid height map", new_height_map);
@@ -182,7 +223,19 @@ export class DemoScene extends Scene {
           const new_mesh = fire_build_mesh(new_height_map, this.GROUND_LEVEL + 0.2, timeFactor);
           this.resource_manager.add_procedural_mesh("mesh_flame", new_mesh);
           flame.mesh_reference = "mesh_flame";
-          flame.material.updateColor();
+          
+          const time = performance.now() * 0.001; // Convert in seconds
+          const cycle = Math.floor(Math.sin(time * 2) * 1.2 + 1); // 0, 1, or 2
+
+          // Define the distinct colors
+          const colors = [
+              [1.0, 0.0, 0.0],   // Red
+              [1.0, 0.0, 0.4],  // Orange
+              [1.0, 0.3, 0.0]    // Yellow
+          ];
+
+          const color = colors[Math.max(Math.min(cycle, 2), 0)]
+          this.resource_manager.update_flame_color(color)
         };
       }
       // Lights
@@ -192,6 +245,7 @@ export class DemoScene extends Scene {
         light.evolve = (dt) => {
           const curr_pos = light.position;
           light.position = [curr_pos[0], curr_pos[1], this.ui_params.light_height[light_idx]];
+          this.update_flame_light();
         }
       }
       //Stones

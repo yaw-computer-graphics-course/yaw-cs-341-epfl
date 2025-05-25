@@ -8,6 +8,8 @@ import {vec2, vec3, vec4, mat2, mat3, mat4} from "../../lib/gl-matrix_3.3.0/esm/
  */
 export function terrain_build_mesh(height_map, GROUND_LEVEL) {
 
+    const scale_factor = 3;
+
     const grid_width = height_map.width;
     const grid_height = height_map.height;
 
@@ -31,8 +33,8 @@ export function terrain_build_mesh(height_map, GROUND_LEVEL) {
             // Calculate distance from center [0-1] range
             const distFromCenter = Math.sqrt(nx*nx + ny*ny);
 
-            const vx = 1.0/grid_width * gx -0.5;
-            const vy = 1.0/grid_height * gy -0.5;
+            const vx = (1.0/grid_width * gx -0.5) * scale_factor;
+            const vy = (1.0/grid_height * gy -0.5) * scale_factor;
 			
 			// Check if we are at the boundary
             if (gx <= 0 || gx >= grid_width - 1 || gy <= 0 || gy >= grid_height - 1) {
@@ -46,7 +48,7 @@ export function terrain_build_mesh(height_map, GROUND_LEVEL) {
                 ]);
             }
 
-			const vz = Math.min(0.5 - 1/(distFromCenter + 1) - Math.abs(1.5*elevation), GROUND_LEVEL) - 0.001;
+			const vz = (Math.min(0.5 - 1/(distFromCenter + 1) - Math.abs(1.5*elevation), GROUND_LEVEL) - 0.001) * scale_factor;
             vertices[idx] = [vx, vy, vz];
 			const UV_SCALE = 1.0;
 			tex_coords[idx] = [gx * UV_SCALE / (grid_width - 1), gy * UV_SCALE / (grid_height - 1)];
@@ -80,6 +82,9 @@ export function terrain_build_mesh(height_map, GROUND_LEVEL) {
  * @returns ground plane mesh data
  */
 export function ground_build_mesh(height_map, GROUND_LEVEL) {
+
+    const scale_factor = 3;
+
     const grid_width = height_map.width;
     const grid_height = height_map.height;
 
@@ -98,11 +103,11 @@ export function ground_build_mesh(height_map, GROUND_LEVEL) {
             const idx = xy_to_v_index(gx, gy);
             
             // Convert grid coordinates to vertex positions
-            const vx = 1.0/grid_width * gx - 0.5;
-            const vy = 1.0/grid_height * gy - 0.5;
+            const vx = (1.0/grid_width * gx - 0.5) * scale_factor;
+            const vy = (1.0/grid_height * gy - 0.5) * scale_factor;
             
             // All vertices are at GROUND_LEVEL for a flat plane
-            const vz = GROUND_LEVEL;
+            const vz = GROUND_LEVEL * scale_factor;
 
             vertices[idx] = [vx, vy, vz];
             

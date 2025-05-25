@@ -166,18 +166,22 @@ export const stone = new DiffuseMaterial({
     texture: 'Rock047_1K_Color.png',
     shininess: 0.1
 });
+stone.properties.push("shadow");
 
 export const log = new DiffuseMaterial({
     texture: 'Wood006_1K_Color.png',
     shininess: 0.5
 });
+log.properties.push("shadow");
 
 export const coal = new DiffuseMaterial({
     texture: 'Rock035_1K_Color.png',
     shininess: 0.8
 });
+coal.properties.push("shadow");
 
 export const branch = new DiffuseMaterial({
     texture: 'Wood006_1K_Color.png',
     shininess: 0.5
 });
+branch.properties.push("shadow");

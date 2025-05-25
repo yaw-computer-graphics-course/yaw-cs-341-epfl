@@ -105,8 +105,7 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
 
 
     exclude_object(obj){
-        // Exclude object with environment material: the sky does not cast shadows
-        return obj.material.properties.includes('environment');
+        return !obj.material.properties.includes('shadow')
     }
 
     compute_shadow_cube_map(scene_state, light){

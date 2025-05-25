@@ -180,6 +180,21 @@ export class ResourceManager{
       ];
     }
 
+    update_flame_color(color) {
+      const make_texture_from_color = (color) => {
+        const c = vec3.scale([0, 0, 0], color, 255)
+    
+        return this.regl.texture({
+          data: [
+            [c, c],
+            [c, c],
+          ],
+          colorType: 'uint8',
+        })
+      }
+
+      this.resources['tex_flame'] = make_texture_from_color(color);
+    }
 }
 
 /**
