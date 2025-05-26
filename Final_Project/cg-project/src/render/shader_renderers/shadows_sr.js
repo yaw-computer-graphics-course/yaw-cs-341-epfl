@@ -55,7 +55,7 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
      * White means "shadows" black means "no shadows"
      * @param {*} scene_state 
      */
-    render(scene_state, shadow_softness = 0.05, use_soft_shadows=false){
+    render(scene_state, shadow_softness, use_soft_shadows=false){
 
         const scene = scene_state.scene;
         const inputs = [];
@@ -112,7 +112,7 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
 
 
     exclude_object(obj){
-        return obj.material.properties.includes('environment')
+        return obj.material.properties.includes('no_shadow')
     }
 
     compute_shadow_cube_map(scene_state, light){
@@ -165,9 +165,5 @@ export class ShadowsShaderRenderer extends ShaderRenderer {
             // Poisson Disk for soft shadows (PCF)
             poissonDisk: regl.prop('poissonDisk'),
         };
-    }
-
-    setSoftness(value) {
-        this.shadow_softness = value;
     }
 }

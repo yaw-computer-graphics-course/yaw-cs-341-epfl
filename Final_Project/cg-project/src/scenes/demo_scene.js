@@ -69,6 +69,17 @@ export class DemoScene extends Scene {
       material: MATERIALS.grass
     });
 
+    /*// Add background environment
+    this.resource_manager.add_procedural_mesh("mesh_sphere_env_map", cg_mesh_make_uv_sphere(16));
+
+    // Add some meshes to the static objects list
+    this.static_objects.push({
+      translation: [0, 0, 0],
+      scale: [80., 80., 80.],
+      mesh_reference: 'mesh_sphere_env_map',
+      material: MATERIALS.gray_pure_sky
+    });*/
+
     // Add static objects
     this.setup_static_objects();
 
@@ -79,8 +90,6 @@ export class DemoScene extends Scene {
     this.objects = this.static_objects.concat(this.dynamic_objects);
   }
 
-
-
   setup_static_objects() {
     const objects = [
       { name: "stones", mesh: "Stones.obj", material: MATERIALS.stone },
@@ -88,33 +97,16 @@ export class DemoScene extends Scene {
       { name: "coal", mesh: "Coal.obj", material: MATERIALS.coal },
       { name: "branches", mesh: "Branches.obj", material: MATERIALS.branch },
     ];
-
-    for (let i = 0; i < 5; i++) {
-      const radius = 7; // Increase this value for a larger circle
-      const angle = i * 2 * Math.PI / 5;
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-
-      const tree_mesh = tree_build_mesh();
-      const mesh_name = `mesh_tree_${i}`;
-      this.resource_manager.add_procedural_mesh(mesh_name, tree_mesh);
-
-      const tree_obj = {
-        mesh_reference: mesh_name,
-        material: MATERIALS.gray,
-        translation: [x, y, -0.25],
-        scale: [10, 10, 10],
-      };
-      this.static_objects.push(tree_obj);
-      this.actors[`tree_${i}`] = tree_obj;
-    }
+    
+    this.generate_trees(14, 12);
+    
 
     objects.forEach(obj => {
       const item = {
         mesh_reference: obj.mesh,
         material: obj.material,
         translation: [0, 0, 0],
-        scale: [2, 2, 2],
+        scale: [3.5, 3.5, 3.5],
       };
       this.actors[obj.name] = item;
       this.static_objects.push(item);
@@ -123,8 +115,8 @@ export class DemoScene extends Scene {
     const item1 = {
       mesh_reference: "bench1.obj",
       material: MATERIALS.bench,
-      translation: [0, 3, 0],
-      scale: [2, 2, 2],
+      translation: [0, 5, 0],
+      scale: [4, 4, 4],
     };
     this.actors["bench1"] = item1;
     this.static_objects.push(item1);
@@ -133,7 +125,7 @@ export class DemoScene extends Scene {
       mesh_reference: "bench2.obj",
       material: MATERIALS.bench,
       translation: [-3, -3, 0],
-      scale: [2, 2, 2],
+      scale: [4, 4, 4],
     };
     this.actors["bench2"] = item2;
     this.static_objects.push(item2);
@@ -141,8 +133,8 @@ export class DemoScene extends Scene {
     const item3 = {
       mesh_reference: "firewood.obj",
       material: MATERIALS.firewood,
-      translation: [2.5, 2.5, 0],
-      scale: [2, 2, 2],
+      translation: [6, 4, 0],
+      scale: [4, 4, 4],
     };
     this.actors["firewood"] = item3;
     this.static_objects.push(item3);
@@ -151,10 +143,58 @@ export class DemoScene extends Scene {
       mesh_reference: "chest.obj",
       material: MATERIALS.chest_tex,
       translation: [-2, 9, 0],
-      scale: [.7, .7, .7],
+      scale: [0.8, 0.8, 0.8],
     };
     this.actors["chest"] = item4;
     this.static_objects.push(item4);
+  }
+
+  generate_trees(area_radius, count, exclusion_radius = 3) {
+    const min_dist_to_objects = 5.0; // Minimum distance from other static objects
+    const max_attempts = 100; // To avoid infinite loops
+
+    // Gather positions of static objects to avoid
+    const avoid_positions = this.static_objects.map(obj => obj.translation);
+
+    for (let i = 0, placed = 0; placed < count && i < count * max_attempts; i++) {
+      // Generate random position in a ring (outside exclusion_radius, inside area_radius)
+      const angle = Math.random() * 2 * Math.PI;
+      const r = Math.sqrt(Math.random()) * (area_radius - exclusion_radius) + exclusion_radius;
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+
+      // Check distance to flame/campfire (center)
+      const d = Math.sqrt(x * x + y * y);
+      if (d < exclusion_radius) continue;
+
+      // Check distance to other static objects
+      let too_close = false;
+      for (const pos of avoid_positions) {
+        const dx = x - pos[0];
+        const dy = y - pos[1];
+        if (Math.sqrt(dx * dx + dy * dy) < min_dist_to_objects) {
+          too_close = true;
+          break;
+        }
+      }
+      if (too_close) continue;
+
+      // Place the tree
+      const tree_mesh = tree_build_mesh();
+      const mesh_name = `mesh_tree_${placed}`;
+      this.resource_manager.add_procedural_mesh(mesh_name, tree_mesh);
+
+      const tree_obj = {
+        mesh_reference: mesh_name,
+        material: MATERIALS.bench,
+        translation: [x, y, -0.25],
+        scale: [10, 10, 10],
+      };
+      this.static_objects.push(tree_obj);
+      this.actors[`tree_${placed}`] = tree_obj;
+      avoid_positions.push([x, y, -0.25]); // So next trees avoid this one
+      placed++;
+    }
   }
 
   initialize_lights() {
@@ -180,7 +220,7 @@ export class DemoScene extends Scene {
     // Add dynamic lights for flame objects
     const flameLight = {
       position: [0, 0, maxElevation], 
-      color: [1.0, 0.0, 0.0],
+      color: [1.0, 0.4, 0.1],
     };
     
     this.lights.push(flameLight);
@@ -224,8 +264,8 @@ export class DemoScene extends Scene {
     // Define the distinct colors
     this.flame_colors = [
         [1.0, 0.78, 0.3],   // Red
-        [1.0, 0.55, 0.2],  // Orange
-        [0.85, 0.32, 0.1]    // Yellow
+        [1.0, 0.9059, 0.6],  // Orange
+        [1.0, 0.9804, 0.8941]    // Yellow
     ];
 
     const flame = fire_build_mesh(initial_height_map, this.GROUND_LEVEL + 0.2);
@@ -236,7 +276,7 @@ export class DemoScene extends Scene {
         mesh_reference: 'mesh_flame',
         material: MATERIALS.flame_material,
         translation: [0, 0, 0],
-        scale: [.7, .7, .7],
+        scale: [1.4, 1.4, 1.4],
     };
     this.dynamic_objects.push(flame_obj);
     this.actors["flame"] = flame_obj;
@@ -288,7 +328,6 @@ export class DemoScene extends Scene {
           this.resource_manager.add_procedural_mesh("mesh_flame", new_mesh);
           flame.mesh_reference = "mesh_flame";
           
-          const time = performance.now() * 0.001; // Convert in seconds
           this.flame_index = (this.flame_index + 1) % 3
           const color = this.flame_colors[this.flame_index]
           this.resource_manager.update_flame_color(color)
@@ -301,6 +340,9 @@ export class DemoScene extends Scene {
         light.evolve = (dt) => {
           const curr_pos = light.position;
           light.position = [curr_pos[0], curr_pos[1], this.ui_params.light_height[light_idx]];
+          this.flame_index = (this.flame_index + 1) % 3
+          const color = this.flame_colors[this.flame_index]
+          light.color = color;
           this.update_flame_light();
         }
       }
@@ -342,7 +384,13 @@ export class DemoScene extends Scene {
     this.ui_params.use_ssao = true;
 
     this.ui_params.shadow_softness = 0.05;
+
     this.ui_params.use_soft_shadows = true; // Initial state: soft shadows
+
+    this.ui_params.use_bloom = true;
+
+    this.raw_ssao = false;
+
 
     // Set preset view
     create_hotkey_action("Preset view", "1", () => {
@@ -354,20 +402,9 @@ export class DemoScene extends Scene {
       })
     });
     
-    // Create a slider to change the height of each light
     const n_steps_slider = 100;
-    const min_light_height_1 = 7;
-    const max_light_height_1 = 9;
-    create_slider("Height light 1 ", [0, n_steps_slider], (i) => {
-      this.ui_params.light_height[0] = min_light_height_1 + i * (max_light_height_1 - min_light_height_1) / n_steps_slider;
-    });
-    const min_light_height_2 = 6;
-    const max_light_height_2 = 8;
-    create_slider("Height light 2 ", [0, n_steps_slider], (i) => {
-      this.ui_params.light_height[1] = min_light_height_2 + i * (max_light_height_2 - min_light_height_2) / n_steps_slider;
-    });
     // Add shadow softness control
-    create_slider("Shadow Softness", [0, 200], (value) => {
+    create_slider("Shadow Softness", [0, 500], (value) => {
       this.ui_params.shadow_softness = value / 1000;
     });
 
@@ -381,8 +418,17 @@ export class DemoScene extends Scene {
         this.ui_params.use_ssao = !this.ui_params.use_ssao;
     });
 
+    create_button_with_hotkey("Toggle Raw SSAO", "r", () => {
+        this.ui_params.raw_ssao = !this.ui_params.raw_ssao;
+    });
+
     create_hotkey_action("Soft Shadows", "s", () => {
       this.ui_params.use_soft_shadows = !this.ui_params.use_soft_shadows;
-    })
+    });
+
+    create_hotkey_action("Bloom", "b", () => {
+      this.ui_params.use_bloom = !this.ui_params.use_bloom;
+    });
+
   }
 }

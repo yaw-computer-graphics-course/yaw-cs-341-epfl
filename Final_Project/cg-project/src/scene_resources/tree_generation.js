@@ -36,8 +36,8 @@ export default function tree_build_mesh() {
         forward: [0, 0, 1],
         up: [0, 1, 0],
         right: [1, 0, 0],
-        thickness: 0.18,
-        height: 0.5,
+        thickness: 0.5,
+        height: 0.7,
         last_ring: []
     };
 
@@ -100,7 +100,7 @@ export default function tree_build_mesh() {
                 vec3.add(curr_state.position, curr_state.position, delta);
 
                 // Add a leaf at the end of a branch segment with some probability
-                if (Math.random() < 0.15) {
+                if (Math.random() < 0.7) {
                     const leaf_result = generate_leaf(curr_state.position, curr_state.forward, vertices.length / 3);
                     vertices.push(...leaf_result.vertices);
                     faces.push(...leaf_result.faces);
@@ -172,26 +172,31 @@ function generate_branch_segment(base, forward, right, up, height, bottom_radius
 }
 
 function generate_leaf(position, direction, vertex_offset) {
-    const size = 0.05;
-    const vertices = [];
-    const faces = [];
-    const tex_coords = [];
+    const length = 0.18;
+    const width = 0.09;
 
-    const right = vec3.fromValues(-direction[1], direction[0], 0);
-    vec3.normalize(right, right);
-    const up = vec3.create();
-    vec3.cross(up, right, direction);
-    vec3.normalize(up, up);
+    // Find two vectors perpendicular to direction
+    let up = [0, 1, 0];
+    if (Math.abs(vec3.dot(direction, up)) > 0.9) up = [1, 0, 0];
+    const right = vec3.normalize(vec3.create(), vec3.cross(vec3.create(), direction, up));
+    up = vec3.normalize(vec3.create(), vec3.cross(vec3.create(), right, direction));
 
-    const center = vec3.clone(position);
-    const tip = vec3.scaleAndAdd(vec3.create(), center, direction, size);
-    const left = vec3.scaleAndAdd(vec3.create(), center, right, -size / 2);
-    const right_pt = vec3.scaleAndAdd(vec3.create(), center, right, size / 2);
+    // Tip of the leaf
+    const tip = vec3.scaleAndAdd(vec3.create(), position, direction, length);
 
-    vertices.push(...left, ...tip, ...right_pt);
-    faces.push(vertex_offset, vertex_offset + 1, vertex_offset + 2);
-    tex_coords.push(0, 0, 0.5, 1, 1, 0);
+    // Base left and right
+    const base_left = vec3.scaleAndAdd(vec3.create(), position, right, -width);
+    const base_right = vec3.scaleAndAdd(vec3.create(), position, right, width);
 
+    const vertices = [
+        ...tip, ...base_left, ...base_right
+    ];
+    const faces = [
+        vertex_offset + 0, vertex_offset + 1, vertex_offset + 2
+    ];
+    const tex_coords = [
+        0.5, 1,  0, 0,  1, 0
+    ];
     return { vertices, faces, tex_coords };
 }
 

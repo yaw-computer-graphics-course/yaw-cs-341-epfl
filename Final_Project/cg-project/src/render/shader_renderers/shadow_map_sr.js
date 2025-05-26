@@ -33,6 +33,8 @@ export class ShadowMapShaderRenderer extends ShaderRenderer {
 
         for (const obj of scene.objects) {
 
+            if (this.exclude_object(obj)) continue;
+
             const mesh = this.resource_manager.get_mesh(obj.mesh_reference);
             
             const { 
@@ -55,6 +57,10 @@ export class ShadowMapShaderRenderer extends ShaderRenderer {
 
     cull(){
         return { enable: true }; // don't draw back face
+    }
+
+    exclude_object(obj) {
+        return obj.material.properties.includes('flame');
     }
 
     uniforms(regl){

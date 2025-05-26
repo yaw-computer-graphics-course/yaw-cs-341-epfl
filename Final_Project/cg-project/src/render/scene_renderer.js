@@ -11,6 +11,7 @@ import { PositionsShaderRenderer } from "./shader_renderers/positions_sr.js"
 import { NormalsShaderRenderer } from "./shader_renderers/normals_sr.js"
 import { SSAOShaderRenderer } from "./shader_renderers/ssao_sr.js"
 import { SSAOBlurShaderRenderer } from "./shader_renderers/ssao_blur_sr.js"
+import { BloomShaderRenderer } from "./shader_renderers/bloom_sr.js"
 
 export class SceneRenderer {
 
@@ -41,6 +42,8 @@ export class SceneRenderer {
         this.ssao = new SSAOShaderRenderer(regl, resource_manager);
         this.ssao_with_blur = new SSAOBlurShaderRenderer(regl, resource_manager);
 
+        this.bloom = new BloomShaderRenderer(regl, resource_manager);
+
         // Create textures & buffer to save some intermediate renders into a texture
         this.create_texture_and_buffer("shadows", {}); 
         this.create_texture_and_buffer("base", {}); 
@@ -48,6 +51,7 @@ export class SceneRenderer {
         this.create_texture_and_buffer("normals", {});
         this.create_texture_and_buffer("ssao", {});
         this.create_texture_and_buffer("ssao_with_blur", {});
+        this.create_texture_and_buffer("lit_scene", {});
     }
 
     /**
@@ -162,22 +166,42 @@ export class SceneRenderer {
             this.pre_processing.render(scene_state);
 
             // Render the shadows
-            this.shadows.render(scene_state, scene.ui_params.shadow_softness, scene.ui_params.use_soft_shadows);
+            if (scene.ui_params.use_soft_shadows) {
+                this.shadows.render(scene_state, scene.ui_params.shadow_softness, scene.ui_params.use_soft_shadows);
+            }
         })
 
         /*---------------------------------------------------------------
-            3. Compositing
+            3. Compositing / Bloom pass setup
         ---------------------------------------------------------------*/
 
-        // Mix the base color of the scene with the shadows information to create the final result
-        this.map_mixer.render(
-            scene_state,
-            this.texture("shadows"),
-            this.texture("base"),
-            this.texture("ssao_with_blur"),
-            scene.ui_params.ssao_strength,
-            scene.ui_params.use_ssao ? 1 : 0,
-        );
+        if (scene.ui_params.raw_ssao) {
+            this.ssao_with_blur.render(scene_state, this.texture("ssao"));
+        } else {
+            if (scene.ui_params.use_bloom) {
+                this.render_in_texture("lit_scene", () => {
+                    this.map_mixer.render(
+                        scene_state,
+                        this.texture("shadows"),
+                        this.texture("base"),
+                        this.texture("ssao_with_blur"),
+                        scene.ui_params.ssao_strength,
+                        scene.ui_params.use_ssao ? 1 : 0,
+                    );
+                })
+                this.bloom.render(scene_state, this.texture("lit_scene"));
+            } else {
+                // Mix the base color of the scene with the shadows information to create the final result
+                this.map_mixer.render(
+                    scene_state,
+                    this.texture("shadows"),
+                    this.texture("base"),
+                    this.texture("ssao_with_blur"),
+                    scene.ui_params.ssao_strength,
+                    scene.ui_params.use_ssao ? 1 : 0,
+                );
+            }
+        }
 
         // Visualize cubemap
         // this.mirror.env_capture.visualize();

@@ -157,6 +157,8 @@ export class ResourceManager{
             "grass.jpg",
             "Wood.png",
             "green-grass-texture.jpg",
+            'mud_road_puresky.jpg',
+            'tree_texture.jpg',
           ];
     }
 
@@ -177,7 +179,8 @@ export class ResourceManager{
             'texcoords.vert.glsl',
             'ssao.frag.glsl',
             'ssao_blur.frag.glsl',
-            'flame_shader.glsl', 'point_light_hard_shadows.frag.glsl'
+            'flame_shader.glsl', 'point_light_hard_shadows.frag.glsl',
+            'bloom.frag.glsl',
           ];
     }
 

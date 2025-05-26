@@ -35,6 +35,7 @@ class BackgroundMaterial extends Material {
         this.texture = texture;
         this.properties.push("environment");
         this.properties.push("no_blinn_phong");
+        this.properties.push("no_shadow");
     }
 }
 
@@ -63,6 +64,7 @@ export class FireMaterial extends Material {
         this.texture = texture;
         this.color = color;
         this.shininess = shininess;
+        this.properties.push("flame");
     }
 
     updateColor() {
@@ -171,6 +173,7 @@ export const log = new DiffuseMaterial({
     texture: 'Wood006_1K_Color.png',
     shininess: 0.5
 });
+log.properties.push('flame');
 
 export const coal = new DiffuseMaterial({
     texture: 'Rock035_1K_Color.png',
@@ -196,8 +199,18 @@ export const grass = new DiffuseMaterial({
     texture: 'green-grass-texture.jpg',
     shininess: 5,
 });
+//grass.properties.push("no_shadow");
 
 export const chest_tex = new DiffuseMaterial({
     texture: 'Wood.png',
     shininess: 5,
 });
+
+export const gray_pure_sky = new BackgroundMaterial({
+    texture: 'mud_road_puresky.jpg',
+});
+
+export const tree_wood = new DiffuseMaterial({
+    texture: 'tree_texture.jpg',
+})
+
