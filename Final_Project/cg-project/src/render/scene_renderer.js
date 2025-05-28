@@ -205,6 +205,5 @@ export class SceneRenderer {
 
         // Visualize cubemap
         // this.mirror.env_capture.visualize();
-
     }
 }

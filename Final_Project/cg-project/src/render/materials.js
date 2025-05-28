@@ -66,16 +66,6 @@ export class FireMaterial extends Material {
         this.shininess = shininess;
         this.properties.push("flame");
     }
-
-    updateColor() {
-        // Compute the new color based on the previous color
-        this.color[0] = this.color[0] * 0.9 + 0.1; // Decrease red slightly
-        this.color[1] = this.color[1] * 0.9 + 0.1 * Math.sin(Date.now() / 100); // Change green dynamically
-        this.color[2] = this.color[2] * 0.1; // Keep blue low
-        
-        // Clamp values to ensure they stay within [0, 1]
-        this.color = this.color.map(c => Math.max(0, Math.min(c, 1)));
-    }
 }
 
 class ReflectiveMaterial extends Material {
@@ -199,7 +189,6 @@ export const grass = new DiffuseMaterial({
     texture: 'green-grass-texture.jpg',
     shininess: 5,
 });
-//grass.properties.push("no_shadow");
 
 export const chest_tex = new DiffuseMaterial({
     texture: 'Wood.png',

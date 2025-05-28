@@ -179,7 +179,7 @@ export class ResourceManager{
             'texcoords.vert.glsl',
             'ssao.frag.glsl',
             'ssao_blur.frag.glsl',
-            'flame_shader.glsl', 'point_light_hard_shadows.frag.glsl',
+            'point_light_hard_shadows.frag.glsl',
             'bloom.frag.glsl',
           ];
     }

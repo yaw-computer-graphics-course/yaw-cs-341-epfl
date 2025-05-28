@@ -1,21 +1,21 @@
-// Vertex attributes, specified in the "attributes" entry of the pipeline
-attribute vec3 vertex_positions;
-attribute vec3 vertex_normal;
+// Vertex attribute
+attribute vec3 vertex_positions;  // The position of the vertex in model space
+attribute vec3 vertex_normal;     // The normal at the vertex
 
-// Varying values passed to fragment shader
+// Varying to pass the fragment position in view space to the fragment shader
 varying vec3 v2f_frag_pos;
 
-// Global variables specified in "uniforms" entry of the pipeline
-uniform mat4 mat_model_view;
-uniform mat4 mat_model_view_projection;
-
+// Uniform transformation matrices
+uniform mat4 mat_model_view;              // Model-View matrix
+uniform mat4 mat_model_view_projection;   // Model-View-Projection matrix
 
 void main() {
-	
-	// vertex position in camera view
+	// Convert the vertex position to a 4D homogeneous coordinate
 	vec4 position_v4 = vec4(vertex_positions, 1);
+	
+	// Compute the fragment position in camera (view) space
 	v2f_frag_pos = (mat_model_view * vec4(position_v4)).xyz;
 
-	// vertex position on canvas
+	// Compute the vertex position after applying the MVP matrix
 	gl_Position = mat_model_view_projection * vec4(vertex_positions, 1);
 }

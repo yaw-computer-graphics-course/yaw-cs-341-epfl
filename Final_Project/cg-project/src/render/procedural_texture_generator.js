@@ -175,4 +175,3 @@ class BufferData {
 		return this.data[x + y*this.width << 2] * this.scale
 	}
 }
-

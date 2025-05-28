@@ -1,18 +1,28 @@
 precision mediump float;
 
+// UV coordinates passed from the vertex shader
 varying vec2 uv;
 
+// G-buffer textures containing view-space positions and normals
 uniform sampler2D positions_tex;
 uniform sampler2D normals_tex;
+
+// Noise texture to introduce randomness in the sampling kernel
 uniform sampler2D noise_tex;
 
+// 64-sample kernel in tangent space, precomputed in the CPU
 uniform vec3 kernel[64];
+
+// Scaling factor to tile the noise texture across the screen
 uniform vec2 noise_scale;
+
+// Projection matrix (used to transform sample positions to screen space)
 uniform mat4 mat_projection;
 
-const float bias = 0.2;
-const float radius = 1.0;
-const int kernelSize = 64;
+// Constants for SSAO effect
+const float bias = 0.2;       // Small offset to avoid self-occlusion
+const float radius = 1.0;     // Sampling radius in view space
+const int kernelSize = 64;    // Number of samples in the kernel
 
 void main() {
     // Get fragment position and normal from G-buffer
@@ -47,8 +57,10 @@ void main() {
         // occlusion += rangeCheck;
         occlusion += (sampleDepth >= samplePos.z + bias ? 1.0 : 0.0) * rangeCheck;
     }
-
+    
+    // Normalize occlusion value and invert (since more occlusion = darker)
     occlusion = 1.0 - (occlusion / float(kernelSize));
 
+    // Apply gamma correction (slightly) and write to output
     gl_FragColor = vec4(vec3(pow(occlusion, 1.5)), 1.0);
 }
