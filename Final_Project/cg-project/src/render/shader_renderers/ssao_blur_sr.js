@@ -4,9 +4,9 @@ import { ShaderRenderer } from "./shader_renderer.js";
 
 export class SSAOBlurShaderRenderer extends ShaderRenderer {
     /**
-     * Post-process renderer for bloom effect
-     * @param {*} regl 
-     * @param {ResourceManager} resource_manager 
+     * Creates a renderer for SSAO blur post-processing effect
+     * @param {*} regl - regl instance
+     * @param {ResourceManager} resource_manager - Resource manager for loading shaders
      */
     constructor(regl, resource_manager){
         super(
@@ -16,7 +16,7 @@ export class SSAOBlurShaderRenderer extends ShaderRenderer {
             `ssao_blur.frag.glsl`
         );
         
-        // Create a full-screen quad mesh
+        // Create a full-screen quad mesh for post-processing
         this.quad_mesh = {
             vertex_positions: regl.buffer([
                 [-1, -1, 0], // Bottom left
@@ -45,15 +45,14 @@ export class SSAOBlurShaderRenderer extends ShaderRenderer {
     }
 
     /**
-     * Render a bloom post-process effect
-     * @param {*} scene_state Current scene state
-     * @param {*} rendered_lit_scene Texture containing the already-rendered scene
+     * Renders the SSAO blur effect
+     * @param {*} scene_state - Current scene state
+     * @param {*} ssao_texture - Texture containing SSAO data to be blurred
      */
     render(scene_state, ssao_texture){
-        // For post-processing, we just need one draw call with the screen quad
+        // Single draw call with the screen quad for post-processing
         this.pipeline({
             mesh: this.quad_mesh,
-            
             ssao_tex: ssao_texture,
             ssao_tex_size: vec2.fromValues(ssao_texture.width, ssao_texture.height),
         });
@@ -74,7 +73,7 @@ export class SSAOBlurShaderRenderer extends ShaderRenderer {
     }
 
     blend(){
-        // No blending needed for the post-process
+        // Disable blending for post-processing
         return {
             enable: false
         };

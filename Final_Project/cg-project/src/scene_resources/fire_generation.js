@@ -1,7 +1,7 @@
 import { vec3 } from "../../lib/gl-matrix_3.3.0/esm/index.js";
 
-// Simple Perlin noise implementation
-class PerlinNoise {
+// Simple noise implementation
+class Noise {
     constructor(seed = 0) {
         this.permutation = this.generatePermutation(seed);
     }
@@ -109,10 +109,10 @@ export function fire_build_mesh(height_map, fire_level, time = 0) {
     const faces = [];
     const tex_coords = [];
 
-    // Create Perlin noise instances for different flame characteristics
-    const flameNoise = new PerlinNoise(42);
-    const turbulenceNoise = new PerlinNoise(123);
-    const detailNoise = new PerlinNoise(789);
+    // Create noise instances for different flame characteristics
+    const flameNoise = new Noise(42);
+    const turbulenceNoise = new Noise(123);
+    const detailNoise = new Noise(789);
 
     function xy_to_v_index(x, y) {
         return x + y * grid_width;
@@ -156,7 +156,7 @@ export function fire_build_mesh(height_map, fire_level, time = 0) {
                 ]);
             }
 
-            // Apply multiple layers of Perlin noise for flame effect
+            // Apply multiple layers of noise for flame effect
             const baseFlame = flameNoise.octaveNoise(
                 vx * 3.0, 
                 vy * 3.0, 

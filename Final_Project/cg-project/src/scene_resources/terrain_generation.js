@@ -39,7 +39,7 @@ export function terrain_build_mesh(height_map, GROUND_LEVEL) {
 			// Check if we are at the boundary
             if (gx <= 0 || gx >= grid_width - 1 || gy <= 0 || gy >= grid_height - 1) {
                 elevation = GROUND_LEVEL;
-				normals[idx] = [0, 0, -1]; // TODO: check these values
+				normals[idx] = [0, 0, -1];
             } else {
                 normals[idx] = vec3.normalize([0, 0, 0], [
                     -(height_map.get(gx+1, gy) - height_map.get(gx-1, gy)) / (2. / grid_width),

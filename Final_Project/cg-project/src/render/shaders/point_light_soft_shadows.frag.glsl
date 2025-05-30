@@ -1,28 +1,17 @@
 precision highp float;
 
-// Fragment position in view/camera space
 varying vec3 v2f_frag_pos;
 
-// Light position in view/camera space
 uniform vec3 light_position_cam;
-
-// Cube shadow map storing depths from the light's point of view
 uniform samplerCube cube_shadowmap;
-
-// Total number of lights (used for normalization in final output)
 uniform float num_lights;
-
-// Controls the softness of shadows by scaling the Poisson offsets
 uniform float shadow_softness;
-
 // 16 Poisson disk samples for PCF (Percentage Closer Filtering)
 uniform vec2 poissonDisk[16];
 
 void main() {
-    // Direction from fragment to light
     vec3 light_dir = normalize(light_position_cam - v2f_frag_pos);
 
-    // Distance from fragment to light (used for depth comparison)
     float dist_frag_light = length(v2f_frag_pos - light_position_cam);
 
     float shadow = 0.0;      // Accumulator for shadow intensity

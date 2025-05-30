@@ -1,19 +1,16 @@
 precision highp float;
 
-// Position of the fragment in view (camera) space, passed from vertex shader
+// Position of the fragment in view (camera) space
 varying vec3 v2f_frag_pos;
 
 // Uniforms
-uniform vec3 light_position_cam;     // Light position in camera coordinates
-uniform samplerCube cube_shadowmap;  // Shadow map stored as a cube texture
-uniform float num_lights;            // Number of lights used
+uniform vec3 light_position_cam;
+uniform samplerCube cube_shadowmap;
+uniform float num_lights;
 
 void main() {
-	// Compute normalized direction from fragment to camera
     vec3 v = normalize(-v2f_frag_pos);
-	// Compute direction from fragment to light
 	vec3 l = normalize(light_position_cam - v2f_frag_pos);
-	 // Compute distance from fragment to light source
 	float dist_frag_light = length(v2f_frag_pos - light_position_cam);
 
     // Sample the cube shadow map using the direction from the light to the fragment
@@ -29,5 +26,5 @@ void main() {
 		color = vec3(1.0 / num_lights);
 	}
 
-    gl_FragColor = vec4(color, 1.); // output: RGBA in 0..1 range
+    gl_FragColor = vec4(color, 1.);
 }
