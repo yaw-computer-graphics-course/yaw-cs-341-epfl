@@ -142,6 +142,10 @@ __-> Dynamic Integration and User Controls:__ <br>
 
 The bloom effect is integrated into the rendering pipeline and can be toggled via user controls in real time.
 
+#### Validation
+
+<video src="videos/Bloom_Validation.mp4" height="300px" autoplay loop></video>
+
 ### Feature 3 : Soft Shadows
 
 #### Implementation
@@ -243,8 +247,7 @@ Here are the results of the positions, normals, ssao and ssao with blur buffers.
 
 In order to visualize the effect, here is the same scene with and without SSAO. Look especially at the lighting around the tree.
 
-<img src="images/without_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
-<img src="images/with_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
+<video src="videos/SSAO_Validation.mp4" height="300px" autoplay loop></video>
 
 
 

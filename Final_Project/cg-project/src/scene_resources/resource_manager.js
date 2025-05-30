@@ -195,6 +195,7 @@ export class ResourceManager{
         "bench1.obj", "bench2.obj",
         "firewood.obj",
         "chest.obj",
+        "suzanne.obj",
       ];
     }
 

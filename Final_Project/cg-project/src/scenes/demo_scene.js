@@ -235,7 +235,7 @@ export class DemoScene extends Scene {
 
       const tree_obj = {
         mesh_reference: mesh_name,
-        material: MATERIALS.bench,
+        material: MATERIALS.branch,
         translation: [x, y, -0.25],
         scale: [10, 10, 10],
       };
