@@ -207,7 +207,7 @@ The accumulated shadow values are averaged to generate the final shadow factor. 
 
 #### Validation
 
-TODO
+<video src="videos/Soft_Shadows_Validation.mp4" height="300px" autoplay loop></video>
 
 ### Feature 4 : Screen Space Ambient Occulsion (SSAO)
 

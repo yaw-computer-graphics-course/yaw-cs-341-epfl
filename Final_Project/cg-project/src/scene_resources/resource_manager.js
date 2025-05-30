@@ -196,6 +196,7 @@ export class ResourceManager{
         "firewood.obj",
         "chest.obj",
         "suzanne.obj",
+        "uv_sphere.obj",
       ];
     }
 
