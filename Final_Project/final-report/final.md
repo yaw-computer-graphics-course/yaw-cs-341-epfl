@@ -12,23 +12,35 @@ title: Final Project Report CS-341 2025
 
 ## Abstract
 
-TODO
-
+This report presents the development of a real-time, interactive campfire scene built using the **regl** framework. The goal was to combine several computer graphics techniques to create a visually rich and atmospheric environment. Key features include soft shadows, SSAO, bloom effects, procedural fire and smoke, and L-System-based tree generation. The project emphasizes both technical execution and artistic expression, aiming to simulate a warm, immersive nighttime setting. This document outlines the methods used, challenges faced, and solutions implemented throughout the development process.
 
 ## Overview
 
-<div style="display: flex; justify-content: space-around; align-items: center;">
-<div>
-<img src="images/demo_detail.png" height="210px" style="vertical-align: middle;">
-</div>
-<div>
-<video src="videos/demo_detail.mp4" height="210px" autoplay loop style="vertical-align: middle;"></video>
-</div>
-</div>
-<figcaption style="text-align: center;">Some more visuals focusing on interesting details of your scene.</figcaption>
+Here are several views showcasing the scene from different camera perspectives:
 
-TODO
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
 
+<div style="flex: 0 0 45%; text-align: center;">
+  <img src="images/view1.png" alt="Inside Scene View" style="width: 100%; max-width: 400px;">
+  <p><strong>View 1:</strong> Inside the scene, offering an immersive, up-close experience of the environment.</p>
+</div>
+
+<div style="flex: 0 0 45%; text-align: center;">
+  <img src="images/view2.png" alt="Close Side View 1" style="width: 100%; max-width: 400px;">
+  <p><strong>View 2:</strong> Near the scene along the z-axis, showing a slightly more distant perspective.</p>
+</div>
+
+<div style="flex: 0 0 45%; text-align: center;">
+  <img src="images/view3.png" alt="Close Side View 2" style="width: 100%; max-width: 400px;">
+  <p><strong>View 3:</strong> Similar distance to View 2 but from a slightly different angle for more spatial context.</p>
+</div>
+
+<div style="flex: 0 0 45%; text-align: center;">
+  <img src="images/view4.png" alt="Top-Down View" style="width: 100%; max-width: 400px;">
+  <p><strong>View 4:</strong> A top-down perspective showing the overall layout and composition of the scene.</p>
+</div>
+
+</div>
 
 ## Feature validation
 
@@ -262,6 +274,15 @@ __-> 1. Inconsistent Shadow Rendering Near Light Sources:__ <br>
 
 In some situations—especially around bright light sources like the flame of the campfire and from certain camera angles—soft shadows were missing or appeared unnaturally sharp. This led to inconsistent lighting and a less realistic appearance.
 
+</br>
+
+<div style="text-align:center; margin: 20px 0;">
+  <img src="images/failed_exp_circle.png" width="60%" />
+  <figcaption>Figure: Missing soft shadows near the campfire light source.</figcaption>
+</div>
+
+</br>
+
 **Potential Causes:**
 
 - **Cube Mapping Limitations**: Fragments near the edges of the cube map’s coverage may lack sufficient detail.
@@ -278,6 +299,15 @@ In some situations—especially around bright light sources like the flame of th
 __-> 2. Artifacts at Greater Distances:__ <br>
 
 On distant terrain surfaces, especially in shadowed regions, visual artifacts such as black lines were visible. These disrupted the visual flow and were particularly noticeable in low-light conditions.
+
+</br>
+
+<div style="text-align:center; margin: 20px 0;">
+  <img src="images/failed_exp_dark_lines.png" width="60%" />
+  <figcaption>Figure: Black line artifacts appearing in distant shadows on terrain surfaces.</figcaption>
+</div>
+
+</br>
 
 **Potential Causes:**
 
