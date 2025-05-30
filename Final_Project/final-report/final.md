@@ -404,4 +404,27 @@ Despite the setbacks shown above, we were able to resolve all of them through it
 
 ## References
 
-TODO
+### 📚 **Books**
+
+- **Marschner & Shirley: _Fundamentals of Computer Graphics_, 5th Edition, AK Peters, 2021**
+- **Glassner: _Graphics Gems_, Academic Press, 1989**
+- **Ebert, Musgrave, Peachey, Perlin, Worley: _Texturing & Modeling: A Procedural Approach_, 3rd Edition**
+
+### 🌐 **Blogs**
+
+- [3D Game Shaders for Beginners](https://github.com/lettier/3d-game-shaders-for-beginners)
+
+### 🎓 **Online Tutorials**
+
+- [Awesome Computer Graphics Resources by lettier](https://github.com/lettier/awesome-computer-graphics)
+- [Introduction to Computer Graphics by Cem Yuksel](https://www.youtube.com/watch?v=vLSphLtKQ0o&list=PLplnkTzzqsZTfYh4UbhLGpI5kGd5oW_Hh)
+- [Blender 4.0 Beginner Donut Tutorial (Newest) by Blender Guru](https://youtube.com/playlist?list=PLjEaoINr3zgEPv5y--4MKpciLaoQYZB1Z&si=tnK_WiwRdk_pP7cw)
+- [Learn OpenGL: Learn modern OpenGL graphics programming in a step-by-step fashion](https://learnopengl.com/)
+
+### 🖼️ **Meshes and Textures**
+
+- [Benches](https://free3d.com/3d-model/hipster-bench-83378.html)
+- [Campfire](https://www.cgtrader.com/free-3d-models/various/various-models/campfire-7c95f25c-078b-4386-b6b6-fed4b0a0375b)
+- [Grass](https://www.freepik.com/free-photo/green-grass-texture_969018.htm#fromView=keyword&page=1&position=37&uuid=6a92b9ae-c3d6-4912-ad3f-e0337f5b4947&query=Grass+Texture)
+- [Chest](https://sketchfab.com/3d-models/medieval-chest-e84b6208cbb148ab9a32d6c52897dad1)
+- [Sky Island](https://www.freepik.com/free-photo/closeup-shot-gray-rough-concrete-background_9990863.htm#fromView=keyword&page=1&position=45&uuid=ac5cc307-b3ab-4939-b72e-3ac48c98413d&query=Rock+Texture)
