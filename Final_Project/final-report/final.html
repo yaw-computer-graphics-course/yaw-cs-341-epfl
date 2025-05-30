@@ -107,11 +107,11 @@ still.
 campfire scene built using the <strong>regl</strong> framework. The goal
 was to combine several computer graphics techniques to create a visually
 rich and atmospheric environment. Key features include soft shadows,
-SSAO, bloom effects, procedural fire and smoke, and L-System-based tree
-generation. The project emphasizes both technical execution and artistic
-expression, aiming to simulate a warm, immersive nighttime setting. This
-document outlines the methods used, challenges faced, and solutions
-implemented throughout the development process.</p>
+SSAO, bloom effects, procedural fire and L-System-based tree generation.
+The project emphasizes both technical execution and artistic expression,
+aiming to simulate a warm, immersive nighttime setting. This document
+outlines the methods used, challenges faced, and solutions implemented
+throughout the development process.</p>
 <h2 id="overview">Overview</h2>
 <p>Here are several views showcasing the scene from different camera
 perspectives:</p>
@@ -239,12 +239,12 @@ Procedurally Generated Texture</h3>
 <p>To achieve a realistic flame effect in our scene, we used procedural
 generation techniques to create both the flame’s mesh and texture. This
 approach allows for a dynamic visual representation that simulates the
-behavior of real flames.</p>
+behavior of a real flame.</p>
 <p><strong>-&gt; Mesh Generation and Noise Functions:</strong> <br></p>
 <p>The flame mesh is generated using the <code>fire_build_mesh</code>
 function, which takes into account a height map, a base flame level, and
 a time parameter. The height map defines the shape of the flame, and the
-Perlin noise algorithm is used to introduce variability to the flame’s
+noise algorithm is used to introduce variability to the flame’s
 appearance.</p>
 <p>To create the height map, we use the <code>create_height_map</code>
 method, which generates a 2D grid of float values based on a sine-cosine
@@ -253,8 +253,7 @@ influenced by time-dependent offsets. The resulting height map is then
 used to construct a grid of vertices, where each vertex’s height is
 influenced by multiple noise functions, including:</p>
 <ul>
-<li><strong>Base flame height</strong> from a Perlin noise
-generator</li>
+<li><strong>Base flame height</strong> from a Noise generator</li>
 <li><strong>Turbulence</strong> for chaotic movement</li>
 <li><strong>Detail noise</strong> for finer variations</li>
 </ul>
@@ -332,9 +331,9 @@ contributes to visual liveliness, even before applying geometry-based
 distortion.</p></li>
 <li><p><strong>Full Flame with Mesh and Texture</strong>:<br />
 The second video showcases the procedural generation of the flame mesh,
-driven by Perlin noise and height maps. The deformation gives the flame
-volume and realistic motion. Combined with the animated texture, this
-creates a fire effect that flickers and shifts in real-time.</p></li>
+driven by noise and height maps. The deformation gives the flame volume
+and realistic motion. Combined with the animated texture, this creates a
+fire effect that flickers and shifts in real-time.</p></li>
 </ol>
 <p>This separation makes it clear how both components—texture and
 mesh—work together to simulate a flame in motion.</p>
@@ -514,18 +513,24 @@ offsetting the sample depth slightly.</p>
 kernel.</p>
 <p>The algotithm goes as follows : - We start by extracting the view
 space position and normal from the corresponding buffers, as well as a
-random vector from the noise buffer. - We then create a TBN matrix which
-stands for tangent-bitangent-normal, where we use the Gramm-Schmidt
-process to create an orthogonal basis of the tangent space. This matrix
-serves to transform vectors from this space to view space. - Then we
-loop over our samples, multiply them by the TBN matrix and adding them
-to the current fragment’s position. - Now we project it to screen-space
-and transform the coordinates to the [0, 1] range to use them to sample
-the position texture. The sample depth then is just the z component of
-the resulting vector. - Next we use an occlusion variable to cumulate
-the total fragment occlusion, this variable gets incremented or not for
-each sample by comparing its depth. - The final value is then inverted
-and normalized and output as the fragment “color” in this pass.</p>
+random vector from the noise buffer.</p>
+<ul>
+<li><p>We then create a TBN matrix which stands for
+tangent-bitangent-normal, where we use the Gramm-Schmidt process to
+create an orthogonal basis of the tangent space. This matrix serves to
+transform vectors from this space to view space.</p></li>
+<li><p>Then we loop over our samples, multiply them by the TBN matrix
+and adding them to the current fragment’s position.</p></li>
+<li><p>Now we project it to screen-space and transform the coordinates
+to the [0, 1] range to use them to sample the position texture. The
+sample depth then is just the z component of the resulting
+vector.</p></li>
+<li><p>Next we use an occlusion variable to cumulate the total fragment
+occlusion, this variable gets incremented or not for each sample by
+comparing its depth.</p></li>
+<li><p>The final value is then inverted and normalized and output as the
+fragment “color” in this pass.</p></li>
+</ul>
 <p><strong>-&gt; Blur pass:</strong> <br></p>
 <p>The raw SSAO texture tends to be noisy due to the random sampling. To
 clean it up, a box blur is applied over a small grid (4x4) of

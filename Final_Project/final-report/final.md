@@ -91,15 +91,15 @@ Here are several views showcasing the scene from different camera perspectives:
 
 #### Implementation
 
-To achieve a realistic flame effect in our scene, we used procedural generation techniques to create both the flame's mesh and texture. This approach allows for a dynamic visual representation that simulates the behavior of real flames.
+To achieve a realistic flame effect in our scene, we used procedural generation techniques to create both the flame's mesh and texture. This approach allows for a dynamic visual representation that simulates the behavior of a real flame.
 
 __-> Mesh Generation and Noise Functions:__ <br>
 
-The flame mesh is generated using the `fire_build_mesh` function, which takes into account a height map, a base flame level, and a time parameter. The height map defines the shape of the flame, and the Perlin noise algorithm is used to introduce variability to the flame's appearance.
+The flame mesh is generated using the `fire_build_mesh` function, which takes into account a height map, a base flame level, and a time parameter. The height map defines the shape of the flame, and the noise algorithm is used to introduce variability to the flame's appearance.
 
 To create the height map, we use the `create_height_map` method, which generates a 2D grid of float values based on a sine-cosine wave pattern. This pattern simulates elevation data that can be influenced by time-dependent offsets. The resulting height map is then used to construct a grid of vertices, where each vertex's height is influenced by multiple noise functions, including:
 
-- **Base flame height** from a Perlin noise generator
+- **Base flame height** from a Noise generator
 - **Turbulence** for chaotic movement
 - **Detail noise** for finer variations
 
@@ -149,7 +149,7 @@ These two videos demonstrate the layered approach taken to achieve a realistic f
    The first video validates that the flame texture is properly designed, mapped, and animated. It shows how the procedural color cycling contributes to visual liveliness, even before applying geometry-based distortion.
 
 2. **Full Flame with Mesh and Texture**:  
-   The second video showcases the procedural generation of the flame mesh, driven by Perlin noise and height maps. The deformation gives the flame volume and realistic motion. Combined with the animated texture, this creates a fire effect that flickers and shifts in real-time.
+   The second video showcases the procedural generation of the flame mesh, driven by noise and height maps. The deformation gives the flame volume and realistic motion. Combined with the animated texture, this creates a fire effect that flickers and shifts in real-time.
 
 This separation makes it clear how both components—texture and mesh—work together to simulate a flame in motion.
 
@@ -276,10 +276,15 @@ It also makes use of some constants to adapt as we see fit.
 
 The algotithm goes as follows :
 - We start by extracting the view space position and normal from the corresponding buffers, as well as a random vector from the noise buffer.
+
 - We then create a TBN matrix which stands for tangent-bitangent-normal, where we use the Gramm-Schmidt process to create an orthogonal basis of the tangent space. This matrix serves to transform vectors from this space to view space.
+
 - Then we loop over our samples, multiply them by the TBN matrix and adding them to the current fragment's position.
+
 - Now we project it to screen-space and transform the coordinates to the [0, 1] range to use them to sample the position texture. The sample depth then is just the z component of the resulting vector.
+
 - Next we use an occlusion variable to cumulate the total fragment occlusion, this variable gets incremented or not for each sample by comparing its depth.
+
 - The final value is then inverted and normalized and output as the fragment "color" in this pass.
 
 __-> Blur pass:__ <br>
