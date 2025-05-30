@@ -43,33 +43,37 @@ TODO
 	</thead>
 	<tbody>
 		<tr>
-			<td>Feature 1</td>
-			<td>5</td>
-			<td style="background-color: #d4edda;">Completed</td>
-		</tr>
-		<tr>
-			<td>Feature 2</td>
-			<td>5</td>
-			<td style="background-color: #cce5ff;">Missing</td>
-		</tr>
-		<tr>
-			<td>Feature 3</td>
-			<td>10</td>
-			<td style="background-color: #e8ebca;">Partially Completed</td>
-		</tr>
-		<tr>
-			<td>Feature 4</td>
+			<td>Soft Shadows</td>
 			<td>10</td>
 			<td style="background-color: #d4edda;">Completed</td>
 		</tr>
 		<tr>
-			<td>Feature 5</td>
-			<td>20</td>
+			<td>SSAO</td>
+			<td>10</td>
+			<td style="background-color: #d4edda;">Completed</td>
+		</tr>
+		<tr>
+			<td>PTG</td>
+			<td>10</td>
+			<td style="background-color: #d4edda;">Completed</td>
+		</tr>
+		<tr>
+			<td>L-Systems</td>
+			<td>10</td>
+			<td style="background-color: #d4edda;">Completed</td>
+		</tr>
+		<tr>
+			<td>Mesh/Scene Design</td>
+			<td>5</td>
+			<td style="background-color: #d4edda;">Completed</td>
+		</tr>
+		<tr>
+			<td>Bloom</td>
+			<td>5</td>
 			<td style="background-color: #d4edda;">Completed</td>
 		</tr>
 	</tbody>
 </table>
-
 
 ### Feature 1 : Procedurally Generated Texture
 
@@ -246,48 +250,48 @@ Before settling on the final scene, we explored numerous different approaches an
 
 \* *We later replaced the Blender-created flame with a procedurally generated mesh and applied a procedural texture on top, which better captured the desired dynamic and natural appearance.*
 
-### Challenges
+Despite the setbacks shown above, we were able to resolve all of them through iterative improvements. We included these failed attempts in the report as a trace of the development process and the challenges we faced and overcame.
 
-#### Challenges in Soft Shadow Implementation
+However, two issues related to soft shadow rendering remain unresolved.
 
-During the development of soft shadow rendering, two primary visual issues were encountered. These issues affect the consistency and realism of shadows across different lighting conditions and viewing angles.
+#### Issues in Soft Shadow Implementation
 
----
+During the development of soft shadow rendering, two primary visual issues were encountered. These affect the consistency and realism of shadows across different lighting conditions and viewing angles.
 
-### 1. Inconsistent Shadow Rendering Near Light Sources
+__-> 1. Inconsistent Shadow Rendering Near Light Sources:__ <br>
 
-In certain cases, especially around bright light sources like the flame of the campfire and when viewed from specific camera angles, soft shadows were either missing or appeared overly sharp. This led to unnatural lighting transitions and reduced visual realism.
+In some situations—especially around bright light sources like the flame of the campfire and from certain camera angles—soft shadows were missing or appeared unnaturally sharp. This led to inconsistent lighting and a less realistic appearance.
 
 **Potential Causes:**
 
-- **Cube Mapping Limitations**: Shadow data is captured using cube maps, and fragments near the edge of the cube’s coverage may not receive sufficient detail.
-- **Poisson Disk Sampling Variation**: The softness of shadows depends on sampling. Depending on the viewing angle and fragment location, this could explain to inconsistent results.
+- **Cube Mapping Limitations**: Fragments near the edges of the cube map’s coverage may lack sufficient detail.
+- **Poisson Disk Sampling Variation**: The shadow softness depends on the sampling distribution, which may produce inconsistent results depending on the view angle and location.
 
 **Potential Mitigation Strategies:**
 
-- **Increased Sampling Resolution**: Using more Poisson disk samples can produce smoother transitions, though it increases performance costs.
-- **Adjustable Shadow Softness**: Dynamically modifying the `shadow_softness` parameter, possibly based on distance to the light source, can help maintain consistent shadow quality.
-- **Bias Optimization**: Fine-tuning the depth comparison bias reduces artifacts like shadow acne and helps improve rendering accuracy.
-- **Hybrid Shadow Techniques**: Combining hard and soft shadow methods may offer a more balanced appearance, especially near light sources.
-- **Higher Cube Map Resolution**: Increasing the depth map resolution can improve detail capture and minimize shadow loss near complex geometry.
+- **Increased Sampling Resolution**: More Poisson disk samples can produce smoother shadow edges, at a higher computational cost.
+- **Adjustable Shadow Softness**: Dynamically modifying the `shadow_softness` parameter, possibly based on distance to the light source.
+- **Bias Optimization**: Carefully adjusting the bias used in depth comparisons to reduce shadow acne and artifacts.
+- **Hybrid Shadow Techniques**: Mixing soft and hard shadows to balance realism and detail near complex lighting regions.
+- **Higher Cube Map Resolution**: Improves detail capture and helps reduce shadow loss near bright or complex surfaces.
 
----
+__-> 2. Artifacts at Greater Distances:__ <br>
 
-### 2. Artifacts at Greater Distances
-
-At greater distances from light sources, particularly on large terrain surfaces, visual artifacts such as black lines were observed. These artifacts break the visual continuity of the scene and are especially visible in low-light or shadowed areas.
+On distant terrain surfaces, especially in shadowed regions, visual artifacts such as black lines were visible. These disrupted the visual flow and were particularly noticeable in low-light conditions.
 
 **Potential Causes:**
 
-- **Depth Precision Loss**: Shadow map depth resolution decreases with distance, resulting in mismatches during shadow comparison.
-- **Insufficient Sampling Coverage**: At long ranges, the Poisson disk sampling may not provide enough variance, leading to sharp transitions and visible lines.
-- **Fixed Bias Limitations**: A static bias value may not be suitable for all distances, causing some fragments to be incorrectly shadowed.
+- **Depth Precision Loss**: Shadow map precision decreases with distance, leading to inaccurate shadow results.
+- **Insufficient Sampling Coverage**: Poisson disk samples may not provide adequate variation at longer distances.
+- **Fixed Bias Limitations**: A uniform bias does not adapt well to varying fragment depths, resulting in incorrect shadowing.
 
 **Potential Solutions:**
 
-- **Higher Shadow Map Resolution**: Improves detail accuracy at long distances, reducing depth-related artifacts.
-- **Distance-Based Biasing**: Adjusting the bias based on fragment distance allows more accurate depth comparison across varying ranges.
-- **Post-Processing Filters**: Blurring or blending operations applied after shadow rendering can reduce the visibility of hard lines and improve visual integration.
+- **Higher Shadow Map Resolution**: Improves shadow accuracy and reduces artifacts in large or distant surfaces.
+- **Distance-Based Biasing**: Modifying bias based on fragment distance to improve consistency across depth ranges.
+- **Post-Processing Filters**: Applying blur or blending filters during post-processing to smooth out hard lines or discontinuities.
+
+### Challenges
 
 ## Contributions
 
@@ -308,37 +312,37 @@ At greater distances from light sources, particularly on large terrain surfaces,
 	</thead>
 	<tbody>
 		<tr>
-			<td>Name 1</td>
-			<td></td>
+			<td>Walid Ait Said</td>
+			<td>8</td>
 			<td style="background-color: #f0f0f0;"></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>10</td>
+			<td>7</td>
+			<td>6</td>
+			<td>8</td>
+			<td>10</td>
+			<td>50</td>
 		</tr>
 		<tr>
-			<td>Name 2</td>
-			<td></td>
+			<td>Youssef Benhayoun Sadafi</td>
+			<td>8</td>
 			<td style="background-color: #f0f0f0;"></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>11</td>
+			<td>7</td>
+			<td>7</td>
+			<td>6</td>
+			<td>10</td>
+			<td>50</td>
 		</tr>
 		<tr>
-			<td>Name 3</td>
-			<td></td>
+			<td>Adam Bekkar</td>
+			<td>8</td>
 			<td style="background-color: #f0f0f0;"></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>10</td>
+			<td>6</td>
+			<td>8</td>
+			<td>7</td>
+			<td>10</td>
+			<td>50</td>
 		</tr>
 	</tbody>
 </table>
@@ -353,24 +357,19 @@ At greater distances from light sources, particularly on large terrain surfaces,
 	</thead>
 	<tbody>
 		<tr>
-			<td>Name 1</td>
+			<td>Walid Ait Said</td>
 			<td>1/3</td>
 		</tr>
 		<tr>
-			<td>Name 2</td>
+			<td>Youssef Benhayoun Sadafi</td>
 			<td>1/3</td>
 		</tr>
 		<tr>
-			<td>Name 3</td>
+			<td>Adam Bekkar</td>
 			<td>1/3</td>
 		</tr>
 	</tbody>
 </table>
-
-
-#### Comments
-
-TODO
 
 
 ## References

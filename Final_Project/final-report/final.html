@@ -67,13 +67,6 @@
           id="toc-failed-experiments">Failed Experiments</a></li>
           <li><a href="#challenges"
           id="toc-challenges">Challenges</a></li>
-          <li><a
-          href="#inconsistent-shadow-rendering-near-light-sources"
-          id="toc-inconsistent-shadow-rendering-near-light-sources">1.
-          Inconsistent Shadow Rendering Near Light Sources</a></li>
-          <li><a href="#artifacts-at-greater-distances"
-          id="toc-artifacts-at-greater-distances">2. Artifacts at
-          Greater Distances</a></li>
           </ul></li>
           <li><a href="#contributions"
           id="toc-contributions">Contributions</a></li>
@@ -132,40 +125,7 @@ Status
 <tbody>
 <tr>
 <td>
-Feature 1
-</td>
-<td>
-5
-</td>
-<td style="background-color: #d4edda;">
-Completed
-</td>
-</tr>
-<tr>
-<td>
-Feature 2
-</td>
-<td>
-5
-</td>
-<td style="background-color: #cce5ff;">
-Missing
-</td>
-</tr>
-<tr>
-<td>
-Feature 3
-</td>
-<td>
-10
-</td>
-<td style="background-color: #e8ebca;">
-Partially Completed
-</td>
-</tr>
-<tr>
-<td>
-Feature 4
+Soft Shadows
 </td>
 <td>
 10
@@ -176,10 +136,54 @@ Completed
 </tr>
 <tr>
 <td>
-Feature 5
+SSAO
 </td>
 <td>
-20
+10
+</td>
+<td style="background-color: #d4edda;">
+Completed
+</td>
+</tr>
+<tr>
+<td>
+PTG
+</td>
+<td>
+10
+</td>
+<td style="background-color: #d4edda;">
+Completed
+</td>
+</tr>
+<tr>
+<td>
+L-Systems
+</td>
+<td>
+10
+</td>
+<td style="background-color: #d4edda;">
+Completed
+</td>
+</tr>
+<tr>
+<td>
+Mesh/Scene Design
+</td>
+<td>
+5
+</td>
+<td style="background-color: #d4edda;">
+Completed
+</td>
+</tr>
+<tr>
+<td>
+Bloom
+</td>
+<td>
+5
 </td>
 <td style="background-color: #d4edda;">
 Completed
@@ -408,76 +412,72 @@ natural.
 <p>* <em>We later replaced the Blender-created flame with a procedurally
 generated mesh and applied a procedural texture on top, which better
 captured the desired dynamic and natural appearance.</em></p>
-<h3 id="challenges">Challenges</h3>
-<h4 id="challenges-in-soft-shadow-implementation">Challenges in Soft
-Shadow Implementation</h4>
+<p>Despite the setbacks shown above, we were able to resolve all of them
+through iterative improvements. We included these failed attempts in the
+report as a trace of the development process and the challenges we faced
+and overcame.</p>
+<p>However, two issues related to soft shadow rendering remain
+unresolved.</p>
+<h4 id="issues-in-soft-shadow-implementation">Issues in Soft Shadow
+Implementation</h4>
 <p>During the development of soft shadow rendering, two primary visual
-issues were encountered. These issues affect the consistency and realism
-of shadows across different lighting conditions and viewing angles.</p>
-<hr />
-<h3 id="inconsistent-shadow-rendering-near-light-sources">1.
-Inconsistent Shadow Rendering Near Light Sources</h3>
-<p>In certain cases, especially around bright light sources like the
-flame of the campfire and when viewed from specific camera angles, soft
-shadows were either missing or appeared overly sharp. This led to
-unnatural lighting transitions and reduced visual realism.</p>
+issues were encountered. These affect the consistency and realism of
+shadows across different lighting conditions and viewing angles.</p>
+<p><strong>-&gt; 1. Inconsistent Shadow Rendering Near Light
+Sources:</strong> <br></p>
+<p>In some situations—especially around bright light sources like the
+flame of the campfire and from certain camera angles—soft shadows were
+missing or appeared unnaturally sharp. This led to inconsistent lighting
+and a less realistic appearance.</p>
 <p><strong>Potential Causes:</strong></p>
 <ul>
-<li><strong>Cube Mapping Limitations</strong>: Shadow data is captured
-using cube maps, and fragments near the edge of the cube’s coverage may
-not receive sufficient detail.</li>
-<li><strong>Poisson Disk Sampling Variation</strong>: The softness of
-shadows depends on sampling. Depending on the viewing angle and fragment
-location, this could explain to inconsistent results.</li>
+<li><strong>Cube Mapping Limitations</strong>: Fragments near the edges
+of the cube map’s coverage may lack sufficient detail.</li>
+<li><strong>Poisson Disk Sampling Variation</strong>: The shadow
+softness depends on the sampling distribution, which may produce
+inconsistent results depending on the view angle and location.</li>
 </ul>
 <p><strong>Potential Mitigation Strategies:</strong></p>
 <ul>
-<li><strong>Increased Sampling Resolution</strong>: Using more Poisson
-disk samples can produce smoother transitions, though it increases
-performance costs.</li>
+<li><strong>Increased Sampling Resolution</strong>: More Poisson disk
+samples can produce smoother shadow edges, at a higher computational
+cost.</li>
 <li><strong>Adjustable Shadow Softness</strong>: Dynamically modifying
 the <code>shadow_softness</code> parameter, possibly based on distance
-to the light source, can help maintain consistent shadow quality.</li>
-<li><strong>Bias Optimization</strong>: Fine-tuning the depth comparison
-bias reduces artifacts like shadow acne and helps improve rendering
-accuracy.</li>
-<li><strong>Hybrid Shadow Techniques</strong>: Combining hard and soft
-shadow methods may offer a more balanced appearance, especially near
-light sources.</li>
-<li><strong>Higher Cube Map Resolution</strong>: Increasing the depth
-map resolution can improve detail capture and minimize shadow loss near
-complex geometry.</li>
+to the light source.</li>
+<li><strong>Bias Optimization</strong>: Carefully adjusting the bias
+used in depth comparisons to reduce shadow acne and artifacts.</li>
+<li><strong>Hybrid Shadow Techniques</strong>: Mixing soft and hard
+shadows to balance realism and detail near complex lighting
+regions.</li>
+<li><strong>Higher Cube Map Resolution</strong>: Improves detail capture
+and helps reduce shadow loss near bright or complex surfaces.</li>
 </ul>
-<hr />
-<h3 id="artifacts-at-greater-distances">2. Artifacts at Greater
-Distances</h3>
-<p>At greater distances from light sources, particularly on large
-terrain surfaces, visual artifacts such as black lines were observed.
-These artifacts break the visual continuity of the scene and are
-especially visible in low-light or shadowed areas.</p>
+<p><strong>-&gt; 2. Artifacts at Greater Distances:</strong> <br></p>
+<p>On distant terrain surfaces, especially in shadowed regions, visual
+artifacts such as black lines were visible. These disrupted the visual
+flow and were particularly noticeable in low-light conditions.</p>
 <p><strong>Potential Causes:</strong></p>
 <ul>
-<li><strong>Depth Precision Loss</strong>: Shadow map depth resolution
-decreases with distance, resulting in mismatches during shadow
-comparison.</li>
-<li><strong>Insufficient Sampling Coverage</strong>: At long ranges, the
-Poisson disk sampling may not provide enough variance, leading to sharp
-transitions and visible lines.</li>
-<li><strong>Fixed Bias Limitations</strong>: A static bias value may not
-be suitable for all distances, causing some fragments to be incorrectly
-shadowed.</li>
+<li><strong>Depth Precision Loss</strong>: Shadow map precision
+decreases with distance, leading to inaccurate shadow results.</li>
+<li><strong>Insufficient Sampling Coverage</strong>: Poisson disk
+samples may not provide adequate variation at longer distances.</li>
+<li><strong>Fixed Bias Limitations</strong>: A uniform bias does not
+adapt well to varying fragment depths, resulting in incorrect
+shadowing.</li>
 </ul>
 <p><strong>Potential Solutions:</strong></p>
 <ul>
-<li><strong>Higher Shadow Map Resolution</strong>: Improves detail
-accuracy at long distances, reducing depth-related artifacts.</li>
-<li><strong>Distance-Based Biasing</strong>: Adjusting the bias based on
-fragment distance allows more accurate depth comparison across varying
-ranges.</li>
-<li><strong>Post-Processing Filters</strong>: Blurring or blending
-operations applied after shadow rendering can reduce the visibility of
-hard lines and improve visual integration.</li>
+<li><strong>Higher Shadow Map Resolution</strong>: Improves shadow
+accuracy and reduces artifacts in large or distant surfaces.</li>
+<li><strong>Distance-Based Biasing</strong>: Modifying bias based on
+fragment distance to improve consistency across depth ranges.</li>
+<li><strong>Post-Processing Filters</strong>: Applying blur or blending
+filters during post-processing to smooth out hard lines or
+discontinuities.</li>
 </ul>
+<h3 id="challenges">Challenges</h3>
 <h2 id="contributions">Contributions</h2>
 <table>
 <caption>
@@ -517,65 +517,86 @@ Total
 <tbody>
 <tr>
 <td>
-Name 1
+Walid Ait Said
 </td>
 <td>
+8
 </td>
 <td style="background-color: #f0f0f0;">
 </td>
 <td>
+10
 </td>
 <td>
+7
 </td>
 <td>
+6
 </td>
 <td>
+8
 </td>
 <td>
+10
 </td>
 <td>
+50
 </td>
 </tr>
 <tr>
 <td>
-Name 2
+Youssef Benhayoun Sadafi
 </td>
 <td>
+8
 </td>
 <td style="background-color: #f0f0f0;">
 </td>
 <td>
+11
 </td>
 <td>
+7
 </td>
 <td>
+7
 </td>
 <td>
+6
 </td>
 <td>
+10
 </td>
 <td>
+50
 </td>
 </tr>
 <tr>
 <td>
-Name 3
+Adam Bekkar
 </td>
 <td>
+8
 </td>
 <td style="background-color: #f0f0f0;">
 </td>
 <td>
+10
 </td>
 <td>
+6
 </td>
 <td>
+8
 </td>
 <td>
+7
 </td>
 <td>
+10
 </td>
 <td>
+50
 </td>
 </tr>
 </tbody>
@@ -597,7 +618,7 @@ Contribution
 <tbody>
 <tr>
 <td>
-Name 1
+Walid Ait Said
 </td>
 <td>
 1/3
@@ -605,7 +626,7 @@ Name 1
 </tr>
 <tr>
 <td>
-Name 2
+Youssef Benhayoun Sadafi
 </td>
 <td>
 1/3
@@ -613,7 +634,7 @@ Name 2
 </tr>
 <tr>
 <td>
-Name 3
+Adam Bekkar
 </td>
 <td>
 1/3
@@ -621,8 +642,6 @@ Name 3
 </tr>
 </tbody>
 </table>
-<h4 id="comments">Comments</h4>
-<p>TODO</p>
 <h2 id="references">References</h2>
 <p>TODO</p>
         </div>
