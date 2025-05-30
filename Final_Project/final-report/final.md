@@ -120,11 +120,6 @@ The `evolve` function, called every frame, updates the height map using sine and
 
 To maintain performance while still achieving visual realism, we used a simple animated texture with color cycling instead of generating complex procedural textures. The noise-based mesh already gave a satisfying flame shape and motion, so the cycling colors were enough to create the desired flame look without adding extra complexity.
 
-#### Validation
-
-TODO
-
-
 ### Feature 2 : Bloom Effect Shader
 
 #### Implementation
@@ -146,11 +141,6 @@ After accumulating the blurred values, the result is normalized by dividing by t
 __-> Dynamic Integration and User Controls:__ <br>
 
 The bloom effect is integrated into the rendering pipeline and can be toggled via user controls in real time.
-
-#### Validation
-
-TODO
-
 
 ### Feature 3 : Soft Shadows
 
@@ -182,26 +172,121 @@ The accumulated shadow values are averaged to generate the final shadow factor. 
 
 TODO
 
-### Feature 4
+### Feature 4 : Screen Space Ambient Occulsion (SSAO)
 
 #### Implementation
 
-TODO
+This technique adds subtle shadows in crevices and contact areas by analyzing nearby geometry in screen space, enhancing the perception of depth and detail in rendered scenes without the computational cost of full global illumination.
+Our SSAO implementation makes use of multiple passes : positions, normals, ssao, ssao blur.<br>
+
+__-> Positions pass:__ <br>
+
+In this pass, for each pixel, the fragment's view-space position is computed by multiplying each vertex position by the model-view matrix and interpolating it. It is then stored in a texture.
+
+__-> Normals pass:__<br>
+
+Similar to the positions' pass, each fragment's view-space normal is computed in the vertex shader, this time by using the normals' model-view matrix, and then interpolated and encoded to fit in the [0.0, 1.0] range.
+
+__-> SSAO pass:__ <br>
+
+The most relevant part is the fragment shader which takes as inputs :
+
+
+`uv` : Texture coordinates for the current fragment, interpolated from the vertex shader.
+
+`positions_tex`: A texture storing view-space positions of fragments.
+
+`normals_tex` : A texture storing normals, encoded in the [0, 1] range.
+
+`noise_tex` : A small noise texture used to randomize the sampling kernel orientation per fragment. This texture is tiled across the screen and is computed in the CPU.
+
+`kernel[64]` : A uniform array of 64 precomputed sample vectors distributed within a hemisphere. They are used to probe the surrounding geometry. This is compued in the CPU.
+
+`noise_scale` : A scale factor used to tile the noise texture across the screen.
+
+`mat_projection` : The projection matrix, used to transform view-space coordinates to screen-space.
+
+It also makes use of some constants to adapt as we see fit. 
+
+`bias` : Helps to prevent self-occlusion artifacts by offsetting the sample depth slightly.
+
+`radius` : Defines the sampling radius in view space.
+
+`kernelSize` : Number of samples in the occlusion kernel.
+
+The algotithm goes as follows :
+- We start by extracting the view space position and normal from the corresponding buffers, as well as a random vector from the noise buffer.
+- We then create a TBN matrix which stands for tangent-bitangent-normal, where we use the Gramm-Schmidt process to create an orthogonal basis of the tangent space. This matrix serves to transform vectors from this space to view space.
+- Then we loop over our samples, multiply them by the TBN matrix and adding them to the current fragment's position.
+- Now we project it to screen-space and transform the coordinates to the [0, 1] range to use them to sample the position texture. The sample depth then is just the z component of the resulting vector.
+- Next we use an occlusion variable to cumulate the total fragment occlusion, this variable gets incremented or not for each sample by comparing its depth.
+- The final value is then inverted and normalized and output as the fragment "color" in this pass.
+
+__-> Blur pass:__ <br>
+
+The raw SSAO texture tends to be noisy due to the random sampling. To clean it up, a box blur is applied over a small grid (4x4) of neighboring pixels. Each neighboring SSAO value is averaged to smooth out artifacts. The result is a softened occlusion texture that still retains detail but avoids pixelated noise.
+
+__-> Final output (Integration in the map mixer):__<br>
+
+After computing the previous passes, the resulting buffer gets passed to the map mixer shader which essentially adds the ssao factor to the final color by simply multiplying it.
 
 #### Validation
 
-TODO
+Here are the results of the positions, normals, ssao and ssao with blur buffers. <br>
+
+<img src="images/positions.png" height="200px" width="250px" style="vertical-align: middle;">
+<img src="images/normals.png" height="200px" width="250px" style="vertical-align: middle;">
+<img src="images/raw_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
+<img src="images/blur_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
+
+<br>
+
+In order to visualize the effect, here is the same scene with and without SSAO. Look especially at the lighting around the tree.
+
+<img src="images/without_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
+<img src="images/with_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
 
 
-### Feature 5
+
+### Feature 5 : L-Systems
 
 #### Implementation
 
-TODO
+This implementation generates a 3D procedural tree mesh using an L-system and simulates plant-like branching structures. It uses two main things: an axiom and a set of rules.
+From the axiom, it recursively replaces each element based on the rule set until it reaches the specified number of iterations. It then draws using a turtle based algorithm, the turtle keeps a state throught the drawing process. This state contains its positions, three vectors that represent a moving orthogonal basis, the current thickness and height of the cylinder as well the last ring for optimization purposes.
+
+The L-Systems rules contain some special characters :
+
+`[` : Saves the current state of the turtle into a stack.
+
+`]` : Pops the previously saved state from the stack.
+
+`+` : Rotates the angle along +x.
+
+`-` : Rotates the angle along -x.
+
+`^` : Rotates the angle along +y.
+
+`&` : Rotates the angle along -y.
+
+Then, for each character not among these, the turtle draws a cylinder by computing the center points and surrounding circle points then extracts the faces. And for each cylinder, it has a probability to draw a branch with is just a generated simple triangle mesh for randomness. Then we compute normals using triangle normals and angle weights using the same method as the previous assignments.
+
 
 #### Validation
 
-TODO
+Here is some outputs for different iterations:<br>
+
+<img src="images/tree-iter-1.png" height="200px" width="250px" style="vertical-align: middle;">
+<img src="images/tree-iter-2.png" height="200px" width="250px" style="vertical-align: middle;">
+<img src="images/tree-iter-3.png" height="200px" width="250px" style="vertical-align: middle;">
+<img src="images/tree-iter-4.png" height="200px" width="250px" style="vertical-align: middle;">
+
+<br>And here is some popular L-System generations:<br>
+
+<img src="images/koch-snowflake.png" height="200px" width="250px" style="vertical-align: middle;">
+<img src="images/sierpinski-triangle.png" height="200px" width="250px" style="vertical-align: middle;">
+
+
 
 ### Feature 6
 
