@@ -371,6 +371,33 @@ strength.</p>
 <br></p>
 <p>The bloom effect is integrated into the rendering pipeline and can be
 toggled via user controls in real time.</p>
+<h4 id="validation-1">Validation</h4>
+<p></br></p>
+<div style="text-align: center;">
+<video src="videos/Bloom_Validation.mp4" height="200px" autoplay loop muted></video>
+<p>
+Bloom Effect Validation on Fire Animation
+</p>
+</div>
+<p>The video demonstrates the effect of bloom on a fire animation by
+comparing the same scene with and without the bloom effect applied. The
+bloom visually enhances the fire, creating a glowing aura around the
+flame that mimics how bright light scatters, adding realism and
+intensity to the scene. This validation is effective because there is a
+light source positioned at the top of the flame, which naturally emits
+bright light that the bloom effect can accentuate. Without bloom, the
+fire looks flat and less vibrant, whereas with bloom, the light from the
+flame appears to glow and softly bleed into the surrounding space,
+confirming that the bloom shader is correctly simulating the expected
+light diffusion.</p>
+<p>We chose to show the bloom effect in this way because comparing the
+same scene side-by-side with and without bloom provides a clear and
+immediate visual contrast, making the impact of the effect easy to
+observe and understand. Additionally, using the fire animation as the
+subject is convenient because the flame is positioned at the center of
+the scene, allowing the bloom effect to not only enhance the flame
+itself but also influence the surrounding objects with a soft light
+impact.</p>
 <h3 id="feature-3-soft-shadows">Feature 3 : Soft Shadows</h3>
 <h4 id="implementation-2">Implementation</h4>
 <p>Soft shadow rendering is implemented using a combination of
@@ -416,8 +443,33 @@ shadows. The resulting shadow factor is used to adjust the fragment
 color and lighting intensity. The system supports accumulation from
 multiple light sources, ensuring consistent blending of shadow effects
 across different illumination contributions.</p>
-<h4 id="validation-1">Validation</h4>
-<p>TODO</p>
+<h4 id="validation-2">Validation</h4>
+<p></br></p>
+<div style="text-align: center;">
+<video src="videos/Soft_Shadows_Validation.mp4" height="200px" autoplay loop muted></video>
+<p>
+Soft Shadows Toggle Demonstration
+</p>
+</div>
+<p></br></p>
+<p>
+This video showcases the soft shadow feature being toggled on and off.
+When enabled, the shadows exhibit smooth edges and gradual falloff. The
+clear visual difference validates the correct implementation of the soft
+shadow algorithm by highlighting how it improves depth perception and
+overall scene realism — even if some visual artifacts are present, as
+noted in the failed experiences section.
+</p>
+<p>
+To better demonstrate the effect of the soft shadows, we chose to render
+three UV spheres of different colors within the scene. These spheres
+provide distinct and simple geometric forms that clearly reveal the
+shadow softness and edge transitions. The contrasting colors help to
+visually isolate each sphere’s shadow, making it easier to observe how
+the soft shadow algorithm interacts with varied lighting conditions and
+surface orientations. This choice enhances the clarity of the
+demonstration.
+</p>
 <h3 id="feature-4-screen-space-ambient-occulsion-ssao">Feature 4 :
 Screen Space Ambient Occulsion (SSAO)</h3>
 <h4 id="implementation-3">Implementation</h4>
@@ -485,9 +537,10 @@ mixer):</strong><br></p>
 <p>After computing the previous passes, the resulting buffer gets passed
 to the map mixer shader which essentially adds the ssao factor to the
 final color by simply multiplying it.</p>
-<h4 id="validation-2">Validation</h4>
-<p>Here are the results of the positions, normals, ssao and ssao with
-blur buffers. <br></p>
+<h4 id="validation-3">Validation</h4>
+<p>To validate the SSAO implementation, we present the key intermediate
+buffers and final results below. Each step confirms that the underlying
+data and operations function as intended.</p>
 <div style="text-align: center;">
 <figure style="display: inline-block; margin: 10px;">
 <img src="images/positions.png" height="200px" width="250px" style="vertical-align: middle;">
@@ -517,22 +570,40 @@ Blurred SSAO output
 <p><br></p>
 <div style="text-align: center;">
 <p>
-To visualize the effect of SSAO, here is the same scene with and without
-SSAO. Notice the enhanced shadowing around the base of the trees:
+<strong>Visual Comparison of SSAO Enabled vs. Disabled</strong>
+</p>
+<p><video src="videos/SSAO_Validation.mp4" height="300px" autoplay loop muted></video></p>
+</div>
+<p>This video demonstrates the effect of enabling SSAO. Without SSAO,
+objects appear uniformly lit and disconnected from the ground,
+especially at contact points. When SSAO is enabled, subtle shadows form
+around the base of the model, adding depth and realism to the
+lighting.</p>
+<p><br></p>
+<div style="text-align: center;">
+<p>
+<strong>Static Scene Comparison</strong>
 </p>
 <figure style="display: inline-block; margin: 10px;">
 <img src="images/without_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
 <figcaption>
-Scene without SSAO
+Scene without SSAO — lighting appears flatter and less integrated with
+geometry.
 </figcaption>
 </figure>
 <figure style="display: inline-block; margin: 10px;">
 <img src="images/with_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
 <figcaption>
-Scene with SSAO
+Scene with SSAO — subtle ambient shadows enhance realism, particularly
+near contact surfaces.
 </figcaption>
 </figure>
 </div>
+<p>By comparing the two images, the effect of SSAO can be observed. When
+SSAO is enabled, additional ambient shadows appear around the base of
+the trees and logs, helping to define their spatial relationship with
+the ground. This contributes to a lighting result that appears more
+integrated with the environment.</p>
 <h3 id="feature-5-l-systems">Feature 5 : L-Systems</h3>
 <h4 id="implementation-4">Implementation</h4>
 <p>This implementation generates a 3D procedural tree mesh using an
@@ -558,7 +629,7 @@ extracts the faces. And for each cylinder, it has a probability to draw
 a branch with is just a generated simple triangle mesh for randomness.
 Then we compute normals using triangle normals and angle weights using
 the same method as the previous assignments.</p>
-<h4 id="validation-3">Validation</h4>
+<h4 id="validation-4">Validation</h4>
 <p>Here is some outputs for different iterations:</p>
 <div style="text-align: center;">
 <!-- L-System Tree Iterations -->
@@ -635,8 +706,36 @@ a campfire. The light source was programmed to adjust its position in
 real time, always aligning with the highest elevation point of the
 flame. This setup produced soft shadows and interacted with nearby
 objects to enhance the perception of depth in the scene.</p>
-<h4 id="validation-4">Validation</h4>
-<p>TODO</p>
+<h4 id="validation-5">Validation</h4>
+<p></br></p>
+<div style="text-align: center;">
+<img src="images/view2.png" alt="Bottom view of procedurally generated sky island terrain" height="200px"/>
+<p>
+Bottom View of Procedurally Generated Sky Island Terrain
+</p>
+</div>
+<p></br></p>
+<div style="text-align: center;">
+<video src="videos/campfire_at_midnight.mov" height="200px" autoplay loop muted></video>
+<p>
+Full Scene Overview Showing Procedural Meshes and Textures
+</p>
+</div>
+<p></br></p>
+<p>The image shows the bottom part of the sky island, highlighting the
+procedurally generated mesh terrain that forms the island’s foundation.
+This terrain is built dynamically using a procedural height map,
+ensuring natural and varied elevation patterns.</p>
+<p>The video presents the entire scene, showcasing the procedural meshes
+with their corresponding textures, such as logs, stones, benches, chest,
+branches, firewood, and others, integrated seamlessly into the
+environment. The scene includes detailed static objects and dynamic
+elements like the animated flame, all composed and textured using
+materials managed via the resource manager. The procedural generation
+techniques provide both the landscape and the objects populating it.</p>
+<p>Some meshes and textures used in the scene have been sourced from
+free platforms. References and credits for these assets are provided at
+the bottom of the report.</p>
 <h2 id="discussion">Discussion</h2>
 <h3 id="additional-components">Additional Components</h3>
 <h4 id="flame-generation-approach">Flame Generation Approach</h4>

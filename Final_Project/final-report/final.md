@@ -12,7 +12,7 @@ title: Final Project Report CS-341 2025
 
 ## Abstract
 
-This report presents the development of a real-time, interactive campfire scene built using the **regl** framework. The goal was to combine several computer graphics techniques to create a visually rich and atmospheric environment. Key features include soft shadows, SSAO, bloom effects, procedural fire and smoke, and L-System-based tree generation. The project emphasizes both technical execution and artistic expression, aiming to simulate a warm, immersive nighttime setting. This document outlines the methods used, challenges faced, and solutions implemented throughout the development process.
+This report presents the development of a real-time, interactive campfire scene built using the **regl** framework. The goal was to combine several computer graphics techniques to create a visually rich and atmospheric environment. Key features include soft shadows, SSAO, bloom effects, procedural fire and L-System-based tree generation. The project emphasizes both technical execution and artistic expression, aiming to simulate a warm, immersive nighttime setting. This document outlines the methods used, challenges faced, and solutions implemented throughout the development process.
 
 ## Overview
 
@@ -177,7 +177,16 @@ The bloom effect is integrated into the rendering pipeline and can be toggled vi
 
 #### Validation
 
-<video src="videos/Bloom_Validation.mp4" height="300px" autoplay loop></video>
+</br>
+
+<div style="text-align: center;">
+  <video src="videos/Bloom_Validation.mp4" height="200px" autoplay loop muted></video>
+  <p>Bloom Effect Validation on Fire Animation</p>
+</div>
+
+The video demonstrates the effect of bloom on a fire animation by comparing the same scene with and without the bloom effect applied. The bloom visually enhances the fire, creating a glowing aura around the flame that mimics how bright light scatters, adding realism and intensity to the scene. This validation is effective because there is a light source positioned at the top of the flame, which naturally emits bright light that the bloom effect can accentuate. Without bloom, the fire looks flat and less vibrant, whereas with bloom, the light from the flame appears to glow and softly bleed into the surrounding space, confirming that the bloom shader is correctly simulating the expected light diffusion.
+
+We chose to show the bloom effect in this way because comparing the same scene side-by-side with and without bloom provides a clear and immediate visual contrast, making the impact of the effect easy to observe and understand. Additionally, using the fire animation as the subject is convenient because the flame is positioned at the center of the scene, allowing the bloom effect to not only enhance the flame itself but also influence the surrounding objects with a soft light impact.
 
 ### Feature 3 : Soft Shadows
 
@@ -207,7 +216,21 @@ The accumulated shadow values are averaged to generate the final shadow factor. 
 
 #### Validation
 
-<video src="videos/Soft_Shadows_Validation.mp4" height="300px" autoplay loop></video>
+</br>
+
+<div style="text-align: center;">
+  <video src="videos/Soft_Shadows_Validation.mp4" height="200px" autoplay loop muted></video>
+  <p>Soft Shadows Toggle Demonstration</p>
+</div>
+
+</br>
+
+<p>
+    This video showcases the soft shadow feature being toggled on and off. When enabled, the shadows exhibit smooth edges and gradual falloff. The clear visual difference validates the correct implementation of the soft shadow algorithm by highlighting how it improves depth perception and overall scene realism — even if some visual artifacts are present, as noted in the failed experiences section.
+</p>
+<p>
+	To better demonstrate the effect of the soft shadows, we chose to render three UV spheres of different colors within the scene. These spheres provide distinct and simple geometric forms that clearly reveal the shadow softness and edge transitions. The contrasting colors help to visually isolate each sphere's shadow, making it easier to observe how the soft shadow algorithm interacts with varied lighting conditions and surface orientations. This choice enhances the clarity of the demonstration.
+</p>
 
 ### Feature 4 : Screen Space Ambient Occulsion (SSAO)
 
@@ -269,7 +292,7 @@ After computing the previous passes, the resulting buffer gets passed to the map
 
 #### Validation
 
-Here are the results of the positions, normals, ssao and ssao with blur buffers. <br>
+To validate the SSAO implementation, we present the key intermediate buffers and final results below. Each step confirms that the underlying data and operations function as intended.
 
 <div style="text-align: center;">
 
@@ -296,30 +319,31 @@ Here are the results of the positions, normals, ssao and ssao with blur buffers.
 
 <br>
 
-<<<<<<< Updated upstream
-In order to visualize the effect, here is the same scene with and without SSAO. Look especially at the lighting around the tree.
-
-<video src="videos/SSAO_Validation.mp4" height="300px" autoplay loop></video>
-||||||| Stash base
-In order to visualize the effect, here is the same scene with and without SSAO. Look especially at the lighting around the tree.
-
-<img src="images/without_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
-<img src="images/with_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
-=======
 <div style="text-align: center;">
-  <p>To visualize the effect of SSAO, here is the same scene with and without SSAO. Notice the enhanced shadowing around the base of the trees:</p>
->>>>>>> Stashed changes
+  <p><strong>Visual Comparison of SSAO Enabled vs. Disabled</strong></p>
+  <video src="videos/SSAO_Validation.mp4" height="300px" autoplay loop muted></video>
+</div>
+
+This video demonstrates the effect of enabling SSAO. Without SSAO, objects appear uniformly lit and disconnected from the ground, especially at contact points. When SSAO is enabled, subtle shadows form around the base of the model, adding depth and realism to the lighting.
+
+<br>
+
+<div style="text-align: center;">
+  <p><strong>Static Scene Comparison</strong></p>
 
   <figure style="display: inline-block; margin: 10px;">
     <img src="images/without_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
-    <figcaption>Scene without SSAO</figcaption>
+    <figcaption>Scene without SSAO — lighting appears flatter and less integrated with geometry.</figcaption>
   </figure>
 
   <figure style="display: inline-block; margin: 10px;">
     <img src="images/with_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
-    <figcaption>Scene with SSAO</figcaption>
+    <figcaption>Scene with SSAO — subtle ambient shadows enhance realism, particularly near contact surfaces.</figcaption>
   </figure>
 </div>
+
+ By comparing the two images, the effect of SSAO can be observed. When SSAO is enabled, additional ambient shadows appear around the base of the trees and logs, helping to define their spatial relationship with the ground. This contributes to a lighting result that appears more integrated with the environment.
+
 
 ### Feature 5 : L-Systems
 
@@ -414,7 +438,27 @@ A dynamic lighting system was used to simulate the warm illumination of a campfi
 
 #### Validation
 
-TODO
+</br>
+
+<div style="text-align: center;">
+  <img src="images/view2.png" alt="Bottom view of procedurally generated sky island terrain" height="200px"/>
+  <p>Bottom View of Procedurally Generated Sky Island Terrain</p>
+</div>
+
+</br>
+
+<div style="text-align: center;">
+  <video src="videos/campfire_at_midnight.mov" height="200px" autoplay loop muted></video>
+  <p>Full Scene Overview Showing Procedural Meshes and Textures</p>
+</div>
+
+</br>
+
+The image shows the bottom part of the sky island, highlighting the procedurally generated mesh terrain that forms the island’s foundation. This terrain is built dynamically using a procedural height map, ensuring natural and varied elevation patterns.
+
+The video presents the entire scene, showcasing the procedural meshes with their corresponding textures, such as logs, stones, benches, chest, branches, firewood, and others, integrated seamlessly into the environment. The scene includes detailed static objects and dynamic elements like the animated flame, all composed and textured using materials managed via the resource manager. The procedural generation techniques provide both the landscape and the objects populating it.
+
+Some meshes and textures used in the scene have been sourced from free platforms. References and credits for these assets are provided at the bottom of the report.
 
 ## Discussion
 
