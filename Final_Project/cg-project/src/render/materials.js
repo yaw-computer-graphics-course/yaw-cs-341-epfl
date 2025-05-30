@@ -108,6 +108,21 @@ export const sunset_sky = new BackgroundMaterial({
     texture: 'kloppenheim_07_puresky_blur.jpg'
 });
 
+export const red = new DiffuseMaterial({
+    color: [1.0, 0.0, 0.0],
+    shininess: 10.
+})
+
+export const green = new DiffuseMaterial({
+    color: [0.0, 1.0, 0.0],
+    shininess: 10.
+})
+
+export const blue = new DiffuseMaterial({
+    color: [0.0, 0.0, 1.0],
+    shininess: 10.
+})
+
 export const gray = new DiffuseMaterial({
     color: [0.4, 0.4, 0.4],
     shininess: 0.5
