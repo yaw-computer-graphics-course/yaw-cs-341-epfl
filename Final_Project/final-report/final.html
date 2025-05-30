@@ -387,63 +387,7 @@ greater visual depth and contributed to a more dynamic and realistic
 flame effect. For a more technical explanation, refer to <strong>Feature
 1</strong>.</p>
 <h3 id="failed-experiments">Failed Experiments</h3>
-<p>Before settling on the final scene, we explored numerous different
-approaches and had to backtrack several times. Here is a compilation of
-some of the alternative methods and ideas that were tested but
-ultimately set aside.</p>
-<div
-style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-<div style="flex: 0 0 30%; text-align: center;">
-<img src="images/failed_exp1.png" width="100%" />
-<p>
-Terrain generation using a weird height map created unstable and
-exaggerated shapes that looked unrealistic.
-</p>
-</div>
-<div style="flex: 0 0 30%; text-align: center;">
-<img src="images/failed_exp2.png" width="100%" />
-<p>
-Another terrain attempt with an odd height map led to exaggerated shapes
-that looked unrealistic.
-</p>
-</div>
-<div style="flex: 0 0 30%; text-align: center;">
-<img src="images/failed_exp3.png" width="100%" />
-<p>
-Incorrect bloom parameters resulted in overly bright highlights and loss
-of visual detail.
-</p>
-</div>
-<div style="flex: 0 0 30%; text-align: center;">
-<img src="images/failed_exp4.png" width="100%" />
-<p>
-Sky brightness caused the bloom effect to be exaggerated, making the
-upper part of the scene overly intense.
-</p>
-</div>
-<div style="flex: 0 0 30%; text-align: center;">
-<img src="images/failed_exp5.png" width="100%" />
-<p>
-Combining fire mesh from Blender* with dynamic properties lacked realism
-and visual clarity.
-</p>
-</div>
-<div style="flex: 0 0 30%; text-align: center;">
-<img src="images/failed_exp6.png" width="100%" />
-<p>
-Procedural flame using noise produced awkward shapes that didn’t look
-natural.
-</p>
-</div>
-</div>
-<p>* <em>We later replaced the Blender-created flame with a procedurally
-generated mesh and applied a procedural texture on top, which better
-captured the desired dynamic and natural appearance.</em></p>
-<p>Despite the setbacks shown above, we were able to resolve all of them
-through iterative improvements. We included these failed attempts in the
-report as a trace of the development process and the challenges we faced
-and overcame.</p>
-<p>However, two issues related to soft shadow rendering remain
+<p>Despite progress, two major issues with soft shadow rendering remain
 unresolved.</p>
 <h4 id="issues-in-soft-shadow-implementation">Issues in Soft Shadow
 Implementation</h4>
@@ -522,6 +466,62 @@ filters during post-processing to smooth out hard lines or
 discontinuities.</li>
 </ul>
 <h3 id="challenges">Challenges</h3>
+<p>Before settling on the final scene, we explored numerous different
+approaches and had to backtrack several times. Here is a compilation of
+some of the alternative methods and ideas that were tested but
+ultimately set aside.</p>
+<div
+style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+<div style="flex: 0 0 30%; text-align: center;">
+<img src="images/failed_exp1.png" width="100%" />
+<p>
+Terrain generation using a weird height map created unstable and
+exaggerated shapes that looked unrealistic.
+</p>
+</div>
+<div style="flex: 0 0 30%; text-align: center;">
+<img src="images/failed_exp2.png" width="100%" />
+<p>
+Another terrain attempt with an odd height map led to exaggerated shapes
+that looked unrealistic.
+</p>
+</div>
+<div style="flex: 0 0 30%; text-align: center;">
+<img src="images/failed_exp3.png" width="100%" />
+<p>
+Incorrect bloom parameters resulted in overly bright highlights and loss
+of visual detail.
+</p>
+</div>
+<div style="flex: 0 0 30%; text-align: center;">
+<img src="images/failed_exp4.png" width="100%" />
+<p>
+Sky brightness caused the bloom effect to be exaggerated, making the
+upper part of the scene overly intense.
+</p>
+</div>
+<div style="flex: 0 0 30%; text-align: center;">
+<img src="images/failed_exp5.png" width="100%" />
+<p>
+Combining fire mesh from Blender* with dynamic properties lacked realism
+and visual clarity.
+</p>
+</div>
+<div style="flex: 0 0 30%; text-align: center;">
+<img src="images/failed_exp6.png" width="100%" />
+<p>
+Procedural flame using noise produced awkward shapes that didn’t look
+natural.
+</p>
+</div>
+</div>
+<p>* <em>We later replaced the Blender-created flame with a procedurally
+generated mesh and applied a procedural texture on top, which better
+captured the desired dynamic and natural appearance.</em></p>
+<p>Despite the setbacks shown above, we were able to resolve all of them
+through iterative improvements. We included these failed attempts in the
+report as a trace of the development process and the challenges we faced
+and overcame.</p>
 <h2 id="contributions">Contributions</h2>
 <table>
 <caption>
