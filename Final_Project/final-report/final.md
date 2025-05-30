@@ -120,6 +120,39 @@ The `evolve` function, called every frame, updates the height map using sine and
 
 To maintain performance while still achieving visual realism, we used a simple animated texture with color cycling instead of generating complex procedural textures. The noise-based mesh already gave a satisfying flame shape and motion, so the cycling colors were enough to create the desired flame look without adding extra complexity.
 
+#### Validation
+
+To validate the implementation of the fire, we present two videos:
+
+- The first video shows only the **fire plane with the texture applied**.
+- The second video shows the **full animated fire**, including the procedurally generated mesh and dynamic color-cycled texture.
+
+</br>
+
+<div style="text-align: center;">
+<video src="videos/plane_flame_validation.mov" height="300px" autoplay loop></video>
+</div>
+<figcaption style="text-align: center;">The textured plane shows the base flame texture without mesh deformation.</figcaption>
+
+</br>
+
+<div style="text-align: center;">
+<video src="videos/flame_validation.mov" height="300px" autoplay loop></video>
+</div>
+<figcaption style="text-align: center;">The animated flame, with both procedural mesh and dynamic texture, demonstrating realistic flickering.</figcaption>
+
+</br>
+
+These two videos demonstrate the layered approach taken to achieve a realistic flame:
+
+1. **Texture-Only Plane**:  
+   The first video validates that the flame texture is properly designed, mapped, and animated. It shows how the procedural color cycling contributes to visual liveliness, even before applying geometry-based distortion.
+
+2. **Full Flame with Mesh and Texture**:  
+   The second video showcases the procedural generation of the flame mesh, driven by Perlin noise and height maps. The deformation gives the flame volume and realistic motion. Combined with the animated texture, this creates a fire effect that flickers and shifts in real-time.
+
+This separation makes it clear how both components—texture and mesh—work together to simulate a flame in motion.
+
 ### Feature 2 : Bloom Effect Shader
 
 #### Implementation
@@ -238,18 +271,55 @@ After computing the previous passes, the resulting buffer gets passed to the map
 
 Here are the results of the positions, normals, ssao and ssao with blur buffers. <br>
 
-<img src="images/positions.png" height="200px" width="250px" style="vertical-align: middle;">
-<img src="images/normals.png" height="200px" width="250px" style="vertical-align: middle;">
-<img src="images/raw_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
-<img src="images/blur_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
+<div style="text-align: center;">
+
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/positions.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Position buffer</figcaption>
+  </figure>
+
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/normals.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Normal buffer</figcaption>
+  </figure>
+
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/raw_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Raw SSAO output</figcaption>
+  </figure>
+
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/blur_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Blurred SSAO output</figcaption>
+  </figure>
+</div>
 
 <br>
 
+<<<<<<< Updated upstream
 In order to visualize the effect, here is the same scene with and without SSAO. Look especially at the lighting around the tree.
 
 <video src="videos/SSAO_Validation.mp4" height="300px" autoplay loop></video>
+||||||| Stash base
+In order to visualize the effect, here is the same scene with and without SSAO. Look especially at the lighting around the tree.
 
+<img src="images/without_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
+<img src="images/with_ssao.png" height="300px" width="503px" style="vertical-align: middle;">
+=======
+<div style="text-align: center;">
+  <p>To visualize the effect of SSAO, here is the same scene with and without SSAO. Notice the enhanced shadowing around the base of the trees:</p>
+>>>>>>> Stashed changes
 
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/without_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
+    <figcaption>Scene without SSAO</figcaption>
+  </figure>
+
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/with_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
+    <figcaption>Scene with SSAO</figcaption>
+  </figure>
+</div>
 
 ### Feature 5 : L-Systems
 
@@ -277,30 +347,74 @@ Then, for each character not among these, the turtle draws a cylinder by computi
 
 #### Validation
 
-Here is some outputs for different iterations:<br>
+Here is some outputs for different iterations:
 
-<img src="images/tree-iter-1.png" height="200px" width="250px" style="vertical-align: middle;">
-<img src="images/tree-iter-2.png" height="200px" width="250px" style="vertical-align: middle;">
-<img src="images/tree-iter-3.png" height="200px" width="250px" style="vertical-align: middle;">
-<img src="images/tree-iter-4.png" height="200px" width="250px" style="vertical-align: middle;">
+<div style="text-align: center;">
 
-<br>And here is some popular L-System generations:<br>
+  <!-- L-System Tree Iterations -->
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/tree-iter-1.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Tree generated using L-System - Iteration 1</figcaption>
+  </figure>
 
-<img src="images/koch-snowflake.png" height="200px" width="250px" style="vertical-align: middle;">
-<img src="images/sierpinski-triangle.png" height="200px" width="250px" style="vertical-align: middle;">
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/tree-iter-2.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Tree generated using L-System - Iteration 2</figcaption>
+  </figure>
 
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/tree-iter-3.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Tree generated using L-System - Iteration 3</figcaption>
+  </figure>
 
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/tree-iter-4.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Tree generated using L-System - Iteration 4</figcaption>
+  </figure>
 
-### Feature 6
+</div>
+
+<br><p style="text-align: center;">Below are examples of popular L-System based fractals:</p><br>
+
+<div style="text-align: center;">
+
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/koch-snowflake.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Koch Snowflake - A classic fractal generated using an L-System</figcaption>
+  </figure>
+
+  <figure style="display: inline-block; margin: 10px;">
+    <img src="images/sierpinski-triangle.png" height="200px" width="250px" style="vertical-align: middle;">
+    <figcaption>Sierpiński Triangle - Another well-known L-System fractal</figcaption>
+  </figure>
+
+</div>
+
+### Feature 6: Mesh / Scene Design
 
 #### Implementation
 
-TODO
+The mesh and scene design played a central role in constructing the visual environment of **"A Campfire At Midnight."** The scene was built using a combination of procedural generation and manual modeling to create a cohesive and immersive setting.
+
+#### Mesh Design
+
+**Procedural Terrain Generation**  
+The terrain was procedurally generated using noise functions to form a floating island, serving as the foundation for all other scene elements. This approach allowed for natural variation in the landscape while maintaining a stylized aesthetic.
+
+**Flame Mesh**  
+The campfire flame was designed using a procedurally generated mesh, enhanced with animated textures. These elements worked together to simulate flame motion and depth, resulting in a more dynamic and engaging visual effect.
+
+**Environment Elements**  
+Objects such as rocks, logs, and vegetation were added to support the campfire setting. These elements were positioned to align with the terrain and were textured to maintain visual consistency throughout the scene.
+
+#### Scene Design
+
+**Atmospheric Lighting**  
+A dynamic lighting system was used to simulate the warm illumination of a campfire. The light source was programmed to adjust its position in real time, always aligning with the highest elevation point of the flame. This setup produced soft shadows and interacted with nearby objects to enhance the perception of depth in the scene.
 
 #### Validation
 
 TODO
-
 
 ## Discussion
 

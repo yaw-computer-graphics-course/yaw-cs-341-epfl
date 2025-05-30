@@ -55,9 +55,14 @@
           <li><a href="#feature-3-soft-shadows"
           id="toc-feature-3-soft-shadows">Feature 3 : Soft
           Shadows</a></li>
-          <li><a href="#feature-4" id="toc-feature-4">Feature 4</a></li>
-          <li><a href="#feature-5" id="toc-feature-5">Feature 5</a></li>
-          <li><a href="#feature-6" id="toc-feature-6">Feature 6</a></li>
+          <li><a href="#feature-4-screen-space-ambient-occulsion-ssao"
+          id="toc-feature-4-screen-space-ambient-occulsion-ssao">Feature
+          4 : Screen Space Ambient Occulsion (SSAO)</a></li>
+          <li><a href="#feature-5-l-systems"
+          id="toc-feature-5-l-systems">Feature 5 : L-Systems</a></li>
+          <li><a href="#feature-6-mesh-scene-design"
+          id="toc-feature-6-mesh-scene-design">Feature 6: Mesh / Scene
+          Design</a></li>
           </ul></li>
           <li><a href="#discussion" id="toc-discussion">Discussion</a>
           <ul>
@@ -289,7 +294,50 @@ complex procedural textures. The noise-based mesh already gave a
 satisfying flame shape and motion, so the cycling colors were enough to
 create the desired flame look without adding extra complexity.</p>
 <h4 id="validation">Validation</h4>
-<p>TODO</p>
+<p>To validate the implementation of the fire, we present two
+videos:</p>
+<ul>
+<li>The first video shows only the <strong>fire plane with the texture
+applied</strong>.</li>
+<li>The second video shows the <strong>full animated fire</strong>,
+including the procedurally generated mesh and dynamic color-cycled
+texture.</li>
+</ul>
+<p></br></p>
+<div style="text-align: center;">
+<video src="videos/plane_flame_validation.mov" height="300px" autoplay loop>
+</video>
+</div>
+<figcaption style="text-align: center;">
+The textured plane shows the base flame texture without mesh
+deformation.
+</figcaption>
+<p></br></p>
+<div style="text-align: center;">
+<video src="videos/flame_validation.mov" height="300px" autoplay loop>
+</video>
+</div>
+<figcaption style="text-align: center;">
+The animated flame, with both procedural mesh and dynamic texture,
+demonstrating realistic flickering.
+</figcaption>
+<p></br></p>
+<p>These two videos demonstrate the layered approach taken to achieve a
+realistic flame:</p>
+<ol type="1">
+<li><p><strong>Texture-Only Plane</strong>:<br />
+The first video validates that the flame texture is properly designed,
+mapped, and animated. It shows how the procedural color cycling
+contributes to visual liveliness, even before applying geometry-based
+distortion.</p></li>
+<li><p><strong>Full Flame with Mesh and Texture</strong>:<br />
+The second video showcases the procedural generation of the flame mesh,
+driven by Perlin noise and height maps. The deformation gives the flame
+volume and realistic motion. Combined with the animated texture, this
+creates a fire effect that flickers and shifts in real-time.</p></li>
+</ol>
+<p>This separation makes it clear how both components—texture and
+mesh—work together to simulate a flame in motion.</p>
 <h3 id="feature-2-bloom-effect-shader">Feature 2 : Bloom Effect
 Shader</h3>
 <h4 id="implementation-1">Implementation</h4>
@@ -323,8 +371,6 @@ strength.</p>
 <br></p>
 <p>The bloom effect is integrated into the rendering pipeline and can be
 toggled via user controls in real time.</p>
-<h4 id="validation-1">Validation</h4>
-<p>TODO</p>
 <h3 id="feature-3-soft-shadows">Feature 3 : Soft Shadows</h3>
 <h4 id="implementation-2">Implementation</h4>
 <p>Soft shadow rendering is implemented using a combination of
@@ -370,22 +416,226 @@ shadows. The resulting shadow factor is used to adjust the fragment
 color and lighting intensity. The system supports accumulation from
 multiple light sources, ensuring consistent blending of shadow effects
 across different illumination contributions.</p>
-<h4 id="validation-2">Validation</h4>
+<h4 id="validation-1">Validation</h4>
 <p>TODO</p>
-<h3 id="feature-4">Feature 4</h3>
+<h3 id="feature-4-screen-space-ambient-occulsion-ssao">Feature 4 :
+Screen Space Ambient Occulsion (SSAO)</h3>
 <h4 id="implementation-3">Implementation</h4>
-<p>TODO</p>
-<h4 id="validation-3">Validation</h4>
-<p>TODO</p>
-<h3 id="feature-5">Feature 5</h3>
+<p>This technique adds subtle shadows in crevices and contact areas by
+analyzing nearby geometry in screen space, enhancing the perception of
+depth and detail in rendered scenes without the computational cost of
+full global illumination. Our SSAO implementation makes use of multiple
+passes : positions, normals, ssao, ssao blur.<br></p>
+<p><strong>-&gt; Positions pass:</strong> <br></p>
+<p>In this pass, for each pixel, the fragment’s view-space position is
+computed by multiplying each vertex position by the model-view matrix
+and interpolating it. It is then stored in a texture.</p>
+<p><strong>-&gt; Normals pass:</strong><br></p>
+<p>Similar to the positions’ pass, each fragment’s view-space normal is
+computed in the vertex shader, this time by using the normals’
+model-view matrix, and then interpolated and encoded to fit in the [0.0,
+1.0] range.</p>
+<p><strong>-&gt; SSAO pass:</strong> <br></p>
+<p>The most relevant part is the fragment shader which takes as inputs
+:</p>
+<p><code>uv</code> : Texture coordinates for the current fragment,
+interpolated from the vertex shader.</p>
+<p><code>positions_tex</code>: A texture storing view-space positions of
+fragments.</p>
+<p><code>normals_tex</code> : A texture storing normals, encoded in the
+[0, 1] range.</p>
+<p><code>noise_tex</code> : A small noise texture used to randomize the
+sampling kernel orientation per fragment. This texture is tiled across
+the screen and is computed in the CPU.</p>
+<p><code>kernel[64]</code> : A uniform array of 64 precomputed sample
+vectors distributed within a hemisphere. They are used to probe the
+surrounding geometry. This is compued in the CPU.</p>
+<p><code>noise_scale</code> : A scale factor used to tile the noise
+texture across the screen.</p>
+<p><code>mat_projection</code> : The projection matrix, used to
+transform view-space coordinates to screen-space.</p>
+<p>It also makes use of some constants to adapt as we see fit.</p>
+<p><code>bias</code> : Helps to prevent self-occlusion artifacts by
+offsetting the sample depth slightly.</p>
+<p><code>radius</code> : Defines the sampling radius in view space.</p>
+<p><code>kernelSize</code> : Number of samples in the occlusion
+kernel.</p>
+<p>The algotithm goes as follows : - We start by extracting the view
+space position and normal from the corresponding buffers, as well as a
+random vector from the noise buffer. - We then create a TBN matrix which
+stands for tangent-bitangent-normal, where we use the Gramm-Schmidt
+process to create an orthogonal basis of the tangent space. This matrix
+serves to transform vectors from this space to view space. - Then we
+loop over our samples, multiply them by the TBN matrix and adding them
+to the current fragment’s position. - Now we project it to screen-space
+and transform the coordinates to the [0, 1] range to use them to sample
+the position texture. The sample depth then is just the z component of
+the resulting vector. - Next we use an occlusion variable to cumulate
+the total fragment occlusion, this variable gets incremented or not for
+each sample by comparing its depth. - The final value is then inverted
+and normalized and output as the fragment “color” in this pass.</p>
+<p><strong>-&gt; Blur pass:</strong> <br></p>
+<p>The raw SSAO texture tends to be noisy due to the random sampling. To
+clean it up, a box blur is applied over a small grid (4x4) of
+neighboring pixels. Each neighboring SSAO value is averaged to smooth
+out artifacts. The result is a softened occlusion texture that still
+retains detail but avoids pixelated noise.</p>
+<p><strong>-&gt; Final output (Integration in the map
+mixer):</strong><br></p>
+<p>After computing the previous passes, the resulting buffer gets passed
+to the map mixer shader which essentially adds the ssao factor to the
+final color by simply multiplying it.</p>
+<h4 id="validation-2">Validation</h4>
+<p>Here are the results of the positions, normals, ssao and ssao with
+blur buffers. <br></p>
+<div style="text-align: center;">
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/positions.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Position buffer
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/normals.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Normal buffer
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/raw_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Raw SSAO output
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/blur_ssao.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Blurred SSAO output
+</figcaption>
+</figure>
+</div>
+<p><br></p>
+<div style="text-align: center;">
+<p>
+To visualize the effect of SSAO, here is the same scene with and without
+SSAO. Notice the enhanced shadowing around the base of the trees:
+</p>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/without_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
+<figcaption>
+Scene without SSAO
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/with_ssao.png" height="200px" width="503px" style="vertical-align: middle;">
+<figcaption>
+Scene with SSAO
+</figcaption>
+</figure>
+</div>
+<h3 id="feature-5-l-systems">Feature 5 : L-Systems</h3>
 <h4 id="implementation-4">Implementation</h4>
-<p>TODO</p>
-<h4 id="validation-4">Validation</h4>
-<p>TODO</p>
-<h3 id="feature-6">Feature 6</h3>
+<p>This implementation generates a 3D procedural tree mesh using an
+L-system and simulates plant-like branching structures. It uses two main
+things: an axiom and a set of rules. From the axiom, it recursively
+replaces each element based on the rule set until it reaches the
+specified number of iterations. It then draws using a turtle based
+algorithm, the turtle keeps a state throught the drawing process. This
+state contains its positions, three vectors that represent a moving
+orthogonal basis, the current thickness and height of the cylinder as
+well the last ring for optimization purposes.</p>
+<p>The L-Systems rules contain some special characters :</p>
+<p><code>[</code> : Saves the current state of the turtle into a
+stack.</p>
+<p><code>]</code> : Pops the previously saved state from the stack.</p>
+<p><code>+</code> : Rotates the angle along +x.</p>
+<p><code>-</code> : Rotates the angle along -x.</p>
+<p><code>^</code> : Rotates the angle along +y.</p>
+<p><code>&amp;</code> : Rotates the angle along -y.</p>
+<p>Then, for each character not among these, the turtle draws a cylinder
+by computing the center points and surrounding circle points then
+extracts the faces. And for each cylinder, it has a probability to draw
+a branch with is just a generated simple triangle mesh for randomness.
+Then we compute normals using triangle normals and angle weights using
+the same method as the previous assignments.</p>
+<h4 id="validation-3">Validation</h4>
+<p>Here is some outputs for different iterations:</p>
+<div style="text-align: center;">
+<!-- L-System Tree Iterations -->
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/tree-iter-1.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Tree generated using L-System - Iteration 1
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/tree-iter-2.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Tree generated using L-System - Iteration 2
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/tree-iter-3.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Tree generated using L-System - Iteration 3
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/tree-iter-4.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Tree generated using L-System - Iteration 4
+</figcaption>
+</figure>
+</div>
+<br>
+<p style="text-align: center;">
+Below are examples of popular L-System based fractals:
+</p>
+<p><br></p>
+<div style="text-align: center;">
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/koch-snowflake.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Koch Snowflake - A classic fractal generated using an L-System
+</figcaption>
+</figure>
+<figure style="display: inline-block; margin: 10px;">
+<img src="images/sierpinski-triangle.png" height="200px" width="250px" style="vertical-align: middle;">
+<figcaption>
+Sierpiński Triangle - Another well-known L-System fractal
+</figcaption>
+</figure>
+</div>
+<h3 id="feature-6-mesh-scene-design">Feature 6: Mesh / Scene Design</h3>
 <h4 id="implementation-5">Implementation</h4>
-<p>TODO</p>
-<h4 id="validation-5">Validation</h4>
+<p>The mesh and scene design played a central role in constructing the
+visual environment of <strong>“A Campfire At Midnight.”</strong> The
+scene was built using a combination of procedural generation and manual
+modeling to create a cohesive and immersive setting.</p>
+<h4 id="mesh-design">Mesh Design</h4>
+<p><strong>Procedural Terrain Generation</strong><br />
+The terrain was procedurally generated using noise functions to form a
+floating island, serving as the foundation for all other scene elements.
+This approach allowed for natural variation in the landscape while
+maintaining a stylized aesthetic.</p>
+<p><strong>Flame Mesh</strong><br />
+The campfire flame was designed using a procedurally generated mesh,
+enhanced with animated textures. These elements worked together to
+simulate flame motion and depth, resulting in a more dynamic and
+engaging visual effect.</p>
+<p><strong>Environment Elements</strong><br />
+Objects such as rocks, logs, and vegetation were added to support the
+campfire setting. These elements were positioned to align with the
+terrain and were textured to maintain visual consistency throughout the
+scene.</p>
+<h4 id="scene-design">Scene Design</h4>
+<p><strong>Atmospheric Lighting</strong><br />
+A dynamic lighting system was used to simulate the warm illumination of
+a campfire. The light source was programmed to adjust its position in
+real time, always aligning with the highest elevation point of the
+flame. This setup produced soft shadows and interacted with nearby
+objects to enhance the perception of depth in the scene.</p>
+<h4 id="validation-4">Validation</h4>
 <p>TODO</p>
 <h2 id="discussion">Discussion</h2>
 <h3 id="additional-components">Additional Components</h3>
