@@ -97,7 +97,7 @@ export class DemoScene extends Scene {
       translation: [0, 0, 0],
       scale: this.TERRAIN_SCALE,
       mesh_reference: 'mesh_terrain',
-      material: MATERIALS.rock1
+      material: MATERIALS.rock
     });
 
     // Build the flat ground mesh procedurally

@@ -128,23 +128,8 @@ export const pine = new DiffuseMaterial({
     shininess: 0.5
 });
 
-export const rock1 = new DiffuseMaterial({
+export const rock = new DiffuseMaterial({
     texture: 'rock_texture_1.jpg',
-    shininess: 20.0
-});
-
-export const rock2 = new DiffuseMaterial({
-    texture: 'rock_texture_2.jpg',
-    shininess: 20.0
-});
-
-export const rock3 = new DiffuseMaterial({
-    texture: 'rock_texture_3.jpg',
-    shininess: 20.0
-});
-
-export const rock4 = new DiffuseMaterial({
-    texture: 'rock_texture_4.jpg',
     shininess: 20.0
 });
 
