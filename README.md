@@ -97,7 +97,7 @@ Additional contribution and build instructions:
 - Solar-system animation
 - Introductory shaders
 
-![GL1 Solar System](Assignments/GL1_transforms/doc/icg_solar_title.jpg)
+<img src="Assignments/GL1_transforms/doc/icg_solar_title.jpg" alt="GL1 Solar System" style="width:100%; max-width: 300px;">
 
 ---
 
@@ -108,7 +108,7 @@ Additional contribution and build instructions:
 - Gouraud and Phong shading
 - Interactive mesh viewer with Preact UI
 
-![GL2 Mesh Viewer](Assignments/GL2_meshes/doc/teaser.png)
+<img src="Assignments/GL2_meshes/doc/teaser.png" alt="GL2 Mesh Viewer" style="width:100%; max-width: 300px;">
 
 ---
 
@@ -120,7 +120,7 @@ Additional contribution and build instructions:
 - Environment capture
 - Multi-pass scene rendering
 
-![GL3 Environment](Assignments/GL3_env_cubemap/doc/GL33_view1_2024.webp)
+<img src="Assignments/GL3_env_cubemap/doc/GL33_view1_2024.webp" alt="GL3 Environment" style="width:100%; max-width: 300px;">
 
 ---
 
@@ -131,7 +131,7 @@ Additional contribution and build instructions:
 - Basic reflective rays
 - GPU-accelerated ray tracing in a fragment shader
 
-![RT1 Collision Diagram](Assignments/RT1_collisions/doc/triangle_intersection_diagram.png)
+<img src="Assignments/RT1_collisions/doc/triangle_intersection_diagram.png" alt="RT1 Collision Diagram" style="width:100%; max-width: 300px;">
 
 ---
 
@@ -142,7 +142,7 @@ Additional contribution and build instructions:
 - Reflective and transparent materials
 - Ray tracing renders of Blender scenes
 
-![RT2 Light Rays](Assignments/RT2_light_rays/doc/scene_3_lights.png)
+<img src="Assignments/RT2_light_rays/doc/scene_3_lights.png" alt="RT2 Light Rays" style="width:100%; max-width: 300px;">
 
 ---
 
@@ -154,36 +154,10 @@ Additional contribution and build instructions:
 - Demo video included: `campfire_at_midnight.mov`
 - Full source code and scene assets provided in `cg-project/`
 
-<div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
-
-<div style="flex: 0 0 45%; text-align: center;">
-  <img src="Final_Project/final-report/images/view1.png" alt="Inside Scene View" style="width: 100%; max-width: 400px;">
-  <p><strong>View 1:</strong> Inside the scene, immersive up-close view.</p>
-</div>
-
-<div style="flex: 0 0 45%; text-align: center;">
-  <img src="Final_Project/final-report/images/view2.png" alt="Close Side View 1" style="width: 100%; max-width: 400px;">
-  <p><strong>View 2:</strong> Slightly more distant perspective along z-axis.</p>
-</div>
-
-<div style="flex: 0 0 45%; text-align: center;">
-  <img src="Final_Project/final-report/images/view3.png" alt="Close Side View 2" style="width: 100%; max-width: 400px;">
-  <p><strong>View 3:</strong> Similar distance to View 2, different angle.</p>
-</div>
-
-<div style="flex: 0 0 45%; text-align: center;">
-  <img src="Final_Project/final-report/images/view4.png" alt="Top-Down View" style="width: 100%; max-width: 400px;">
-  <p><strong>View 4:</strong> Top-down perspective of the scene layout.</p>
-</div>
-
-</div>
-
-<div style="text-align: left;">
+<img src="Final_Project/final-report/images/view1.png" alt="Inside Scene View" style="width: 100%; max-width: 300px;">
 
 ## License
 
 This project includes the **GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007**.
 
 Third-party libraries (glMatrix, regl.js, preact, webgl-obj-loader) include their own respective licenses.
-
-</div>
